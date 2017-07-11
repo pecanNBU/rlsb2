@@ -15,6 +15,7 @@
         <module>Kafka</module>
         <module>Spark_Streaming</module>
         <module>RocketMQ</module>
+        <module>Distribution</module>
     </modules>
 
     <dependencies>
