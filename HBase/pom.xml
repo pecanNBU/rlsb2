@@ -11,5 +11,13 @@
 
     <artifactId>hbase</artifactId>
 
+    <dependencies>
+        <dependency>
+            <artifactId>dubbo</artifactId>
+            <groupId>com.hzgc</groupId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
 </project>
