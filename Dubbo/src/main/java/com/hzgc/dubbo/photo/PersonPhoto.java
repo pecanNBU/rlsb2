@@ -14,6 +14,7 @@ public class PersonPhoto {
      */
     String ipc;
 
+
     /**
      * 人脸大图数据
      */

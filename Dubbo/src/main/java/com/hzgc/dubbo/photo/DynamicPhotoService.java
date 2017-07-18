@@ -12,4 +12,5 @@ public interface DynamicPhotoService {
     public PersonPhoto getDynamicPhotoInfo(String DynamicPhotoID);
 
 
+
 }
