@@ -11,5 +11,11 @@
 
     <artifactId>streaming</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.hzgc</groupId>
+            <artifactId>jni</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
 </project>
