@@ -123,7 +123,7 @@ class EsClientUtils{
         Settings settings = Settings.builder()
                 .put("cluster.name", EsClientUtils.clusterName).build();
         System.out.println("++++++++++++++++++++++"  + EsClientUtils.nodeHosts);
-        for (String host:EsClientUtils.nodeHosts.split(",")){
+        for (String host:EsClientUtils.nodeHosts.split("_")){
             client = new PreBuiltTransportClient(settings)
                     .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(host),
                             EsClientUtils.nodePort));

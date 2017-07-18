@@ -30,7 +30,7 @@ public class HBase2EsSuite {
         mapOfOberserverArgs.put("es_cluster","my-cluser");
         mapOfOberserverArgs.put("es_index","objectinfo");
         mapOfOberserverArgs.put("es_type","pcl");
-        mapOfOberserverArgs.put("es_hosts","s200");
+        mapOfOberserverArgs.put("es_hosts","s100_s101_s102");
         HBaseHelper helper = new HBaseHelper();
         try {
             helper.dropTable("ObjectInfo");
