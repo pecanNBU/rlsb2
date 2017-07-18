@@ -16,6 +16,7 @@
         <module>Spark_Streaming</module>
         <module>RocketMQ</module>
         <module>Distribution</module>
+        <module>JNI</module>
     </modules>
 
     <dependencyManagement>

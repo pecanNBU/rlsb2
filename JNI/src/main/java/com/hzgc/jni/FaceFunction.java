@@ -7,7 +7,7 @@ import java.io.*;
 public class FaceFunction {
 
     /**
-     * 特征提取方法
+     * 特征提取方法 （内）（赵喆）
      * @param imageData 将图片转为字节数组传入
      * @return 输出float[]形式的特征值
      */
@@ -40,7 +40,7 @@ public class FaceFunction {
     }
 
     /**
-     * 特征提取方法
+     * 特征提取方法 （内）（赵喆）
      * @param imagePath 传入图片的绝对路径
      * @return 返回float[]形式的特征值
      */
@@ -107,6 +107,7 @@ public class FaceFunction {
     }
 
     /**
+     * 将特征值（float[]）转换为字符串（String）（内）（赵喆）
      *
      * @param feature 传入float[]类型的特征值
      * @return 输出指定编码为ISO-8859-1的String
@@ -129,6 +130,7 @@ public class FaceFunction {
     }
 
     /**
+     * 将特征值（String）转换为特征值（float[]）（内）（赵喆）
      *
      * @param feature 传入编码为ISO-8859-1的String
      * @return 返回float[]类型的特征值
@@ -159,6 +161,7 @@ public class FaceFunction {
     }
 
     /**
+     * 特征值（float[]）比对（内）（赵喆）
      *
      * @param currentFeature 需要被比对的特征值
      * @param historyFeature 库中存储的特征值
