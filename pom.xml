@@ -16,6 +16,8 @@
         <module>Spark_Streaming</module>
         <module>RocketMQ</module>
         <module>Distribution</module>
+        <module>JNI</module>
+        <module>HBase2Es</module>
     </modules>
 
     <dependencyManagement>
@@ -52,17 +54,10 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 
 </project>
