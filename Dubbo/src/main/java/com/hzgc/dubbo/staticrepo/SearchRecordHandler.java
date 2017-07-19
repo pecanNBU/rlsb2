@@ -1,4 +1,4 @@
-package com.hzgc.dubbo.hbase;
+package com.hzgc.dubbo.staticrepo;
 
 public interface SearchRecordHandler {
     /**
