@@ -1,8 +1,8 @@
-package com.hzgc.dubbo.search.capture.search;
+package com.hzgc.dubbo.dynamic.search;
 
 //import com.google.gson.Gson;
 
-import com.gosun.bigdata.service.api.capture.picture.CapturedPicture;
+import com.hzgc.dubbo.dynamic.picture.CapturedPicture;
 
 import java.util.List;
 

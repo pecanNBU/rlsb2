@@ -1,4 +1,4 @@
-package com.hzgc.dubbo.search.capture.picture;
+package com.hzgc.dubbo.dynamic.picture;
 
 /**
  * 图片类型
