@@ -2,7 +2,6 @@ package com.hzgc.dubbo.calculate;
 
 
 public interface DynamicPhotoService {
-
     /**
      * 获取动态图片信息（外）（刘善彬）
      * @param DynamicPhotoID 动态图片ID

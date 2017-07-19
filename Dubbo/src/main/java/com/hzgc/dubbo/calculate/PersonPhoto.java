@@ -2,7 +2,6 @@ package com.hzgc.dubbo.calculate;
 
 
 public class PersonPhoto {
-
     /**
      * 动态人脸照片ID
      */
