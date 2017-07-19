@@ -1,7 +1,4 @@
-package com.hzgc.dubbo.dynamic.service;
-
-import com.hzgc.dubbo.dynamic.search.SearchOption;
-import com.hzgc.dubbo.dynamic.search.SearchResult;
+package com.hzgc.dubbo.dynamic;
 
 import java.util.Map;
 

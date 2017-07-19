@@ -1,4 +1,4 @@
-package com.hzgc.dubbo.dynamic.search;
+package com.hzgc.dubbo.dynamic;
 
 import java.util.Date;
 import java.util.List;

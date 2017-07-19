@@ -1,4 +1,4 @@
-package com.hzgc.dubbo.dynamic.search;
+package com.hzgc.dubbo.dynamic;
 
 /**
  * 一天内的时间区间

@@ -1,4 +1,4 @@
-package com.hzgc.dubbo.dynamic.picture;
+package com.hzgc.dubbo.dynamic;
 
 import java.util.Map;
 

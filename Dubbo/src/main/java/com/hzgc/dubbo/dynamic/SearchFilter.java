@@ -1,4 +1,4 @@
-package com.hzgc.dubbo.dynamic.search;
+package com.hzgc.dubbo.dynamic;
 
 /**
  * 搜索过滤条件
