@@ -10,7 +10,8 @@ public interface ObjectInfoHandler {
      * @param  platformId 表示的是平台的ID， 平台的唯一标识。
      * @param person K-V 对，里面存放的是字段和值之间的一一对应关系,
      *               例如：传入一个Map 里面的值如下map.put("idcard", "450722199502196939")
-     *               表示的是身份证号（idcard）是450722199502196939，其中的K 的具体，请参考给出的数据库字段设计
+     *               表示的是身份证号（idcard）是450722199502196939，
+     *               其中的K 的具体，请参考给出的数据库字段设计
      * @return 返回值为0，表示插入成功，返回值为1，表示插入失败
      */
     public byte addObjectInfo(String platformId, Map<String, String> person);
@@ -41,14 +42,24 @@ public interface ObjectInfoHandler {
      * @param start 需要返回的起始行
      * @param pageSize 需要返回的每页的大小
      * @param serachId 搜索Id
-     * @param serachType 搜索的类型，有如下搜索类型：searchByPlatFormIdAndIdCard（身份证号），searchByRowkey（rowke），
-     *                   serachByCphone(布控人手机号)
-     *                   searchByCreator（布控人），searchByName（多条件查询），searchByMuti（多条件&& 查询）
+     * @param serachType 搜索的类型，有如下搜索类型：
+     * searchByPlatFormIdAndIdCard（身份证号），
+     * searchByRowkey（rowke），
+     * serachByCphone(布控人手机号)
+     * searchByCreator（布控人），
+     * searchByName（多条件查询），
+     * searchByMuti（多条件&& 查询）
      * @param moHuSearch  是否模糊查询
-     * @return 返回一个ObjectSearchResult 对象，里面包含了本次查询ID，查询成功标识，查询照片ID（无照片，此参数为空），结果数，人员信息列表
+     * @return 返回一个ObjectSearchResult 对象，
+     * 里面包含了本次查询ID，查询成功标识，
+     * 查询照片ID（无照片，此参数为空），结果数，人员信息列表
      */
-    public ObjectSearchResult getObjectInfo(String platformId, String idCard, String rowkey, byte[] image, int threshold, List<String> pkeys,
-                                            Map<String, String> rowClomn, long start, long pageSize, int serachId, String serachType,
+    public ObjectSearchResult getObjectInfo(String platformId, String idCard,
+                                            String rowkey, byte[] image,
+                                            int threshold, List<String> pkeys,
+                                            Map<String, String> rowClomn,
+                                            long start, long pageSize,
+                                            int serachId, String serachType,
                                             boolean moHuSearch);
 
     /**
@@ -58,14 +69,18 @@ public interface ObjectInfoHandler {
      * @param moHuSearch  是否模糊查询
      * @param start  返回的查询记录中，从哪一条开始
      * @param pageSize  需要返回的记录数
-     * @return 返回一个ObjectSearchResult 对象，里面包含了本次查询ID，查询成功标识，查询照片ID（无照片，此参数为空），结果数，人员信息列表
+     * @return 返回一个ObjectSearchResult 对象，里面包含了本次查询ID，
+     * 查询成功标识，查询照片ID（无照片，此参数为空），结果数，人员信息列表
      */
-    public ObjectSearchResult searchByPlatFormIdAndIdCard(String platformId, String IdCard, boolean moHuSearch, long start, long pageSize);
+    public ObjectSearchResult searchByPlatFormIdAndIdCard(String platformId,
+                                                          String IdCard, boolean moHuSearch,
+                                                          long start, long pageSize);
 
     /**
      * 根据rowkey 进行查询 （外） （李第亮）
      * @param rowkey  标记一条对象信息的唯一标志。
-     * @return  返回一个ObjectSearchResult 对象，里面包含了本次查询ID，查询成功标识，查询照片ID（无照片，此参数为空），结果数，人员信息列表
+     * @return  返回一个ObjectSearchResult 对象，里面包含了本次查询ID，
+     * 查询成功标识，查询照片ID（无照片，此参数为空），结果数，人员信息列表
      */
     public ObjectSearchResult searchByRowkey(String rowkey);
 
@@ -73,7 +88,8 @@ public interface ObjectInfoHandler {
     /**
      * 根据布控人手机号进行查询  （外） （李第亮）
      * @param cphone 布控人手机号
-     * @return 返回一个ObjectSearchResult 对象，里面包含了本次查询ID，查询成功标识，查询照片ID（无照片，此参数为空），结果数，人员信息列表
+     * @return 返回一个ObjectSearchResult 对象，里面包含了本次查询ID，
+     * 查询成功标识，查询照片ID（无照片，此参数为空），结果数，人员信息列表
      */
     public ObjectSearchResult serachByCphone(String cphone);
 
@@ -84,9 +100,11 @@ public interface ObjectInfoHandler {
      * @param moHuSearch  是否模糊查询
      * @param start  返回的查询记录中，从哪一条开始
      * @param pageSize  需要返回的记录数
-     * @return  返回一个ObjectSearchResult 对象，里面包含了本次查询ID，查询成功标识，查询照片ID（无照片，此参数为空），结果数，人员信息列表
+     * @return  返回一个ObjectSearchResult 对象，
+     * 里面包含了本次查询ID，查询成功标识，查询照片ID（无照片，此参数为空），结果数，人员信息列表
      */
-    public ObjectSearchResult searchByCreator(String creator, boolean moHuSearch, long start, long pageSize);
+    public ObjectSearchResult searchByCreator(String creator, boolean moHuSearch,
+                                              long start, long pageSize);
 
     /**
      * 根据人员信息表中的人员姓名进行查询   （外） （李第亮）
@@ -94,9 +112,11 @@ public interface ObjectInfoHandler {
      * @param moHuSearch  是否模糊查询
      * @param start  返回的查询记录中，从哪一条开始
      * @param pageSize  需要返回的记录数
-     * @return  返回一个ObjectSearchResult 对象，里面包含了本次查询ID，查询成功标识，查询照片ID（无照片，此参数为空），结果数，人员信息列表
+     * @return  返回一个ObjectSearchResult 对象，里面包含了本次查询ID，
+     * 查询成功标识，查询照片ID（无照片，此参数为空），结果数，人员信息列表
      */
-    public ObjectSearchResult searchByName(String name, boolean moHuSearch, long start, long pageSize);
+    public ObjectSearchResult searchByName(String name, boolean moHuSearch,
+                                           long start, long pageSize);
 
     /**
      * 根据图片进行搜索，涉及特征值对比算法，以及该怎么对比。  （外） （李第亮）
@@ -109,7 +129,9 @@ public interface ObjectInfoHandler {
      * @param pageSize  需要返回的记录数
      * @return
      */
-    public ObjectSearchResult serachByPhotoAndThreshold(String platformId, byte[] photo, int threshold, String feature, long start, long pageSize);
+    public ObjectSearchResult serachByPhotoAndThreshold(String platformId, byte[] photo,
+                                                        int threshold, String feature,
+                                                        long start, long pageSize);
 
     /**
      *  根据传进来的图片和人车标志，计算特征值，并且返回  （外） （李第亮）
@@ -121,7 +143,8 @@ public interface ObjectInfoHandler {
 
 
     /**
-     * 根据人员类型keys 进行查询，返回rowkeys 和features ，返回rowkeys 和特征值列表 （内-----To刘善斌） （李第亮）
+     * 根据人员类型keys 进行查询，返回rowkeys 和features ，
+     * 返回rowkeys 和特征值列表 （内-----To刘善斌） （李第亮）
      * @param pkeys
      * @return
      */

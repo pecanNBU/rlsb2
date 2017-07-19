@@ -15,7 +15,9 @@ public class ObjectSearchResult {
     public ObjectSearchResult() {
     }
 
-    public ObjectSearchResult(String searchId, String searchStatus, String photoId, long searchNums, List<ObjectInfo> results) {
+    public ObjectSearchResult(String searchId, String searchStatus,
+                              String photoId, long searchNums,
+                              List<ObjectInfo> results) {
         this.searchId = searchId;
         this.searchStatus = searchStatus;
         this.photoId = photoId;
