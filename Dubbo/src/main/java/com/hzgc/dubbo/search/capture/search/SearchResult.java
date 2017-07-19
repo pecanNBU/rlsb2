@@ -2,7 +2,7 @@ package com.hzgc.dubbo.search.capture.search;
 
 //import com.google.gson.Gson;
 
-import com.gosun.bigdata.service.api.capture.picture.CapturedPicture;
+import com.hzgc.dubbo.search.capture.picture.CapturedPicture;
 
 import java.util.List;
 
