@@ -5,5 +5,6 @@ package com.hzgc.dubbo.dynamic;
  */
 public enum SearchType {
     PERSON,
-    CAR
+    CAR;
 }
+

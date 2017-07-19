@@ -1,5 +1,6 @@
 package com.hzgc.dubbo.dynamic;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  */
 public class SearchOption {
     /**
-     * 搜索类型
+     * 搜索类型，PERSON（人）,CAR（车）
      */
     private SearchType searchType;
     /**
@@ -30,9 +31,9 @@ public class SearchOption {
     /**
      * 搜索的设备范围
      */
-    private List<String> boxChannelIds;
+    private List<String> deviceIds ;
     /**
-     * 平台 Id 优先使用 boxChannelIds 圈定范围
+     * 平台 Id 优先使用 deviceIds 圈定范围
      */
     private String platformId;
     /**
@@ -52,11 +53,114 @@ public class SearchOption {
      */
     private List<SearchFilter> filters;
 
-    public void init() {
-        // 初始化搜索日期
-
+    public SearchType getSearchType() {
+        return searchType;
     }
 
+    public void setSearchType(SearchType searchType) {
+        this.searchType = searchType;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
+    }
+
+    public String getPlateNumber() {
+        return plateNumber;
+    }
+
+    public void setPlateNumber(String plateNumber) {
+        this.plateNumber = plateNumber;
+    }
+
+    public float getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(float threshold) {
+        this.threshold = threshold;
+    }
+
+    public List<String> getDeviceIds() {
+        return deviceIds;
+    }
+
+    public void setDeviceIds(List<String> deviceIds) {
+        this.deviceIds = deviceIds;
+    }
+
+    public String getPlatformId() {
+        return platformId;
+    }
+
+    public void setPlatformId(String platformId) {
+        this.platformId = platformId;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public List<TimeInterval> getIntervals() {
+        return intervals;
+    }
+
+    public void setIntervals(List<TimeInterval> intervals) {
+        this.intervals = intervals;
+    }
+
+    public List<SearchFilter> getFilters() {
+        return filters;
+    }
+
+    public void setFilters(List<SearchFilter> filters) {
+        this.filters = filters;
+    }
+
+    public void init() {
+        // 初始化搜索日期
+    }
+
+    @Override
+    public String toString() {
+        return "SearchOption{" +
+                "searchType=" + searchType +
+                ", image=" + Arrays.toString(image) +
+                ", imageId='" + imageId + '\'' +
+                ", plateNumber='" + plateNumber + '\'' +
+                ", threshold=" + threshold +
+                ", deviceIds=" + deviceIds +
+                ", platformId='" + platformId + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", intervals=" + intervals +
+                ", filters=" + filters +
+                '}';
+    }
 }
 
 

@@ -5,17 +5,13 @@ package com.hzgc.dubbo.dynamic;
  */
 public enum PictureType {
     /**
-     * 默认类型，表示需要进行分析图片类型
-     */
-    DEFAULT(0),
-    /**
      * 人脸图
      */
-    FACE(1),
+    PERSON(0),
     /**
-     * 车辆图
+     *车辆图
      */
-    CAR(100);
+    CAR(1);
 
     private int type;
 
@@ -27,8 +23,12 @@ public enum PictureType {
         return type;
     }
 
+    public void setType(int type) {
+        this.type = type;
+    }
+
     /**
-     * 根据类型值获取 PictureType
+     * 根据类型值获取 PictureType,默认为PERSON
      *
      * @param type 类型值
      * @return PictureType
@@ -39,6 +39,13 @@ public enum PictureType {
                 return pictureType;
             }
         }
-        return PictureType.DEFAULT;
+        return PictureType.PERSON;
+    }
+
+    @Override
+    public String toString() {
+        return "PictureType{" +
+                "type=" + type +
+                '}';
     }
 }

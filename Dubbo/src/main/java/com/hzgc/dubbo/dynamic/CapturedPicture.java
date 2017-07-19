@@ -1,13 +1,15 @@
 package com.hzgc.dubbo.dynamic;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
  * 动态图片定义
  */
 public class CapturedPicture {
+
     /**
-     * 图片 id 用于获取图片
+     * 图片 id (rowkey)用于获取图片
      */
     private String id;
     /**
@@ -30,4 +32,64 @@ public class CapturedPicture {
      * 图片数据
      */
     private byte[] image;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getIpcId() {
+        return ipcId;
+    }
+
+    public void setIpcId(String ipcId) {
+        this.ipcId = ipcId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getSimilarity() {
+        return similarity;
+    }
+
+    public void setSimilarity(int similarity) {
+        this.similarity = similarity;
+    }
+
+    public Map<String, Object> getExtend() {
+        return extend;
+    }
+
+    public void setExtend(Map<String, Object> extend) {
+        this.extend = extend;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "CapturedPicture{" +
+                "id='" + id + '\'' +
+                ", ipcId='" + ipcId + '\'' +
+                ", description='" + description + '\'' +
+                ", similarity=" + similarity +
+                ", extend=" + extend +
+                ", image=" + Arrays.toString(image) +
+                '}';
+    }
 }
