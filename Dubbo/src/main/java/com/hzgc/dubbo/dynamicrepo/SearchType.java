@@ -1,4 +1,4 @@
-package com.hzgc.dubbo.dynamic;
+package com.hzgc.dubbo.dynamicrepo;
 
 /**
  * 搜索类型，搜人或者搜车
