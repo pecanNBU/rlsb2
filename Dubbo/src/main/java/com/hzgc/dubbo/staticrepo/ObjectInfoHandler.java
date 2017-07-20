@@ -14,21 +14,21 @@ public interface ObjectInfoHandler {
      *               其中的K 的具体，请参考给出的数据库字段设计
      * @return 返回值为0，表示插入成功，返回值为1，表示插入失败
      */
-    public byte addObjectInfo(String platformId, Map<String, String> person);
+    public byte addObjectInfo(String platformId, Map<String, Object> person);
 
     /**
      * 删除对象的信息  （外）  （李第亮）
-     * @param Id 具体的一个人员信息的ID，值唯一
+     * @param rowkeys 具体的一个人员信息的ID，值唯一
      * @return 返回值为0，表示删除成功，返回值为1，表示删除失败
      */
-    public int deleteObjectInfo(String Id);
+    public int deleteObjectInfo(List<String> rowkeys);
 
     /**
      * 修改对象的信息   （外）  （李第亮）
      * @param person K-V 对，里面存放的是字段和值之间的一一对应关系，参考添加里的描述
      * @return返回值为0，表示更新成功，返回值为1，表示更新失败
      */
-    public int updateObjectInfo(Map<String, String> person);
+    public int updateObjectInfo(Map<String, Object> person);
 
     /**
      * 可以匹配精确查找，以图搜索人员信息，模糊查找   （外）  （李第亮）
@@ -142,12 +142,6 @@ public interface ObjectInfoHandler {
     public byte[] getEigenValue(String tag, byte[] photo);
 
 
-    /**
-     * 根据人员类型keys 进行查询，返回rowkeys 和features ，
-     * 返回rowkeys 和特征值列表 （内-----To刘善斌） （李第亮）
-     * @param pkeys
-     * @return
-     */
-    public List<Map<String, ObjectInfo>> searchByPkeys(List<String> pkeys);
+
 
 }
