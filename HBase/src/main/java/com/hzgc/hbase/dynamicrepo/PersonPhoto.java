@@ -1,4 +1,4 @@
-package com.hzgc.dubbo.dynamicrepo;
+package com.hzgc.hbase.dynamicrepo;
 
 
 public class PersonPhoto {
@@ -79,7 +79,4 @@ public class PersonPhoto {
     public void setEx(String ex) {
         this.ex = ex;
     }
-
-
-
 }
