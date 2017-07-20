@@ -1,4 +1,4 @@
-package com.hzgc.dubbo.dynamic;
+package com.hzgc.dubbo.dynamicrepo;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package com.hzgc.dubbo.dynamic;
+package com.hzgc.dubbo.dynamicrepo;
 
 /**
  * 图片类型
