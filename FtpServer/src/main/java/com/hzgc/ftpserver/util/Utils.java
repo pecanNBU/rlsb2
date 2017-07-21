@@ -9,7 +9,11 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class Utils {
     private static Logger log = Logger.getLogger(Utils.class);
@@ -146,73 +150,18 @@ public class Utils {
     }
 
     public static String faceNum(String facekey){
-        String column = facekey.substring(facekey.lastIndexOf("_") + 1, facekey.length());
-        char[] chars = column.toCharArray();
-        int a = 0;
-        for (int i = 0; i < column.length(); i++) {
-            if (chars[i] != '0') {
-                a = i;
-                break;
-            }
-        }
-        column = column.substring(a,column.length());
-        //System.out.println("faceColumn = " + column);
-        return column;
+        String faceNum = facekey.substring(facekey.lastIndexOf("_") + 1,facekey.length());
+        return faceNum;
     }
 
     public static String faceRowKey(String faceKey){
-        String rowKeyStr = faceKey.substring(0,faceKey.lastIndexOf("_"));
-        StringBuilder rowkey = new StringBuilder();
-        rowkey.append(rowKeyStr);
-        int rowKeyLen = rowkey.length();
-
-        if (rowKeyLen % 8 != 0){
-            StringBuffer stringBuffer = new StringBuffer();
-            for (int i = 0; i < 7 - rowKeyLen % 8; i++){
-                stringBuffer.insert(0,"0");
-            }
-            rowkey.append("_").append(stringBuffer);
-        }
-
-        //System.out.println("faceRowKey = " + rowkey.toString() + "  faceRowKey.length() = " + rowkey.length());
-        return rowkey.toString();
+        String faceRowKeyStr = faceKey.substring(0,faceKey.lastIndexOf("_"));
+        return faceRowKeyStr;
     }
 
     public static String faceKey(int faceNum,String key){
         StringBuilder faceKey = new StringBuilder();
-        String faceNumStr = faceNum + "";
-
-        if (key != null && key.length() > 0){
-            String[] strs = key.split("_");
-            int piece = strs.length;
-            if (piece == 4){
-                if (faceNumStr.length() <= strs[3].length()){
-                    String faceKeyStr = key.substring(0, key.length() - faceNumStr.length());
-                    faceKey.append(faceKeyStr).append(faceNum);
-                    //System.out.println("faceKey = " + faceKey.toString() + "  faceKey.length() = " + faceKey.length());
-                }else {
-                    String faceKeyStr = key.substring(0, key.lastIndexOf("_"));
-                    faceKey.append(faceKeyStr);
-                    StringBuffer stringBuffer = new StringBuffer();
-                    for (int i = 0; i < 7 - (faceKey.length() + faceNumStr.length()) % 8; i++){
-                        stringBuffer.insert(0,"0");
-                    }
-                    faceKey.append("_").append(stringBuffer).append(faceNum);
-                    //System.out.println("faceKey = " + faceKey + "  faceKey.length() = " + faceKey.length());
-                }
-            }else if (piece == 3){
-                faceKey.append(key).append("_");
-                StringBuilder stringBuilder = new StringBuilder();
-                for (int i = 0; i < 7 - faceNumStr.length(); i++){
-                    stringBuilder.insert(0,"0");
-                }
-                faceKey.append(stringBuilder).append(faceNum);
-                //System.out.println("faceKey = " + faceKey.toString() + "  faceKey.length() = " + faceKey.length());
-            }
-        }else {
-            faceKey.append(faceKey).append(faceNum);
-        }
-
+        faceKey.append(key).append("_").append(faceNum);
         return faceKey.toString();
     }
 
@@ -223,33 +172,58 @@ public class Utils {
             String ipcID = fileName.substring(1,fileName.indexOf("/",2));
             String tempKey = fileName.substring(fileName.lastIndexOf("/"), fileName.lastIndexOf("_")).replace("/","");
             String prefixName = tempKey.substring(tempKey.lastIndexOf("_") + 1, tempKey.length());
-            String timeName = tempKey.substring(0, tempKey.lastIndexOf("_")).replace("_", "");
+            String timeName = tempKey.substring(2, tempKey.lastIndexOf("_")).replace("_", "");
 
-            key = key.append(ipcID).append("_").append(timeName).append("_");
             StringBuffer prefixNameKey = new StringBuffer();
             prefixNameKey = prefixNameKey.append(prefixName).reverse();
-
             if (prefixName.length() < 10){
+                StringBuilder stringBuilder = new StringBuilder();
                 for (int i = 0; i < 10 - prefixName.length(); i++){
-                    prefixNameKey.insert(0,"0");
+                    stringBuilder.insert(0,"0");
                 }
-                key.append(prefixNameKey);
-            }else {
-                key.append(prefixName);
+                prefixNameKey.insert(0,stringBuilder);
             }
 
-            if (key.length() % 8 != 0){
+            if (ipcID.length() == 32){
+                key.append(ipcID).append("_").append(timeName).append("_").append(prefixNameKey);
+            }else if (ipcID.length() == 31){
+                key.append(ipcID).append("__").append(timeName).append("_").append(prefixNameKey);
+            }else if (ipcID.length() <= 30){
                 StringBuffer stringBuffer = new StringBuffer();
-                for (int i = 0; i < 7 - key.length() % 8; i++){
+                for (int i = 0; i < 31 - ipcID.length(); i++){
                     stringBuffer.insert(0,"0");
                 }
-                key.append("_").append(stringBuffer);
+                key.append(ipcID).append("_").append(stringBuffer).append("_").append(timeName).append("_").append(prefixNameKey);
             }
         }else {
             key.append(fileName);
         }
-
-        //System.out.println("key = " + key + " key.length() = " + key.length());
         return key.toString();
+    }
+
+    public static Map getRowKeyMessage(String rowKey){
+        String ipcID = rowKey.substring(0,rowKey.indexOf("_"));
+        String timeStr = rowKey.substring(33,rowKey.lastIndexOf("_"));
+
+        String year = timeStr.substring(0,2);
+        String month = timeStr.substring(2,4);
+        String day = timeStr.substring(4,6);
+        String hour = timeStr.substring(6,8);
+        String minute = timeStr.substring(8,10);
+        String second = timeStr.substring(10,12);
+
+        StringBuilder time = new StringBuilder();
+        time = time.append(20).append(year).append("-").append(month).append("-").append(day).append(" ").append(hour).append(":").append(minute).append(":").append(second);
+        SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+        Map<String,String> map = new HashMap<>();
+        try {
+            Date date = sdf.parse(time.toString());
+            long timeStamp = date.getTime();
+            map.put("ipcID",ipcID);
+            map.put("time",String.valueOf(timeStamp));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 }

@@ -54,9 +54,9 @@ public class WorkerThread implements Runnable {
                 if (null != columnFamily && null != column && null != consumerRecord) {
                     if (columnFamily.equals("FaceImage")){
                         String faceRowKey = Utils.faceRowKey(consumerRecord.key());
-                        System.out.println("faceRowKey = " + faceRowKey);
-                        Put put = new Put(Bytes.toBytes(Utils.faceRowKey(consumerRecord.key())));
-                        put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(Utils.faceNum(consumerRecord.key())),consumerRecord.value());
+                        String faceNum = Utils.faceNum(consumerRecord.key());
+                        Put put = new Put(Bytes.toBytes(faceRowKey));
+                        put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(faceNum),consumerRecord.value());
                         picTable.put(put);
                         System.out.printf(Thread.currentThread().getName() + "topic = %s, offset = %d, key = %s, value = %s, patition = %s\n",
                                 consumerRecord.topic(), consumerRecord.offset(), consumerRecord.key(), consumerRecord.value(), consumerRecord.partition());
