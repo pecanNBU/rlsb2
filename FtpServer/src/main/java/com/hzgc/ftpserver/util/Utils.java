@@ -146,7 +146,17 @@ public class Utils {
     }
 
     public static String faceNum(String facekey){
-        String column = facekey.substring(facekey.lastIndexOf("_") + 1,facekey.length());
+        String column = facekey.substring(facekey.lastIndexOf("_") + 1, facekey.length());
+        char[] chars = column.toCharArray();
+        int a = 0;
+        for (int i = 0; i < column.length(); i++) {
+            if (chars[i] != '0') {
+                a = i;
+                break;
+            }
+        }
+        column = column.substring(a,column.length());
+        //System.out.println("faceColumn = " + column);
         return column;
     }
 
@@ -155,29 +165,62 @@ public class Utils {
         StringBuilder rowkey = new StringBuilder();
         rowkey.append(rowKeyStr);
         int rowKeyLen = rowkey.length();
-        if (rowkey.length() < 48){
-            for (int i = 0; i < 48 - rowKeyLen; i++){
-                rowkey.insert(rowKeyLen ,"0");
+
+        if (rowKeyLen % 8 != 0){
+            StringBuffer stringBuffer = new StringBuffer();
+            for (int i = 0; i < 7 - rowKeyLen % 8; i++){
+                stringBuffer.insert(0,"0");
             }
+            rowkey.append("_").append(stringBuffer);
         }
-        System.out.println("faceRowKey = " + rowkey.toString() + "  faceRowKey.length() = " + rowkey.length());
+
+        //System.out.println("faceRowKey = " + rowkey.toString() + "  faceRowKey.length() = " + rowkey.length());
         return rowkey.toString();
     }
 
     public static String faceKey(int faceNum,String key){
-        StringBuilder faceNumStr = new StringBuilder();
-        faceNumStr.append(faceNum);
-        String faceKeyStr = key.substring(0,key.length() - faceNumStr.length() - 1);
         StringBuilder faceKey = new StringBuilder();
-        faceKey.append(faceKeyStr).append("_").append(faceNum);
-        System.out.println("faceKey = " + faceKey.toString() + "  faceKey.length() = " + faceKey.length());
+        String faceNumStr = faceNum + "";
+
+        if (key != null && key.length() > 0){
+            String[] strs = key.split("_");
+            int piece = strs.length;
+            if (piece == 4){
+                if (faceNumStr.length() <= strs[3].length()){
+                    String faceKeyStr = key.substring(0, key.length() - faceNumStr.length());
+                    faceKey.append(faceKeyStr).append(faceNum);
+                    //System.out.println("faceKey = " + faceKey.toString() + "  faceKey.length() = " + faceKey.length());
+                }else {
+                    String faceKeyStr = key.substring(0, key.lastIndexOf("_"));
+                    faceKey.append(faceKeyStr);
+                    StringBuffer stringBuffer = new StringBuffer();
+                    for (int i = 0; i < 7 - (faceKey.length() + faceNumStr.length()) % 8; i++){
+                        stringBuffer.insert(0,"0");
+                    }
+                    faceKey.append("_").append(stringBuffer).append(faceNum);
+                    //System.out.println("faceKey = " + faceKey + "  faceKey.length() = " + faceKey.length());
+                }
+            }else if (piece == 3){
+                faceKey.append(key).append("_");
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int i = 0; i < 7 - faceNumStr.length(); i++){
+                    stringBuilder.insert(0,"0");
+                }
+                faceKey.append(stringBuilder).append(faceNum);
+                //System.out.println("faceKey = " + faceKey.toString() + "  faceKey.length() = " + faceKey.length());
+            }
+        }else {
+            faceKey.append(faceKey).append(faceNum);
+        }
+
         return faceKey.toString();
     }
+
     public static String transformNameToKey(String fileName) {
         StringBuilder key = new StringBuilder();
 
-        if(null != fileName && fileName.length() >0){
-            String ipcID = fileName.substring(1,fileName.lastIndexOf("/"));
+        if(fileName != null && fileName.length() >0){
+            String ipcID = fileName.substring(1,fileName.indexOf("/",2));
             String tempKey = fileName.substring(fileName.lastIndexOf("/"), fileName.lastIndexOf("_")).replace("/","");
             String prefixName = tempKey.substring(tempKey.lastIndexOf("_") + 1, tempKey.length());
             String timeName = tempKey.substring(0, tempKey.lastIndexOf("_")).replace("_", "");
@@ -185,26 +228,28 @@ public class Utils {
             key = key.append(ipcID).append("_").append(timeName).append("_");
             StringBuffer prefixNameKey = new StringBuffer();
             prefixNameKey = prefixNameKey.append(prefixName).reverse();
+
             if (prefixName.length() < 10){
                 for (int i = 0; i < 10 - prefixName.length(); i++){
                     prefixNameKey.insert(0,"0");
                 }
-                key.append(prefixNameKey).append("_");
+                key.append(prefixNameKey);
             }else {
-                key.append(prefixName).append("_");
+                key.append(prefixName);
             }
 
-            if (key.length() < 48){
+            if (key.length() % 8 != 0){
                 StringBuffer stringBuffer = new StringBuffer();
-                for (int i = 0; i < 48 - key.length(); i++){
+                for (int i = 0; i < 7 - key.length() % 8; i++){
                     stringBuffer.insert(0,"0");
                 }
-                key.append(stringBuffer);
+                key.append("_").append(stringBuffer);
             }
         }else {
             key.append(fileName);
         }
-        System.out.println("key = " + key + " key.length() = " + key.length());
+
+        //System.out.println("key = " + key + " key.length() = " + key.length());
         return key.toString();
     }
 }
