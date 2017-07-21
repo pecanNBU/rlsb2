@@ -37,6 +37,7 @@ public interface ObjectInfoHandler {
      * 可以匹配精确查找，以图搜索人员信息，模糊查找   （外）（李第亮）
      * @param platformId 对应的是平台的ID
      * @param idCard 身份证号
+     * @param name 人员姓名
      * @param rowkey 对应的是一个人在HBase 数据库中的唯一标志
      * @param image  传过来的图片
      * @param threshold  图片比对的阈值
@@ -54,7 +55,7 @@ public interface ObjectInfoHandler {
      * @param moHuSearch  是否模糊查询
      * @return 返回搜索所需要的结果封装成的对象，包含搜索id，成功与否标志，记录数，记录信息，照片id
      */
-    public ObjectSearchResult getObjectInfo(String platformId, String idCard,
+    public ObjectSearchResult getObjectInfo(String platformId, String name, String idCard,
                                             String rowkey, byte[] image,
                                             int threshold, List<String> pkeys,
                                             String creator, String cphone,
