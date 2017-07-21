@@ -1,4 +1,4 @@
-package com.hzgc.hbase.dynamicrepo;
+package com.hzgc.dubbo.dynamicrepo;
 
 
 public class PersonPhoto {

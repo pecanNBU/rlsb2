@@ -17,5 +17,4 @@ public interface SearchRecordHandler {
      * @return 返回查询的照片
      */
     public byte[] getSearchPhoto(String rowkey);
-
 }
