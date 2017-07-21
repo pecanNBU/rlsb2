@@ -156,7 +156,7 @@ public class Utils {
             }
         }
         column = column.substring(a,column.length());
-        System.out.println("faceColumn = " + column);
+        //System.out.println("faceColumn = " + column);
         return column;
     }
 
@@ -174,7 +174,7 @@ public class Utils {
             rowkey.append("_").append(stringBuffer);
         }
 
-        System.out.println("faceRowKey = " + rowkey.toString() + "  faceRowKey.length() = " + rowkey.length());
+        //System.out.println("faceRowKey = " + rowkey.toString() + "  faceRowKey.length() = " + rowkey.length());
         return rowkey.toString();
     }
 
@@ -189,7 +189,7 @@ public class Utils {
                 if (faceNumStr.length() <= strs[3].length()){
                     String faceKeyStr = key.substring(0, key.length() - faceNumStr.length());
                     faceKey.append(faceKeyStr).append(faceNum);
-                    System.out.println("faceKey = " + faceKey.toString() + "  faceKey.length() = " + faceKey.length());
+                    //System.out.println("faceKey = " + faceKey.toString() + "  faceKey.length() = " + faceKey.length());
                 }else {
                     String faceKeyStr = key.substring(0, key.lastIndexOf("_"));
                     faceKey.append(faceKeyStr);
@@ -198,7 +198,7 @@ public class Utils {
                         stringBuffer.insert(0,"0");
                     }
                     faceKey.append("_").append(stringBuffer).append(faceNum);
-                    System.out.println("faceKey = " + faceKey + "  faceKey.length() = " + faceKey.length());
+                    //System.out.println("faceKey = " + faceKey + "  faceKey.length() = " + faceKey.length());
                 }
             }else if (piece == 3){
                 faceKey.append(key).append("_");
@@ -207,7 +207,7 @@ public class Utils {
                     stringBuilder.insert(0,"0");
                 }
                 faceKey.append(stringBuilder).append(faceNum);
-                System.out.println("faceKey = " + faceKey.toString() + "  faceKey.length() = " + faceKey.length());
+                //System.out.println("faceKey = " + faceKey.toString() + "  faceKey.length() = " + faceKey.length());
             }
         }else {
             faceKey.append(faceKey).append(faceNum);
@@ -249,7 +249,7 @@ public class Utils {
             key.append(fileName);
         }
 
-        System.out.println("key = " + key + " key.length() = " + key.length());
+        //System.out.println("key = " + key + " key.length() = " + key.length());
         return key.toString();
     }
 }
