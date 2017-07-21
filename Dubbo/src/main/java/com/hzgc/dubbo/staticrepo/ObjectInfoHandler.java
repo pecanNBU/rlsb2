@@ -139,7 +139,7 @@ public interface ObjectInfoHandler {
      * @param photo  照片byte 数组
      * @return  照片的特征值
      */
-    public byte[] getEigenValue(String tag, byte[] photo);
+    public String getEigenValue(String tag, byte[] photo);
 
 
 
