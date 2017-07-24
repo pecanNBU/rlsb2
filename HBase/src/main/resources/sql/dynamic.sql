@@ -94,7 +94,7 @@ create 'car',
 |  特征    |   f        |
 -------------------------
 
-create 'upPerFeature',
+create 'upperfea',
 {NAME => 'i', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', COMPRESSION =>
 'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '524280',
  IN_MEMORY => 'true', BLOCKCACHE => 'true'}
@@ -110,7 +110,7 @@ create 'upPerFeature',
 |  特征    |   f        |
 -------------------------
 
-create 'upCarFeature',
+create 'upcarfea',
 {NAME => 'i', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', COMPRESSION =>
 'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '524280',
  IN_MEMORY => 'true', BLOCKCACHE => 'true'}
