@@ -161,25 +161,6 @@ public class FaceFunction {
     }
 
     /**
-     * 特征值（float[]）比对（内）（赵喆）
-     *
-     * @param currentFeature 需要被比对的特征值
-     * @param historyFeature 库中存储的特征值
-     * @return 返回double类型的相似度
-     */
-    public static double featureCompare(float[] currentFeature, float[] historyFeature) {
-        double similarityDegree = 0;
-        double currentFeatureMultiple = 0;
-        double historyFeatureMultiple = 0;
-        for (int i = 0; i < currentFeature.length; i++) {
-            similarityDegree = similarityDegree + currentFeature[i] * historyFeature[i];
-            currentFeatureMultiple = currentFeatureMultiple + Math.pow(currentFeature[i], 2);
-            historyFeatureMultiple = historyFeatureMultiple + Math.pow(historyFeature[i], 2);
-        }
-        return similarityDegree / Math.sqrt(currentFeatureMultiple) / Math.sqrt(historyFeatureMultiple);
-    }
-
-    /**
      * 内部方法：将字节数组转为float
      * @param featureByte 传入字节数组
      * @param index 从指定位置开始读取4个字节
