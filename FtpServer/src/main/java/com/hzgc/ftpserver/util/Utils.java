@@ -4,8 +4,6 @@ import com.hzgc.ftpserver.local.LocalOverFtpServer;
 import org.apache.ftpserver.util.IoUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.*;
 import java.net.URL;
@@ -88,24 +86,6 @@ public class Utils {
         } finally {
             IoUtils.close(printWriter);
             IoUtils.close(fileWriter);
-        }
-    }
-
-    public static void analysisJsonFile(String jsonContext) {
-        JSONArray jsonArray = new JSONArray(jsonContext);
-        int jsonSize = jsonArray.length();
-        System.out.println("Size:" + jsonSize);
-        for (int i = 0; i < jsonSize; i++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
-            Iterator iterable = jsonObject.keys();
-            while (iterable.hasNext()) {
-                String key = (String) iterable.next();
-                String value = jsonObject.get(key).toString();
-                if (value.startsWith("[") && value.endsWith("]")) {
-                    analysisJsonFile(value);
-                }
-                System.out.println(key + "=" + value);
-            }
         }
     }
 
