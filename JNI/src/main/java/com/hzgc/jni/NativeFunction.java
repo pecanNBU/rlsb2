@@ -7,7 +7,9 @@ public class NativeFunction {
 
     public static native void destory();
 
+    public static native float compare(float[] currentFeature, float[] historyFeature);
+
     static {
-        System.loadLibrary("Face");
+        System.loadLibrary("FaceLib");
     }
 }

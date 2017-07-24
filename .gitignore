@@ -3,3 +3,4 @@
 target/
 *.swp
 .idea/vcs.xml
+javadocs/

@@ -24,7 +24,6 @@ public interface CapturePictureSearchService {
 
     SearchResult getSearchResult(String searchId, int offset, int count);
 
-
     /**
      * 查看人、车图片有哪些属性
      *
@@ -41,5 +40,4 @@ public interface CapturePictureSearchService {
      * @return 以二进制数组的形式返回图片
      */
     byte[] getPicture(String imageId, int type);
-
 }

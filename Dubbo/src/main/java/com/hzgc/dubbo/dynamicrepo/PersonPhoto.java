@@ -79,7 +79,4 @@ public class PersonPhoto {
     public void setEx(String ex) {
         this.ex = ex;
     }
-
-
-
 }
