@@ -15,14 +15,12 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     private static Logger logger = Logger.getLogger(String.valueOf(ObjectInfoHandlerImpl.class));
     @Override
     public byte addObjectInfo(String platformId, Map<String, Object> person) {
-        // 或者所有的字段fieldset，转化为List 列表的fieldlist 方便后续处理
         Set<String> fieldset = person.keySet();
         List<String> fieldlist = new ArrayList<String>();
         Iterator<String> it = fieldset.iterator();
         while (it.hasNext()){
             fieldlist.add(it.next());
         }
-        // 拼装rowkey
         String rowkey = UUID.randomUUID().toString().replace("-","");
         // 获取table 对象，通过封装HBaseHelper 来获取
         HBaseHelper helper = new HBaseHelper();
@@ -56,7 +54,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             e.printStackTrace();
             return 1;
         } finally {
-            // 关闭表格和链接对象。
+            // 关闭表格和连接对象。
             try {
                 objectinfo.close();
             } catch (IOException e) {
@@ -70,7 +68,6 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         // 获取table 对象，通过封装HBaseHelper 来获取
         HBaseHelper helper = new HBaseHelper();
         Table table = helper.getTable("objectinfo");
-        //封装删除的List
         List<Delete> deletes = new ArrayList<Delete>();
         Delete delete = null;
         for (String rowkey: rowkeys){
@@ -95,12 +92,10 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
 
     @Override
     public int updateObjectInfo(Map<String, Object> person)  {
-        // 获取table 对象，通过封装HBaseHelper 来获取,先修改，然后把身份证
+        // 获取table 对象，通过封装HBaseHelper 来获取
         HBaseHelper helper = new HBaseHelper();
         Table table = helper.getTable("objectinfo");
-        Table tablefeature = helper.getTable("feature");
         String id = (String) person.get("id");
-        // 解析穿过来的person对象,把获取字段名字。
         Set<String> fieldset = person.keySet();
         Iterator<String> it = fieldset.iterator();
         List<String> fieldlist = new ArrayList<String>();
@@ -124,7 +119,6 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         }finally {
             try {
                 table.close();
-                tablefeature.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
