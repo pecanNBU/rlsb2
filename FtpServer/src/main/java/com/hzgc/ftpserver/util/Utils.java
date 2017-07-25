@@ -149,19 +149,17 @@ public class Utils {
         return picType;
     }
 
-    public static String faceNum(String facekey){
-        String faceNum = facekey.substring(facekey.lastIndexOf("_") + 1,facekey.length());
-        return faceNum;
-    }
-
-    public static String faceRowKey(String faceKey){
-        String faceRowKeyStr = faceKey.substring(0,faceKey.lastIndexOf("_"));
-        return faceRowKeyStr;
-    }
-
     public static String faceKey(int faceNum,String key){
         StringBuilder faceKey = new StringBuilder();
-        faceKey.append(key).append("_").append(faceNum);
+        if (faceNum < 10){
+            key = key.substring(0,key.lastIndexOf("_"));
+            faceKey.append(key).append("_0").append(faceNum);
+        }else if (faceNum >= 10 && faceNum < 100){
+            key = key.substring(0,key.lastIndexOf("_"));
+            faceKey.append(key).append("_").append(faceNum);
+        }else{
+            faceKey.append(key);
+        }
         return faceKey.toString();
     }
 
@@ -185,15 +183,15 @@ public class Utils {
             }
 
             if (ipcID.length() == 32){
-                key.append(ipcID).append("_").append(timeName).append("_").append(prefixNameKey);
+                key.append(ipcID).append("_").append(timeName).append("_").append(prefixNameKey).append("_00");
             }else if (ipcID.length() == 31){
-                key.append(ipcID).append("__").append(timeName).append("_").append(prefixNameKey);
+                key.append(ipcID).append("__").append(timeName).append("_").append(prefixNameKey).append("_00");
             }else if (ipcID.length() <= 30){
                 StringBuffer stringBuffer = new StringBuffer();
                 for (int i = 0; i < 31 - ipcID.length(); i++){
                     stringBuffer.insert(0,"0");
                 }
-                key.append(ipcID).append("_").append(stringBuffer).append("_").append(timeName).append("_").append(prefixNameKey);
+                key.append(ipcID).append("_").append(stringBuffer).append("_").append(timeName).append("_").append(prefixNameKey).append("_00");
             }
         }else {
             key.append(fileName);

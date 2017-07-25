@@ -126,7 +126,9 @@ public class KafkaSTOR extends AbstractCommand {
                         transSz = value.toByteArray().length;
                     } else if (Utils.pickPicture(fileName) > 0) {
                         LOG.info("Kafka Producer Send message[" + file.getName() + "] to Kafka");
-                        kafkaProducer.sendKafkaMessage(kafkaProducer.getFace(), Utils.faceKey(Utils.pickPicture(fileName), key), value.toByteArray());
+                        int faceNum = Utils.pickPicture(fileName);
+                        String faceKey = Utils.faceKey(faceNum,key);
+                        kafkaProducer.sendKafkaMessage(kafkaProducer.getFace(), faceKey, value.toByteArray());
                         transSz = value.toByteArray().length;
                     } else {
                         LOG.info("Contains illegal file[" + file.getName()  + "], write to local default");
