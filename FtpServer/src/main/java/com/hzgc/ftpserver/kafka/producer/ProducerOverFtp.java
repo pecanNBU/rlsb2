@@ -16,9 +16,10 @@ public class ProducerOverFtp {
     private static KafkaProducer kafkaProducer;
     private Properties kafkaPropers = new Properties();
     private FileInputStream fis;
-    private static  String PICTURE = "picture";
-    private static  String FACE = "face";
-    private static  String JSON = "json";
+    private static String PICTURE = "picture";
+    private static String FACE = "face";
+    private static String JSON = "json";
+
     public ProducerOverFtp() {
         try {
             File file = FtpUtil.loadResourceFile("producer-over-ftp.properties");

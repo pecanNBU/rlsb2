@@ -17,7 +17,7 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
 
-public class LocalIODataConnection implements DataConnection{
+public class LocalIODataConnection implements DataConnection {
     private final Logger LOG = LoggerFactory
             .getLogger(LocalIODataConnection.class);
 
@@ -31,7 +31,7 @@ public class LocalIODataConnection implements DataConnection{
     private ServerDataConnectionFactory factory;
 
     public LocalIODataConnection(final Socket socket, final FtpIoSession session,
-                            final ServerDataConnectionFactory factory) {
+                                 final ServerDataConnectionFactory factory) {
         this.session = session;
         this.socket = socket;
         this.factory = factory;
@@ -110,7 +110,7 @@ public class LocalIODataConnection implements DataConnection{
     }
 
     public final long transferFromClient(FtpSession session, final InputStream is
-            ,final OutputStream out) throws IOException {
+            , final OutputStream out) throws IOException {
         TransferRateRequest transferRateRequest = new TransferRateRequest();
         transferRateRequest = (TransferRateRequest) session.getUser()
                 .authorize(transferRateRequest);
@@ -246,22 +246,22 @@ public class LocalIODataConnection implements DataConnection{
                 if (isAscii) {
                     for (int i = 0; i < count; ++i) {
                         byte b = buff[i];
-                        if(isWrite) {
+                        if (isWrite) {
                             if (b == '\n' && lastByte != '\r') {
                                 bos.write('\r');
                             }
 
                             bos.write(b);
                         } else {
-                            if(b == '\n') {
+                            if (b == '\n') {
                                 // for reads, we should always get \r\n
                                 // so what we do here is to ignore \n bytes
                                 // and on \r dump the system local line ending
                                 // Some clients won't transform new lines into \r\n so we make sure we don't delete new lines
-                                if (lastByte != '\r'){
+                                if (lastByte != '\r') {
                                     bos.write(EOL);
                                 }
-                            } else if(b == '\r') {
+                            } else if (b == '\r') {
                                 bos.write(EOL);
                             } else {
                                 // not a line ending, just output
@@ -279,11 +279,11 @@ public class LocalIODataConnection implements DataConnection{
 
                 notifyObserver();
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             LOG.warn("Exception during data transfer, closing data connection socket", e);
             factory.closeDataConnection();
             throw e;
-        } catch(RuntimeException e) {
+        } catch (RuntimeException e) {
             LOG.warn("Exception during data transfer, closing data connection socket", e);
             factory.closeDataConnection();
             throw e;

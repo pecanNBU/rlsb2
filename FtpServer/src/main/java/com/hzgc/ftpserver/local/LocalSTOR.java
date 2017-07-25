@@ -13,7 +13,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-public class LocalSTOR extends AbstractCommand{
+public class LocalSTOR extends AbstractCommand {
     private final Logger LOG = LoggerFactory.getLogger(LocalSTOR.class);
 
     /**
@@ -91,7 +91,7 @@ public class LocalSTOR extends AbstractCommand{
 
             LocalIODataConnection dataConnection;
             try {
-                IODataConnectionFactory customConnFactory = (IODataConnectionFactory)session.getDataConnection();
+                IODataConnectionFactory customConnFactory = (IODataConnectionFactory) session.getDataConnection();
                 dataConnection = new LocalIODataConnection(customConnFactory.createDataSocket(), customConnFactory.getSession(), customConnFactory);
             } catch (Exception e) {
                 LOG.info("Exception getting the input data stream", e);
@@ -123,7 +123,7 @@ public class LocalSTOR extends AbstractCommand{
                 }
                 // attempt to close the output stream so that errors in
                 // closing it will return an error to the client (FTPSERVER-119)
-                if(outStream != null) {
+                if (outStream != null) {
                     outStream.close();
                 }
 

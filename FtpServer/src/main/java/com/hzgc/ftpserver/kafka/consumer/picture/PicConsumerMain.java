@@ -11,6 +11,7 @@ public class PicConsumerMain {
     private static Logger log = Logger.getLogger(PicConsumerMain.class);
     private static File resourceFile;
     private static Properties propers = new Properties();
+
     public static void main(String args[]) {
         try {
             resourceFile = FtpUtil.loadResourceFile("consumer-picture.properties");

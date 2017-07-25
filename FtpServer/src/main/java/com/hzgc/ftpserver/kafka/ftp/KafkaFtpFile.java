@@ -19,7 +19,7 @@ public class KafkaFtpFile implements FtpFile {
     private User user;
 
     protected KafkaFtpFile(final String fileName, final File file,
-                            final User user) {
+                           final User user) {
         if (fileName == null) {
             throw new IllegalArgumentException("fileName can not be null");
         }

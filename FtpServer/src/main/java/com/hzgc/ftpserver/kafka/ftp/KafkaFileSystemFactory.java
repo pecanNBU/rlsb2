@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 
-public class KafkaFileSystemFactory implements FileSystemFactory{
+public class KafkaFileSystemFactory implements FileSystemFactory {
     private final Logger LOG = Logger.getLogger(KafkaFileSystemFactory.class);
 
     private boolean createHome;
