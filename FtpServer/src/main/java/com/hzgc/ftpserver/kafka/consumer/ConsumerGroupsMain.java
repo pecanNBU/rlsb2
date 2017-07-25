@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 public class ConsumerGroupsMain {
     private static Logger LOG = Logger.getLogger(ConsumerGroupsMain.class);
     private static ExecutorService executors;
+
     public static void main(String argsp[]) {
         LOG.info("Start create the hbase connection ");
         try {
