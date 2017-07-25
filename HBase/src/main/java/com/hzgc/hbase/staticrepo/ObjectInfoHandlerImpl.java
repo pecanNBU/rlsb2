@@ -43,9 +43,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         String dateString = format.format(date);
         put.addColumn(Bytes.toBytes("person"), Bytes.toBytes("createtime"), Bytes.toBytes(dateString));
         put.addColumn(Bytes.toBytes("person"), Bytes.toBytes("updatetime"), Bytes.toBytes(dateString));
-
-        put.addColumn(Bytes.toBytes("person"),Bytes.toBytes("feature"),
-                (byte[]) person.get("feature"));
+        put.addColumn(Bytes.toBytes("person"), Bytes.toBytes("platformId"), Bytes.toBytes(platformId));
         // 执行Put 操作，往表格里面添加一行数据
         try {
             objectinfo.put(put);
