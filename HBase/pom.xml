@@ -19,6 +19,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-client</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.hzgc</groupId>
             <artifactId>dubbo</artifactId>
             <version>1.0</version>

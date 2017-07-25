@@ -1,7 +1,7 @@
 package com.hzgc.ftpserver.local;
 
 import com.hzgc.ftpserver.ClusterOverFtp;
-import com.hzgc.ftpserver.util.Utils;
+import com.hzgc.ftpserver.util.FtpUtil;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.ftplet.FtpException;
@@ -25,7 +25,7 @@ public class LocalOverFtpServer extends ClusterOverFtp {
         // set customer user manager
         LocalPropertiesUserManagerFactory userManagerFactory = new LocalPropertiesUserManagerFactory();
         try {
-            userManagerFactory.setFile(Utils.loadResourceFile("users.properties"));
+            userManagerFactory.setFile(FtpUtil.loadResourceFile("users.properties"));
         } catch (Exception e) {
             e.printStackTrace();
         }

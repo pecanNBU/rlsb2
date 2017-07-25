@@ -1,6 +1,5 @@
 package com.hzgc.ftpserver.util;
 
-import com.hzgc.ftpserver.local.LocalOverFtpServer;
 import org.apache.ftpserver.util.IoUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -10,21 +9,18 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-public class Utils {
-    private static Logger log = Logger.getLogger(Utils.class);
-    public static File jsonLogPath;
+public class FtpUtil {
+    private static Logger LOG = Logger.getLogger(FtpUtil.class);
 
     public static boolean checkPort(int checkPort) throws Exception {
         return checkPort > 1024;
     }
-    
 
     public static File loadResourceFile(String resourceName) throws Exception{
         if (false) {
-            URL resource = LocalOverFtpServer.class.getResource("/conf/");
+            URL resource = FtpUtil.class.getResource("/");
             String confPath = resource.getPath();
             confPath = confPath.substring(5, confPath.lastIndexOf("/lib"));
             confPath = confPath + "/conf/";
@@ -33,65 +29,25 @@ public class Utils {
             PropertyConfigurator.configure(confPath + "/com/hzgc/com.hzgc.ftpserver/log4j.properties");
             PropertyConfigurator.configure(confPath + "/hbase-site.xml");
             if (!sourceFile.exists()) {
-                log.error("The local resource file:" + new File(confPath).getAbsolutePath()
+                LOG.error("The local resource file:" + new File(confPath).getAbsolutePath()
                         + "/" + resourceName + " is not found, " +
                         "please check it, System exit.");
                 System.exit(1);
             }
-            log.info("The resource file:" + new File(confPath).getAbsolutePath() + "was load successfull");
+            LOG.info("The resource file:" + new File(confPath).getAbsolutePath() + "was load successfull");
             return sourceFile;
         } else {
-            URL resource = LocalOverFtpServer.class.
-                    getResource("/conf/" + resourceName);
+            URL resource = FtpUtil.class.getResource("/" + resourceName);
             if (resource != null) {
                 return new File(resource.getFile());
             }
         }
-        log.error("Can not find rsource file:/conf" + resourceName);
+        LOG.error("Can not find rsource file:" + FtpUtil.class.getResource("/") + resourceName);
         return null;
-    }
-
-
-    public static String loadJsonFile(InputStream is) {
-//        BufferedInputStream bis;
-        BufferedReader reader = null;
-        StringBuilder strBuff = new StringBuilder();
-        try {
-//            bis = new BufferedInputStream(is);
-            InputStreamReader isr = new InputStreamReader(is, "UTF-8");
-            reader = new BufferedReader(isr);
-            String tempStr;
-            while ((tempStr = reader.readLine()) != null) {
-                strBuff.append(tempStr);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                IoUtils.close(reader);
-            }
-        }
-        return strBuff.toString();
-    }
-
-    public static void writeJsonLog(String jsonContext) {
-        FileWriter fileWriter = null;
-        PrintWriter printWriter = null;
-        try {
-            fileWriter = new FileWriter(jsonLogPath, true);
-            printWriter = new PrintWriter(fileWriter);
-            printWriter.println(jsonContext);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            IoUtils.close(printWriter);
-            IoUtils.close(fileWriter);
-        }
     }
 
     public static ByteArrayOutputStream inputStreamCacher(InputStream is){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ByteArrayInputStream bais = null;
         byte[] buffer = new byte[4096];
         int len;
         try {
@@ -100,7 +56,7 @@ public class Utils {
             }
             baos.flush();
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } finally {
             IoUtils.close(baos);
             IoUtils.close(is);
@@ -167,7 +123,7 @@ public class Utils {
             }else if (ipcID.length() == 31){
                 key.append(ipcID).append("__").append(timeName).append("_").append(prefixNameKey).append("_00");
             }else if (ipcID.length() <= 30){
-                StringBuffer stringBuffer = new StringBuffer();
+                StringBuilder stringBuffer = new StringBuilder();
                 for (int i = 0; i < 31 - ipcID.length(); i++){
                     stringBuffer.insert(0,"0");
                 }

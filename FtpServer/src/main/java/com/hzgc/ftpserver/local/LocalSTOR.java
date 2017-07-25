@@ -1,7 +1,7 @@
 package com.hzgc.ftpserver.local;
 
 
-import com.hzgc.ftpserver.util.Utils;
+import com.hzgc.ftpserver.util.FtpUtil;
 import org.apache.ftpserver.command.AbstractCommand;
 import org.apache.ftpserver.ftplet.*;
 import org.apache.ftpserver.impl.*;
@@ -112,10 +112,10 @@ public class LocalSTOR extends AbstractCommand{
                 //parsing JSON files
                 if (file.getName().contains(".json")) {
                     InputStream is = dataConnection.getDataInputStream();
-                    baos = Utils.inputStreamCacher(is);
+                    baos = FtpUtil.inputStreamCacher(is);
                     bais = new ByteArrayInputStream(baos.toByteArray());
-                    //String jsonStr = Utils.loadJsonFile(bais);
-                    //Utils.writeJsonLog("[" + jsonStr + "]");
+                    //String jsonStr = FtpUtil.loadJsonFile(bais);
+                    //FtpUtil.writeJsonLog("[" + jsonStr + "]");
                     transSz = dataConnection.
                             transferFromClient(session.getFtpletSession(), new BufferedInputStream(bais), outStream);
                 } else {

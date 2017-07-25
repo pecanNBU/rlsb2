@@ -2,7 +2,7 @@ package com.hzgc.ftpserver.kafka.ftp;
 
 import com.hzgc.ftpserver.kafka.producer.ProducerOverFtp;
 import com.hzgc.ftpserver.local.LocalIODataConnection;
-import com.hzgc.ftpserver.util.Utils;
+import com.hzgc.ftpserver.util.FtpUtil;
 import org.apache.ftpserver.command.AbstractCommand;
 import org.apache.ftpserver.ftplet.*;
 import org.apache.ftpserver.impl.*;
@@ -107,27 +107,27 @@ public class KafkaSTOR extends AbstractCommand {
             try {
                 ByteArrayOutputStream value;
                 InputStream is = dataConnection.getDataInputStream();
-                value = Utils.inputStreamCacher(is);
+                value = FtpUtil.inputStreamCacher(is);
                 String key;
                 ProducerOverFtp kafkaProducer = kafkaContext.getProducerOverFtp();
                 long transSz;
                 //parsing JSON files
                 if (file.getName().contains(".json")) {
-                    key = Utils.transformNameToKey(fileName);
+                    key = FtpUtil.transformNameToKey(fileName);
                     LOG.info("Kafka Producer Send message[" + file.getName() + "] to Kafka");
                     kafkaProducer.sendKafkaMessage(kafkaProducer.getJson(), key, value.toByteArray());
                     transSz = value.toByteArray().length;
                 } else if (fileName.contains(".jpg")) {
-                    key = Utils.transformNameToKey(fileName);
+                    key = FtpUtil.transformNameToKey(fileName);
                     //it is picture
-                    if (Utils.pickPicture(fileName) == 0) {
+                    if (FtpUtil.pickPicture(fileName) == 0) {
                         LOG.info("Kafka Producer Send message[" + file.getName() + "] to Kafka");
                         kafkaProducer.sendKafkaMessage(kafkaProducer.getPicture(), key, value.toByteArray());
                         transSz = value.toByteArray().length;
-                    } else if (Utils.pickPicture(fileName) > 0) {
+                    } else if (FtpUtil.pickPicture(fileName) > 0) {
                         LOG.info("Kafka Producer Send message[" + file.getName() + "] to Kafka");
-                        int faceNum = Utils.pickPicture(fileName);
-                        String faceKey = Utils.faceKey(faceNum,key);
+                        int faceNum = FtpUtil.pickPicture(fileName);
+                        String faceKey = FtpUtil.faceKey(faceNum,key);
                         kafkaProducer.sendKafkaMessage(kafkaProducer.getFace(), faceKey, value.toByteArray());
                         transSz = value.toByteArray().length;
                     } else {

@@ -1,6 +1,6 @@
 package com.hzgc.ftpserver.kafka.consumer.picture;
 
-import com.hzgc.ftpserver.util.Utils;
+import com.hzgc.ftpserver.util.FtpUtil;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -13,7 +13,7 @@ public class PicConsumerMain {
     private static Properties propers = new Properties();
     public static void main(String args[]) {
         try {
-            resourceFile = Utils.loadResourceFile("consumer-picture.properties");
+            resourceFile = FtpUtil.loadResourceFile("consumer-picture.properties");
             if (resourceFile != null) {
                 propers.load(new FileInputStream(resourceFile));
             }
