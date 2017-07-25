@@ -31,6 +31,14 @@ JNIEXPORT void JNICALL Java_com_hzgc_jni_NativeFunction_init
 JNIEXPORT void JNICALL Java_com_hzgc_jni_NativeFunction_destory
   (JNIEnv *, jclass);
 
+/*
+ * Class:     com_hzgc_jni_NativeFunction
+ * Method:    compare
+ * Signature: ([F[F)F
+ */
+JNIEXPORT jfloat JNICALL Java_com_hzgc_jni_NativeFunction_compare
+  (JNIEnv *, jclass, jfloatArray, jfloatArray);
+
 #ifdef __cplusplus
 }
 #endif

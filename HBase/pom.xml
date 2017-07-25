@@ -18,6 +18,11 @@
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.hzgc</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
 </project>
