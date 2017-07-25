@@ -4,6 +4,8 @@
 -------------------------
 |  图片ID  |   RowKey   |
 -------------------------
+| 设备ID   |     f      |
+-------------------------
 |  大图    |     b      |
 -------------------------
 |  小图    |     s      |
@@ -12,9 +14,7 @@
 -------------------------
 | 附加信息 |     e      |
 -------------------------
-| 设备ID   |     f      |
--------------------------
-| 时间     |     s      |
+| 时间     |     t      |
 -------------------------
 
 
@@ -34,7 +34,7 @@ create 'person',
 |  特征    |   fea      |
 -------------------------
 
-create 'personfea',
+create 'perFea',
 {NAME => 'f', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', COMPRESSION =>
 'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '65535',
  IN_MEMORY => 'true', BLOCKCACHE => 'true'}
@@ -47,6 +47,8 @@ create 'personfea',
 -------------------------
 |  图片ID  |   RowKey   |
 -------------------------
+| 设备ID   |     f      |
+-------------------------
 |  大图    |     b      |
 -------------------------
 |  小图    |     s      |
@@ -57,7 +59,7 @@ create 'personfea',
 -------------------------
 | 车牌号   |     p      |
 -------------------------
-| 时间     |     s      |
+| 时间     |     t      |
 -------------------------
 
 create 'car',
@@ -76,7 +78,7 @@ create 'car',
 |  特征    |   fea      |
 -------------------------
  
- create 'carfea',
+ create 'carFea',
 {NAME => 'f', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', COMPRESSION =>
 'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '65535',
  IN_MEMORY => 'true', BLOCKCACHE => 'true'}
@@ -94,9 +96,9 @@ create 'car',
 |  特征    |   f        |
 -------------------------
 
-create 'upperfea',
+create 'upPerFea',
 {NAME => 'i', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', COMPRESSION =>
-'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '524280',
+'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '65535',
  IN_MEMORY => 'true', BLOCKCACHE => 'true'}
  
  车辆图：
@@ -109,8 +111,36 @@ create 'upperfea',
 -------------------------
 |  特征    |   f        |
 -------------------------
+|  车牌号  |   p        |
+-------------------------
 
-create 'upcarfea',
+create 'upCarFea',
 {NAME => 'i', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', COMPRESSION =>
-'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '524280',
+'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '65535',
+ IN_MEMORY => 'true', BLOCKCACHE => 'true'}
+ 
+ 查询结果：
+ -------------------------
+|   name   |   field    |
+-------------------------
+|  查询ID  |   RowKey   |
+-------------------------
+|查询图片ID|     q      |
+-------------------------
+| 设备ID   |     f      |
+-------------------------
+|返回图片Id|     r      |
+-------------------------
+|  小图    |     s      |
+-------------------------
+| 相似度   |     si     |
+-------------------------
+| 描述信息 |     d      |
+-------------------------
+| 附加信息 |     e      |
+-------------------------
+
+create 'searchRes',
+{NAME => 'i', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', COMPRESSION =>
+'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '65535',
  IN_MEMORY => 'true', BLOCKCACHE => 'true'}
