@@ -88,6 +88,9 @@
                     <source>1.7</source>
                     <target>1.7</target>
                     <encoding>UTF-8</encoding>
+                    <compilerArguments>
+                        <extdirs>ftpserver-core-1.0.6</extdirs>
+                    </compilerArguments>
                 </configuration>
             </plugin>
         </plugins>

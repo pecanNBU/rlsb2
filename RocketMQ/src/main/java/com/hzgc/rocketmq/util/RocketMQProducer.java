@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
-//import org.apache.log4j.Logger;
+
+import org.apache.log4j.Logger;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.MessageQueueSelector;
 import org.apache.rocketmq.client.producer.SendResult;
@@ -16,7 +17,7 @@ import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.common.message.MessageQueue;
 
 public class RocketMQProducer implements Serializable{
-	//private static Logger log = Logger.getLogger(RocketMQUtil.class);
+	private static Logger log = Logger.getLogger(RocketMQProducer.class);
 	private static String namesrvAddr;
 	private static String topic;
 	private static String tag;
@@ -27,7 +28,7 @@ public class RocketMQProducer implements Serializable{
 	private static String path;
 	private DefaultMQProducer producer;
 	
-	private RocketMQProducer(){
+	private RocketMQProducer() {
 		try{
 			String classRoute = this.getClass().getResource("/").getPath();
 			int index = classRoute.indexOf("RocketMQ");
@@ -40,15 +41,16 @@ public class RocketMQProducer implements Serializable{
 			//tag = properties.getProperty("tag");
 			producerGroup = properties.getProperty("producerGroup", UUID.randomUUID().toString());
 			if(namesrvAddr== null || topic == null) {
-				//log.error("parameter init error");
+				log.error("parameter init error");
 				throw new Exception("parameter init error");
 			}
 			producer = new DefaultMQProducer(producerGroup);
 			producer.setNamesrvAddr(namesrvAddr);
 			producer.start();
-			
-		}catch(Exception e){
+			log.info("producer started...");
+		}catch(Exception e) {
 			e.printStackTrace();
+			log.error("producer init error...");
 			throw new RuntimeException(e);
 		}finally {
 			if(fis!=null)
@@ -56,12 +58,13 @@ public class RocketMQProducer implements Serializable{
 					fis.close();
 				} catch (IOException e) {
 					e.printStackTrace();
+					log.error("fileinputstream close error...");
 					throw new RuntimeException(e);
 				}
 		}
 	}
 	
-	public static RocketMQProducer getInstance(){
+	public static RocketMQProducer getInstance() {
 		if(instance == null){
 			synchronized (RocketMQProducer.class) {
 				if(instance == null){
@@ -109,30 +112,30 @@ public class RocketMQProducer implements Serializable{
 				sendResult = producer.send(msg);
 			}
 			//log.info(startTime);
-			//log.info(sendResult);
-			//System.out.printf("%s%n",sendResult);
+			log.info(sendResult);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.error("send message error...");
 			throw new RuntimeException(e);
 		}
 	}
 	
-	public void shutdown(){
-		if(producer!=null){
+	public void shutdown() {
+		if(producer!= null){
 			producer.shutdown();
 		}
 	}
 	
-	public String getNamesrvAddr(){
+	public String getNamesrvAddr() {
 		return namesrvAddr;
 	}
 	
-	public String getTopic(){
+	public String getTopic() {
 		return topic;
 	}
 	
-	public String getTag(){
+	public String getTag() {
 		return tag;
 	}
 	
