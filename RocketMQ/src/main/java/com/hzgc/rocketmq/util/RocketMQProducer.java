@@ -29,10 +29,10 @@ public class RocketMQProducer implements Serializable {
 
     private RocketMQProducer() {
         try {
-            /*String classRoute = this.getClass().getResource("/").getPath();*/
-			/*int index = classRoute.indexOf("RocketMQ");*/
-			/*String dir = classRoute.substring(0, index);*/
-			/*path = dir + "Distribution/conf/rocketmq.properties";*/
+            /*String classRoute = this.getClass().getResource("/").getPath();
+			int index = classRoute.indexOf("RocketMQ");
+			String dir = classRoute.substring(0, index);
+			path = dir + "Distribution/conf/rocketmq.properties";*/
             path = "RocketMQ/src/main/resources/conf/rocketmq.properties";
             fis = new FileInputStream(new File(path));
             properties.load(fis);
