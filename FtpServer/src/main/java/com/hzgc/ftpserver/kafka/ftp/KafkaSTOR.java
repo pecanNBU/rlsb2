@@ -22,7 +22,7 @@ public class KafkaSTOR extends AbstractCommand {
             throws IOException, FtpException {
         KafkaFtpServerContext kafkaContext = null;
         if (context instanceof KafkaFtpServerContext) {
-            kafkaContext = (KafkaFtpServerContext)context;
+            kafkaContext = (KafkaFtpServerContext) context;
         }
         try {
 
@@ -91,7 +91,7 @@ public class KafkaSTOR extends AbstractCommand {
 
             LocalIODataConnection dataConnection;
             try {
-                IODataConnectionFactory customConnFactory = (IODataConnectionFactory)session.getDataConnection();
+                IODataConnectionFactory customConnFactory = (IODataConnectionFactory) session.getDataConnection();
                 dataConnection = new LocalIODataConnection(customConnFactory.createDataSocket(), customConnFactory.getSession(), customConnFactory);
             } catch (Exception e) {
                 LOG.info("Exception getting the input data stream", e);
@@ -127,24 +127,24 @@ public class KafkaSTOR extends AbstractCommand {
                     } else if (FtpUtil.pickPicture(fileName) > 0) {
                         LOG.info("Kafka Producer Send message[" + file.getName() + "] to Kafka");
                         int faceNum = FtpUtil.pickPicture(fileName);
-                        String faceKey = FtpUtil.faceKey(faceNum,key);
+                        String faceKey = FtpUtil.faceKey(faceNum, key);
                         kafkaProducer.sendKafkaMessage(kafkaProducer.getFace(), faceKey, value.toByteArray());
                         transSz = value.toByteArray().length;
                     } else {
-                        LOG.info("Contains illegal file[" + file.getName()  + "], write to local default");
+                        LOG.info("Contains illegal file[" + file.getName() + "], write to local default");
                         outStream = file.createOutputStream(skipLen);
                         ByteArrayInputStream bis = new ByteArrayInputStream(value.toByteArray());
                         transSz = dataConnection.transferFromClient(session.getFtpletSession(), bis, outStream);
                     }
                 } else {
-                    LOG.info("Contains illegal file[" + fileName  + "], write to local default");
+                    LOG.info("Contains illegal file[" + fileName + "], write to local default");
                     outStream = file.createOutputStream(skipLen);
                     ByteArrayInputStream bis = new ByteArrayInputStream(value.toByteArray());
                     transSz = dataConnection.transferFromClient(session.getFtpletSession(), bis, outStream);
                 }
                 // attempt to close the output stream so that errors in
                 // closing it will return an error to the client (FTPSERVER-119)
-                if(outStream != null) {
+                if (outStream != null) {
                     outStream.close();
                 }
 

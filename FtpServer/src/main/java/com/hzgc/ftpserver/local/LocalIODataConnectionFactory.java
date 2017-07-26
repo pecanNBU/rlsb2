@@ -270,8 +270,8 @@ public class LocalIODataConnectionFactory implements ServerDataConnectionFactory
                         .getActiveLocalAddress());
 
                 // if no local address has been configured, make sure we use the same as the client connects from
-                if(localAddr == null) {
-                    localAddr = ((InetSocketAddress)session.getLocalAddress()).getAddress();
+                if (localAddr == null) {
+                    localAddr = ((InetSocketAddress) session.getLocalAddress()).getAddress();
                 }
 
                 SocketAddress localSocketAddress = new InetSocketAddress(localAddr, dataConfig.getActiveLocalPort());

@@ -20,7 +20,7 @@ public class FaceConsumerHandlerGroup implements ConsumerGroup {
         consumerHandler = new ArrayList<>();
         int consumerNum = Integer.parseInt(propers.getProperty("consumerNum"));
         LOG.info("The number of consumer thread is " + consumerNum);
-        for (int i = 0; i < consumerNum; i++ ) {
+        for (int i = 0; i < consumerNum; i++) {
             LOG.info("Start create the thread FaceConsumerHandlerThread");
             ConsumerHandlerThread consumerThread = new FaceConsumerHandlerThread(propers, hbaseConn, PicConsumerHandlerThread.class);
             consumerHandler.add(consumerThread);
