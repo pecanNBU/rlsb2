@@ -6,15 +6,15 @@ import javax.imageio.stream.FileImageOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
+import org.apache.log4j.*;
 
 public class Image2Byte2Image {
-    private static Logger logger = Logger.getLogger(String.valueOf(Image2Byte2Image.class));
+    private static Logger logger = Logger.getLogger(Image2Byte2Image.class);
     //图片到byte数组
     public static byte[] image2byte(String path) throws IOException {
         File file = new File(path);
         if (!file.exists()){
-            logger.info("文件不存在！");
+            logger.info("File does not exist!");
             return null;
         }
         FileImageInputStream in = new FileImageInputStream(file);
@@ -35,6 +35,7 @@ public class Image2Byte2Image {
     public static byte[] byte2image(byte[] data, String path) throws IOException {
         File file = new File(path);
         if (!file.exists()){
+            logger.info("File does not exist!");
             file.createNewFile();
         }
         FileImageOutputStream out = new FileImageOutputStream(file);

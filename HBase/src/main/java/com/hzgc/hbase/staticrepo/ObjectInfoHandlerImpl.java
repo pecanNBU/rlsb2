@@ -9,10 +9,11 @@ import org.apache.hadoop.hbase.util.Bytes;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.Logger;
+import org.apache.log4j.*;
 
 public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
-    private static Logger logger = Logger.getLogger(String.valueOf(ObjectInfoHandlerImpl.class));
+    private static Logger logger = Logger.getLogger(ObjectInfoHandlerImpl.class);
+
     @Override
     public byte addObjectInfo(String platformId, Map<String, Object> person) {
         Set<String> fieldset = person.keySet();
@@ -47,8 +48,10 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         // 执行Put 操作，往表格里面添加一行数据
         try {
             objectinfo.put(put);
+            logger.info("Form addition successed!");
             return 0;
         } catch (IOException e) {
+            logger.info("Form addition failed!");
             e.printStackTrace();
             return 1;
         } finally {
@@ -75,8 +78,10 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         // 执行删除操作
         try {
             table.delete(deletes);
+            logger.info("table delete successed!");
             return  0;
         } catch (IOException e) {
+            logger.info("table delete failed!");
             e.printStackTrace();
             return 1;
         } finally {
@@ -112,8 +117,10 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         }
         try {
             table.put(put);
+            logger.info("table update successed!");
         } catch (IOException e) {
             e.printStackTrace();
+            logger.info("table update failed!");
         }finally {
             try {
                 table.close();
@@ -183,7 +190,9 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         ResultScanner rs = null;
         try {
             rs = table.getScanner(scan);
+            logger.info("Get the scan result by rowkey successed!");
         } catch (IOException e) {
+            logger.info("Get the scan result by rowkey failed!");
             e.printStackTrace();
         }
         Iterator<Result> it = rs.iterator();

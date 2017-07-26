@@ -14,7 +14,6 @@ import java.util.*;
 
 public class StaticRepoUtilSuite {
 
-
     @Test
     public void testAddObjectInfo(){
         String platformId = "1234";
