@@ -25,11 +25,14 @@ public class DeviceServiceImpl implements DeviceService {
                 put.addColumn(FAMILY, PLAT_ID, Bytes.toBytes(platformId));
                 put.addColumn(FAMILY, NOTES, Bytes.toBytes(notes));
                 TABLE.put(put);
+                LOG.info("Put data[" + ipcID + ", " + platformId + "] successful");
                 return true;
             } catch (Exception e) {
+                LOG.error("Current bind is failed!");
                 return false;
             }
         } else {
+            LOG.error("Please check the arguments!");
             return false;
         }
     }
@@ -41,11 +44,14 @@ public class DeviceServiceImpl implements DeviceService {
                 Delete delete = new Delete(Bytes.toBytes(ipcID));
                 delete.addColumn(FAMILY, PLAT_ID);
                 TABLE.delete(delete);
+                LOG.info("Unbind device:" + ipcID + " and " + platformId + " successful");
                 return true;
             } catch (Exception e) {
+                LOG.error("Current unbind is failed!");
                 return false;
             }
         } else {
+            LOG.error("Please check the arguments!");
             return false;
         }
     }
@@ -57,11 +63,16 @@ public class DeviceServiceImpl implements DeviceService {
                 Put put = new Put(Bytes.toBytes(ipcID));
                 put.addColumn(FAMILY, NOTES, Bytes.toBytes(notes));
                 TABLE.put(put);
+                LOG.info("Rename notes");
+                return true;
             } catch (Exception e) {
+                LOG.error("Current renameNotes is failed!");
                 return false;
             }
+        } else {
+            LOG.error("Please check the arguments!");
+            return false;
         }
-        return false;
     }
 
     @Override
