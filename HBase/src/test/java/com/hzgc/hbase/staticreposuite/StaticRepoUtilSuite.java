@@ -2,6 +2,8 @@ package com.hzgc.hbase.staticreposuite;
 
 import com.hzgc.dubbo.staticrepo.ObjectSearchResult;
 import com.hzgc.hbase.staticrepo.ObjectInfoHandlerImpl;
+import com.hzgc.hbase.staticrepo.ObjectInfoInnerHandler;
+import com.hzgc.hbase.staticrepo.ObjectInfoInnerHandlerImpl;
 import com.hzgc.hbase.util.HBaseHelper;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Connection;
@@ -23,35 +25,38 @@ public class StaticRepoUtilSuite {
         person.put("name", "小王炸");
         person.put("idcard", "1111111111jkh11111111");
         person.put("sex", "1");
-//        try {
-//            person.put("photo", Image2Byte2Image.image2byte("C:\\Users\\lenovo\\Desktop\\temp\\nima.png"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+       try {
+            person.put("photo", Image2Byte2Image.image2byte("E:\\1.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         person.put("reason", "赌博");
         person.put("pkey", "123456");
         person.put("creator", "羊驼");
         person.put("cphone", "18069222222");
         person.put("tag", "person");
+        person.put("feature", "123455555555");
 
         int flag = new ObjectInfoHandlerImpl().addObjectInfo(platformId, person);
         System.out.println(flag);
     }
     @Test
     public void testUpdateObjectInfo(){
-        String platformId = "1234";
+        String platformId = "123456";
         Map<String, Object> person = new HashMap<String, Object>();
         person.put("id", "1111111111jkh11111111");
         person.put("name", "小王炸炸");
         person.put("idcard", "222111111111111111");
         person.put("sex", "0");
-//        try {
-//            person.put("photo", Image2Byte2Image.image2byte("C:\\Users\\lenovo\\Desktop\\temp\\nima.png"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            person.put("photo", Image2Byte2Image.image2byte("E:\\1.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        person.put("pkey", "123456");
         person.put("reason", "赌博+暴力倾向");
         person.put("creator", "羊驼神兽");
+        person.put("feature", "123455555555");
 
         int flag = new ObjectInfoHandlerImpl().updateObjectInfo(person);
         System.out.println(flag);
@@ -106,5 +111,14 @@ public class StaticRepoUtilSuite {
         byte[] photo = new ObjectInfoHandlerImpl().getPhotoByKey("e590e89a002e44b3b302257a85684d1a");
         System.out.println(photo);
         Image2Byte2Image.byte2image(photo, "C:\\Users\\lenovo\\Desktop\\nima.png");
+    }
+
+    @Test
+    public void testimpl(){
+        ObjectInfoInnerHandlerImpl objectInfoInnerHandler = new ObjectInfoInnerHandlerImpl();
+        List<String> a = new ArrayList<>();
+        a.add("123456");
+        List<String> b = objectInfoInnerHandler.searchByPkeys(a);
+        System.out.println(b);
     }
 }
