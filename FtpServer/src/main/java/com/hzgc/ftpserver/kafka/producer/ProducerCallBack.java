@@ -14,6 +14,7 @@ public class ProducerCallBack implements Callback {
         this.startTime = startTime;
         this.key = key;
     }
+
     public void onCompletion(RecordMetadata metadata, Exception exception) {
         long elapsedTime = System.currentTimeMillis() - startTime;
         if (metadata != null) {
