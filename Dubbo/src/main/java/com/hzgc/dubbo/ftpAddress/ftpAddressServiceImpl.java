@@ -36,7 +36,6 @@ public class ftpAddressServiceImpl implements ftpAddressService {
     }
 
     public Map<String, String> getftpAddress() {
-
         return ftpAddressMap;
     }
 
