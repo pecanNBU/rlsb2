@@ -1,9 +1,6 @@
 package com.hzgc.hbase.staticrepo;
 
-import com.hzgc.dubbo.staticrepo.ObjectInfo;
-
 import java.util.List;
-import java.util.Map;
 
 public interface ObjectInfoInnerHandler {
     /**
@@ -12,5 +9,5 @@ public interface ObjectInfoInnerHandler {
      * @param pkeys
      * @return
      */
-    public List<Map<String, ObjectInfo>> searchByPkeys(List<String> pkeys);
+    public List<String> searchByPkeys(List<String> pkeys);
 }
