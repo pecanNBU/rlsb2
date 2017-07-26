@@ -3,6 +3,7 @@ package com.hzgc.hbase.staticrepo;
 import com.hzgc.dubbo.staticrepo.ObjectInfoHandler;
 import com.hzgc.dubbo.staticrepo.ObjectSearchResult;
 import com.hzgc.hbase.util.HBaseHelper;
+import com.hzgc.hbase.util.HBaseUtil;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -405,21 +406,22 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     public void putSearchRecordToHBase(String platformId, ObjectSearchResult searchResult){
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         ObjectOutputStream oout = null;
+        byte[] results = null;
         try {
             oout = new ObjectOutputStream(bout);
             oout.writeObject(searchResult.getResults());
+            results = bout.toByteArray();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        byte[] results = bout.toByteArray();
-        try {
-            if (oout != null){
+        } finally {
+            try {
                 oout.close();
+                bout.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            bout.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
         Table table = HBaseHelper.getTable("srecord");
         Put put = new Put(Bytes.toBytes(searchResult.getSearchId()));
         put.addColumn(Bytes.toBytes("rd"), Bytes.toBytes("searchstatus"),
@@ -439,21 +441,20 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         }
         try {
             table.put(put);
+            LOG.info("excute putSearchRecordToHBase done.");
         } catch (IOException e) {
+            LOG.info("excute putSearchRecordToHBase failed.");
             e.printStackTrace();
         } finally {
-            try {
-                table.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            LOG.info("释放table 对象......");
+            HBaseUtil.closTable(table);
         }
     }
 
     private ObjectSearchResult dealWithSearchRequesBuilder(SearchRequestBuilder searchRequestBuilder){
         SearchResponse response = searchRequestBuilder.get();
         SearchHits hits = response.getHits();
-        System.out.println("总记录数是： " + hits.getTotalHits());
+        LOG.info("总记录数是： " + hits.getTotalHits());
         SearchHit[] searchHits = hits.getHits();
         ObjectSearchResult searchResult = new ObjectSearchResult();
         String searchId = UUID.randomUUID().toString().replace("-", "");
