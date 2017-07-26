@@ -9,12 +9,12 @@ import java.io.IOException;
 import org.apache.log4j.*;
 
 public class Image2Byte2Image {
-    private static Logger logger = Logger.getLogger(Image2Byte2Image.class);
+    private static Logger LOG = Logger.getLogger(Image2Byte2Image.class);
     //图片到byte数组
     public static byte[] image2byte(String path) throws IOException {
         File file = new File(path);
         if (!file.exists()){
-            logger.info("File does not exist!");
+            LOG.info("File does not exist!");
             return null;
         }
         FileImageInputStream in = new FileImageInputStream(file);
@@ -35,7 +35,7 @@ public class Image2Byte2Image {
     public static byte[] byte2image(byte[] data, String path) throws IOException {
         File file = new File(path);
         if (!file.exists()){
-            logger.info("File does not exist!");
+            LOG.info("File does not exist!");
             file.createNewFile();
         }
         FileImageOutputStream out = new FileImageOutputStream(file);

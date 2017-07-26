@@ -131,7 +131,6 @@ public class HBaseHelper {
      * 删除表格
      *
      * @param name 表名称
-     * @throws IOException
      */
     public void dropTable(String name) throws IOException {
         dropTable(TableName.valueOf(name));
@@ -140,7 +139,7 @@ public class HBaseHelper {
     /**
      * 内部方法：删除表格
      *
-     * @param name
+     * @param name 表名称
      */
     private void dropTable(TableName name) {
         Admin admin = null;

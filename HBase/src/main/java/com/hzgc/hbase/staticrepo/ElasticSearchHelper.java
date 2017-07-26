@@ -9,46 +9,42 @@ import org.elasticsearch.transport.client.PreBuiltTransportClient;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
 public class ElasticSearchHelper {
-    private static Settings settings = null;
+    private static Logger LOG = Logger.getLogger(ElasticSearchHelper.class);
     private static TransportClient client = null;
-    private static String es_cluster = null;
-    private static String es_hosts = null;
-    private static Integer es_port = null;
-    private static Logger logger = Logger.getLogger(ElasticSearchHelper.class);
 
     /**
      * 初始化Es 集群信息
      */
-    public static void initElasticSearchClient() {
+    private static void initElasticSearchClient() {
         // 从外部读取Es集群配置信息
         Properties properties_es_config = new Properties();
         try {
             File file = HBaseUtil.loadResourceFile("es_cluster_config_staticrepo.properties");
-            properties_es_config.load(new FileInputStream(file));
-        } catch (Exception e) {
-            logger.info("File does not find!");
+            if (file != null) {
+                properties_es_config.load(new FileInputStream(file));
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        es_cluster = properties_es_config.getProperty("es.cluster.name");
-        es_hosts = properties_es_config.getProperty("es.hosts");
-        es_port = new Integer(properties_es_config.getProperty("es.cluster.port"));
-
+        String es_cluster = properties_es_config.getProperty("es.cluster.name");
+        String es_hosts = properties_es_config.getProperty("es.hosts").trim();
+        Integer es_port = Integer.parseInt(properties_es_config.getProperty("es.cluster.port"));
         // 初始化配置文件
-        settings = Settings.builder().put("cluster.name", es_cluster).build();
-
+        Settings settings = Settings.builder().put("cluster.name", es_cluster).build();
         //初始化client
         client = new PreBuiltTransportClient(settings);
-        for (String host:es_hosts.split(",")){
+        for (String host: es_hosts.split(",")){
             try {
-                client.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(host),es_port));
-                logger.info("Address addition successed!");
+                client.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(host), es_port));
+                LOG.info("Address addition successed!");
             } catch (UnknownHostException e) {
-                logger.info("Host can not be identify!");
+                LOG.error("Host can not be identify!");
                 e.printStackTrace();
             }
         }
@@ -58,7 +54,7 @@ public class ElasticSearchHelper {
      * 返回client 对象信息
      */
     public static TransportClient getEsClient(){
-        if (client == null){
+        if (null == client){
             initElasticSearchClient();
         }
         return ElasticSearchHelper.client;

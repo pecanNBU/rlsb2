@@ -12,27 +12,23 @@ import java.util.*;
 import org.apache.log4j.*;
 
 public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
-    private static Logger logger = Logger.getLogger(ObjectInfoHandlerImpl.class);
+    private static Logger LOG = Logger.getLogger(ObjectInfoHandlerImpl.class);
 
     @Override
     public byte addObjectInfo(String platformId, Map<String, Object> person) {
         Set<String> fieldset = person.keySet();
-        List<String> fieldlist = new ArrayList<String>();
-        Iterator<String> it = fieldset.iterator();
-        while (it.hasNext()){
-            fieldlist.add(it.next());
-        }
-        String rowkey = UUID.randomUUID().toString().replace("-","");
+        List<String> fieldlist = new ArrayList<>();
+        fieldlist.addAll(fieldset);
+        String rowkey = UUID.randomUUID().toString().replace("-", "");
         // 获取table 对象，通过封装HBaseHelper 来获取
-        HBaseHelper helper = new HBaseHelper();
-        Table objectinfo = helper.getTable("objectinfo");
+        Table objectinfo = HBaseHelper.getTable("objectinfo");
         //构造Put 对象
         Put put = new Put(Bytes.toBytes(rowkey));
         // 添加列族属性
-        for (String field:fieldlist){
-            if ("photo".equals(field)){
+        for (String field : fieldlist) {
+            if ("photo".equals(field)) {
                 put.addColumn(Bytes.toBytes("person"), Bytes.toBytes(field),
-                        (byte[])person.get(field));
+                        (byte[]) person.get(field));
             } else {
                 put.addColumn(Bytes.toBytes("person"), Bytes.toBytes(field),
                         Bytes.toBytes((String) person.get(field)));
@@ -48,17 +44,19 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         // 执行Put 操作，往表格里面添加一行数据
         try {
             objectinfo.put(put);
-            logger.info("Form addition successed!");
+            LOG.info("Form addition successed!");
             return 0;
         } catch (IOException e) {
-            logger.info("Form addition failed!");
+            LOG.error("Form addition failed!");
             e.printStackTrace();
             return 1;
         } finally {
             // 关闭表格和连接对象。
             try {
                 objectinfo.close();
+                LOG.info("table closed successed!");
             } catch (IOException e) {
+                LOG.error("table closed failed!");
                 e.printStackTrace();
             }
         }
@@ -67,49 +65,49 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     @Override
     public int deleteObjectInfo(List<String> rowkeys) {
         // 获取table 对象，通过封装HBaseHelper 来获取
-        HBaseHelper helper = new HBaseHelper();
-        Table table = helper.getTable("objectinfo");
-        List<Delete> deletes = new ArrayList<Delete>();
-        Delete delete = null;
-        for (String rowkey: rowkeys){
+        Table table = HBaseHelper.getTable("objectinfo");
+        List<Delete> deletes = new ArrayList<>();
+        Delete delete;
+        for (String rowkey : rowkeys) {
             delete = new Delete(Bytes.toBytes(rowkey));
             deletes.add(delete);
         }
         // 执行删除操作
         try {
             table.delete(deletes);
-            logger.info("table delete successed!");
-            return  0;
+            LOG.info("table delete successed!");
+            return 0;
         } catch (IOException e) {
-            logger.info("table delete failed!");
+            LOG.error("table delete failed!");
             e.printStackTrace();
             return 1;
         } finally {
             try {
                 table.close();
+                LOG.info("table closed successed!");
             } catch (IOException e) {
+                LOG.error("table closed failed!");
                 e.printStackTrace();
             }
         }
     }
 
     @Override
-    public int updateObjectInfo(Map<String, Object> person)  {
+    public int updateObjectInfo(Map<String, Object> person) {
         // 获取table 对象，通过封装HBaseHelper 来获取
-        HBaseHelper helper = new HBaseHelper();
-        Table table = helper.getTable("objectinfo");
+        Table table = HBaseHelper.getTable("objectinfo");
         String id = (String) person.get("id");
         Set<String> fieldset = person.keySet();
         Iterator<String> it = fieldset.iterator();
-        List<String> fieldlist = new ArrayList<String>();
+        List<String> fieldlist = new ArrayList<>();
         while (it.hasNext()) {
             fieldlist.add(it.next());
         }
         Put put = new Put(Bytes.toBytes(id));
         for (String field : fieldlist) {
-            if ("photo".equals(field)){
+            if ("photo".equals(field)) {
                 put.addColumn(Bytes.toBytes("person"), Bytes.toBytes(field),
-                        (byte[])person.get(field));
+                        (byte[]) person.get(field));
             } else {
                 put.addColumn(Bytes.toBytes("person"), Bytes.toBytes(field),
                         Bytes.toBytes((String) person.get(field)));
@@ -117,14 +115,16 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         }
         try {
             table.put(put);
-            logger.info("table update successed!");
+            LOG.info("table update successed!");
         } catch (IOException e) {
             e.printStackTrace();
-            logger.info("table update failed!");
-        }finally {
+            LOG.error("table update failed!");
+        } finally {
             try {
                 table.close();
+                LOG.info("table close successed!");
             } catch (IOException e) {
+                LOG.error("table close failed!");
                 e.printStackTrace();
             }
         }
@@ -184,23 +184,26 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
 
     @Override
     public byte[] getPhotoByKey(String rowkey) {
-        HBaseHelper helper = new HBaseHelper();
-        Table table = helper.getTable("objectinfo");
+        Table table = HBaseHelper.getTable("objectinfo");
         Scan scan = new Scan(Bytes.toBytes(rowkey));
         ResultScanner rs = null;
         try {
             rs = table.getScanner(scan);
-            logger.info("Get the scan result by rowkey successed!");
+            LOG.info("Get the scan result by rowkey successed!");
         } catch (IOException e) {
-            logger.info("Get the scan result by rowkey failed!");
+            LOG.error("Get the scan result by rowkey failed!");
             e.printStackTrace();
         }
-        Iterator<Result> it = rs.iterator();
-        byte[] photo = null;
-        while (it.hasNext()){
-            Result r = it.next();
-            photo = r.getValue(Bytes.toBytes("person"),Bytes.toBytes("photo"));
+        Iterator<Result> it;
+        if (null != rs) {
+            it = rs.iterator();
+            byte[] photo = null;
+            while (it.hasNext()) {
+                Result r = it.next();
+                photo = r.getValue(Bytes.toBytes("person"), Bytes.toBytes("photo"));
+            }
+            return photo;
         }
-        return photo;
+        return null;
     }
 }
