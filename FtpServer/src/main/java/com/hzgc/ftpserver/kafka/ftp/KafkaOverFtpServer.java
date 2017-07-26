@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 public class KafkaOverFtpServer extends ClusterOverFtp {
     private static Logger log = Logger.getLogger(KafkaOverFtpServer.class);
 
-    public void startFtpServer(){
+    public void startFtpServer() {
         KafkaFtpServerFactory serverFactory = new KafkaFtpServerFactory();
         log.info("Create " + KafkaFtpServerFactory.class + " successful");
         ListenerFactory listenerFactory = new ListenerFactory();
