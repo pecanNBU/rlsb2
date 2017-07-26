@@ -1,6 +1,6 @@
 package com.hzgc.ftpserver;
 
-import com.hzgc.ftpserver.util.Utils;
+import com.hzgc.ftpserver.util.FtpUtil;
 import org.apache.ftpserver.DataConnectionConfigurationFactory;
 import org.apache.log4j.Logger;
 
@@ -16,12 +16,12 @@ public abstract class ClusterOverFtp {
     public void loadConfig() throws Exception {
         Properties props = new Properties();
         dataConnConf = new DataConnectionConfigurationFactory();
-        props.load(new FileInputStream(Utils.loadResourceFile("local-over-ftp.properties")));
+        props.load(new FileInputStream(FtpUtil.loadResourceFile("local-over-ftp.properties")));
         log.info("Load configuration for ftp server from ./conf/local-over-ftp.properties");
 
         try {
             listenerPort = Integer.parseInt(props.getProperty("listener-port"));
-            boolean checkPort = Utils.checkPort(listenerPort);
+            boolean checkPort = FtpUtil.checkPort(listenerPort);
             if (!checkPort) {
                 log.error("The port settings for listener port is illegal and must be greater than 1024");
                 System.exit(1);
@@ -38,11 +38,11 @@ public abstract class ClusterOverFtp {
 //            if (null != jsonLogPath) {
 //                jsonLogFile = new File(jsonLogPath);
 //                if (jsonLogFile.exists()) {
-//                    Utils.jsonLogPath = jsonLogFile;
+//                    FtpUtil.jsonLogPath = jsonLogFile;
 //                    log.info(jsonLogFile.getPath() + "is exist, append to it");
 //                } else {
 ////                    jsonLogFile.createNewFile();
-//                    Utils.jsonLogPath = jsonLogFile;
+//                    FtpUtil.jsonLogPath = jsonLogFile;
 //                    log.info(jsonLogFile.getPath() + "is not exist, create it");
 //                }
 //            }

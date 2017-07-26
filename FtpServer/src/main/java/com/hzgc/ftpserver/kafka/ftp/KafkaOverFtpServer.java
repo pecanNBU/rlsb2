@@ -2,7 +2,7 @@ package com.hzgc.ftpserver.kafka.ftp;
 
 import com.hzgc.ftpserver.ClusterOverFtp;
 import com.hzgc.ftpserver.local.LocalPropertiesUserManagerFactory;
-import com.hzgc.ftpserver.util.Utils;
+import com.hzgc.ftpserver.util.FtpUtil;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.listener.ListenerFactory;
@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 public class KafkaOverFtpServer extends ClusterOverFtp {
     private static Logger log = Logger.getLogger(KafkaOverFtpServer.class);
 
-    public void startFtpServer(){
+    public void startFtpServer() {
         KafkaFtpServerFactory serverFactory = new KafkaFtpServerFactory();
         log.info("Create " + KafkaFtpServerFactory.class + " successful");
         ListenerFactory listenerFactory = new ListenerFactory();
@@ -25,7 +25,7 @@ public class KafkaOverFtpServer extends ClusterOverFtp {
         // set customer user manager
         LocalPropertiesUserManagerFactory userManagerFactory = new LocalPropertiesUserManagerFactory();
         try {
-            userManagerFactory.setFile(Utils.loadResourceFile("users.properties"));
+            userManagerFactory.setFile(FtpUtil.loadResourceFile("users.properties"));
         } catch (Exception e) {
             e.printStackTrace();
         }

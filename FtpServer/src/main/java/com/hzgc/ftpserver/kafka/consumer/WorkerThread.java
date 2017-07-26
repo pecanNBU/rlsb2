@@ -1,6 +1,5 @@
 package com.hzgc.ftpserver.kafka.consumer;
 
-import com.hzgc.ftpserver.util.Utils;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.Put;
