@@ -93,13 +93,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             return 1;
         } finally {
             // 关闭表格和连接对象。
-            try {
-                objectinfo.close();
-                LOG.info("table closed successed!");
-            } catch (IOException e) {
-                LOG.error("table closed failed!");
-                e.printStackTrace();
-            }
+            HBaseHelper.closetableconn(objectinfo);
         }
     }
 
@@ -123,13 +117,8 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             e.printStackTrace();
             return 1;
         } finally {
-            try {
-                table.close();
-                LOG.info("table closed successed!");
-            } catch (IOException e) {
-                LOG.error("table closed failed!");
-                e.printStackTrace();
-            }
+            //关闭表连接
+            HBaseHelper.closetableconn(table);
         }
     }
 
@@ -161,13 +150,8 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             e.printStackTrace();
             LOG.error("table update failed!");
         } finally {
-            try {
-                table.close();
-                LOG.info("table close successed!");
-            } catch (IOException e) {
-                LOG.error("table close failed!");
-                e.printStackTrace();
-            }
+            //关闭表连接
+            HBaseHelper.closetableconn(table);
         }
         return 0;
     }
@@ -477,6 +461,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             }
             return photo;
         }
+        HBaseHelper.closetableconn(table);
         return null;
     }
 

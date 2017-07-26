@@ -3,14 +3,13 @@ package com.hzgc.hbase.util;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.*;
-import org.apache.hadoop.hbase.client.Admin;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.ConnectionFactory;
-import org.apache.hadoop.hbase.client.Table;
+import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class HBaseHelper {
@@ -167,18 +166,38 @@ public class HBaseHelper {
     /**
      * 获取表对象
      *
-     * @param name 表名称
+     * @param tableName 表名称
      * @return 表对象
      */
-    public static Table getTable(String name) {
-        if (null != name && name.length() > 0) {
+    public static Table getTable(String tableName) {
+        if (null != tableName && tableName.length() > 0) {
             try {
-                return HBaseHelper.getHBaseConnection().getTable(TableName.valueOf(name));
+                return HBaseHelper.getHBaseConnection().getTable(TableName.valueOf(tableName));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         return null;
+    }
+
+    public static boolean putData(String tableName,
+                                  String rowKey,
+                                  String family,
+                                  List<Map<String, byte[]>> kv) {
+        Table table;
+        try {
+            table = getTable(tableName);
+            Put put = new Put(Bytes.toBytes(rowKey));
+            for (Map<String, byte[]> map : kv) {
+                for (Map.Entry<String, byte[]> entry : map.entrySet()) {
+                    put.addColumn(Bytes.toBytes(family), Bytes.toBytes(entry.getKey()), entry.getValue());
+                }
+            }
+            table.put(put);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -192,6 +211,18 @@ public class HBaseHelper {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+    /**
+     * 关闭table连接
+     */
+    public static void closetableconn(Table table){
+        try {
+            table.close();
+            LOG.info("table closed successed!");
+        } catch (IOException e) {
+            LOG.error("table closed failed!");
+            e.printStackTrace();
         }
     }
 }
