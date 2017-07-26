@@ -1,7 +1,7 @@
-package com.hzgc.dubbo.ftpAddress;
+package com.hzgc.ftpserver.ftpAddress;
 
 public interface ftpAddressService {
 
 	public String getftpAddress();
-
+	
 }

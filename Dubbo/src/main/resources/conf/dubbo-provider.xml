@@ -17,5 +17,5 @@
 	<dubbo:service interface="com.hzgc.dubbo.ftpAddress.ftpAddressService" ref="ftpAddressService" protocol="dubbo"/>
 		
 	<bean id="ftpAddressService" class="com.hzgc.dubbo.ftpAddress.ftpAddressServiceImpl"/>
-	
+
 </beans>
