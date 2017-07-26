@@ -10,5 +10,5 @@ public interface ObjectInfoInnerHandler {
      * @param pkeys
      * @return
      */
-    public List<Map<String, ObjectInfo>> searchByPkeys(List<String> pkeys);
+    public List<String> searchByPkeys(List<String> pkeys);
 }

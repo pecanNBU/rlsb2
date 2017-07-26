@@ -1,5 +1,6 @@
 package com.hzgc.hbase.staticreposuite;
 
+import com.hzgc.dubbo.staticrepo.ObjectSearchResult;
 import com.hzgc.hbase.staticrepo.ObjectInfoHandlerImpl;
 import com.hzgc.hbase.util.HBaseHelper;
 import org.apache.hadoop.hbase.TableName;
@@ -30,7 +31,7 @@ public class StaticRepoUtilSuite {
         person.put("reason", "赌博");
         person.put("pkey", "123456");
         person.put("creator", "羊驼");
-        person.put("cphone", "88888888888");
+        person.put("cphone", "18069222222");
         person.put("tag", "person");
 
         int flag = new ObjectInfoHandlerImpl().addObjectInfo(platformId, person);
@@ -73,4 +74,37 @@ public class StaticRepoUtilSuite {
         System.out.println(conn);
     }
 
+    @Test
+    public void testByGetByPlatFormIdAndIdCard(){
+        ObjectInfoHandlerImpl impl = new ObjectInfoHandlerImpl();
+        ObjectSearchResult searchResult = impl.searchByPlatFormIdAndIdCard("1234", "111",
+                true, 1, 3);
+        System.out.println(searchResult);
+    }
+
+    @Test
+    public void testSearchByRowkey(){
+        ObjectSearchResult objectSearchResult = new ObjectInfoHandlerImpl().searchByRowkey("3598d31ddcb546d1acd3240c8ddb9f0a");
+        System.out.println(objectSearchResult);
+    }
+
+    @Test
+    public void testSearchByPhone(){
+        ObjectSearchResult objectSearchResult = new ObjectInfoHandlerImpl().searchByCphone("18069222222");
+        System.out.println(objectSearchResult);
+    }
+
+    @Test
+    public void testSearchByCreator(){
+        ObjectSearchResult objectSearchResult = new ObjectInfoHandlerImpl().searchByCreator("羊驼驼羊",
+                false, 1, 5);
+        System.out.println(objectSearchResult);
+    }
+
+    @Test
+    public void testGetPhotoByKey() throws IOException {
+        byte[] photo = new ObjectInfoHandlerImpl().getPhotoByKey("e590e89a002e44b3b302257a85684d1a");
+        System.out.println(photo);
+        Image2Byte2Image.byte2image(photo, "C:\\Users\\lenovo\\Desktop\\nima.png");
+    }
 }

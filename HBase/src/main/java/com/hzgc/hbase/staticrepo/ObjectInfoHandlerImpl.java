@@ -297,7 +297,6 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
                     if (!"photo".equals(column)){
                         String value = Bytes.toString(cell.getValueArray());
                         value = value.substring(value.indexOf('>') + 1).trim();
-                        System.out.println(value);
                         person.put(column, value);
                     }
                 }
