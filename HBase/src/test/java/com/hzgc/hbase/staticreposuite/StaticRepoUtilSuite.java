@@ -33,7 +33,8 @@ public class StaticRepoUtilSuite {
         person.put("cphone", "88888888888");
         person.put("tag", "person");
 
-        int flag = new ObjectInfoHandlerImpl().addObjectInfo(platformId, person);
+        int flag = 0;
+        flag = new ObjectInfoHandlerImpl().addObjectInfo(platformId, person);
         System.out.println(flag);
     }
     @Test

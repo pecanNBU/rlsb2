@@ -195,4 +195,16 @@ public class HBaseHelper {
             }
         }
     }
+    /**
+     * 关闭table连接
+     */
+    public static void closetableconn(Table table){
+        try {
+            table.close();
+            LOG.info("table closed successed!");
+        } catch (IOException e) {
+            LOG.error("table closed failed!");
+            e.printStackTrace();
+        }
+    }
 }
