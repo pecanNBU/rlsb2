@@ -8,7 +8,6 @@ import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.log4j.Logger;
-import sun.rmi.runtime.Log;
 
 import java.io.File;
 import java.io.IOException;
