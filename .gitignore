@@ -4,3 +4,4 @@ target/
 *.swp
 .idea/vcs.xml
 javadocs/
+*.iml___jb_tmp___

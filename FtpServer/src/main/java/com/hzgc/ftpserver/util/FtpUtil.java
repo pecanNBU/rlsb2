@@ -18,7 +18,7 @@ public class FtpUtil {
         return checkPort > 1024;
     }
 
-    public static File loadResourceFile(String resourceName) throws Exception {
+    public static File loadResourceFile(String resourceName) {
         if (false) {
             URL resource = FtpUtil.class.getResource("/");
             String confPath = resource.getPath();

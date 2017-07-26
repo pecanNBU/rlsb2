@@ -9,7 +9,7 @@ import java.net.URL;
 public class HBaseUtil {
     private static Logger LOG = Logger.getLogger(HBaseUtil.class);
 
-    public static File loadResourceFile(String resourceName) throws Exception{
+    public static File loadResourceFile(String resourceName) {
         if (false) {
             URL resource = HBaseUtil.class.getResource("/");
             String confPath = resource.getPath();
