@@ -209,20 +209,9 @@ public class HBaseHelper {
                 innerHBaseConnection.close();
                 LOG.info("HBaseConnection close successfull");
             } catch (IOException e) {
+                LOG.info("HBaseConnection close failed ");
                 e.printStackTrace();
             }
-        }
-    }
-    /**
-     * 关闭table连接
-     */
-    public static void closetableconn(Table table){
-        try {
-            table.close();
-            LOG.info("table closed successed!");
-        } catch (IOException e) {
-            LOG.error("table closed failed!");
-            e.printStackTrace();
         }
     }
 }

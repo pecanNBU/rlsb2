@@ -3,6 +3,7 @@ package com.hzgc.hbase.staticrepo;
 import com.hzgc.dubbo.staticrepo.ObjectInfoHandler;
 import com.hzgc.dubbo.staticrepo.ObjectSearchResult;
 import com.hzgc.hbase.util.HBaseHelper;
+import com.hzgc.hbase.util.HBaseUtil;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
@@ -52,7 +53,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             return 1;
         } finally {
             // 关闭表格和连接对象。
-            HBaseHelper.closetableconn(objectinfo);
+            HBaseUtil.closTable(objectinfo);
         }
     }
 
@@ -77,7 +78,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             return 1;
         } finally {
             //关闭表连接
-            HBaseHelper.closetableconn(table);
+            HBaseUtil.closTable(table);
         }
     }
 
@@ -110,7 +111,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             LOG.error("table update failed!");
         } finally {
             //关闭表连接
-            HBaseHelper.closetableconn(table);
+            HBaseUtil.closTable(table);;
         }
         return 0;
     }
@@ -188,7 +189,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             }
             return photo;
         }
-        HBaseHelper.closetableconn(table);
+        HBaseUtil.closTable(table);
         return null;
     }
 }
