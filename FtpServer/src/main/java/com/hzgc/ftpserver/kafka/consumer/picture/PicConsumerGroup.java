@@ -14,7 +14,7 @@ public class PicConsumerGroup {
     public PicConsumerGroup(Properties propers) {
         consumers = new ArrayList<>();
         int consumerNum = Integer.parseInt(propers.getProperty("consumerNum"));
-        for (int i = 0; i < consumerNum; i++ ) {
+        for (int i = 0; i < consumerNum; i++) {
             PicConsumerRunable consumerThread = new PicConsumerRunable(propers);
             consumers.add(consumerThread);
         }

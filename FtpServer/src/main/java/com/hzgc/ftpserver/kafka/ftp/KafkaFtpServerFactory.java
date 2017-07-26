@@ -14,7 +14,7 @@ import org.apache.ftpserver.message.MessageResource;
 
 import java.util.Map;
 
-public class KafkaFtpServerFactory extends FtpServerFactory{
+public class KafkaFtpServerFactory extends FtpServerFactory {
     private KafkaFtpServerContext kafkaFtpServerContext;
 
     public KafkaFtpServerFactory() {

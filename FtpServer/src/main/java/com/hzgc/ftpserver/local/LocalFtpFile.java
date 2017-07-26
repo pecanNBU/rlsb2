@@ -28,7 +28,7 @@ public class LocalFtpFile implements FtpFile {
      * Constructor, internal do not use directly.
      */
     public LocalFtpFile(final String fileName, final File file,
-                            final User user) {
+                        final User user) {
         if (fileName == null) {
             throw new IllegalArgumentException("fileName can not be null");
         }
@@ -366,15 +366,12 @@ public class LocalFtpFile implements FtpFile {
      * Get the physical canonical file name. It works like
      * File.getCanonicalPath().
      *
-     * @param rootDir
-     *            The root directory.
-     * @param currDir
-     *            The current directory. It will always be with respect to the
-     *            root directory.
-     * @param fileName
-     *            The input file name.
+     * @param rootDir  The root directory.
+     * @param currDir  The current directory. It will always be with respect to the
+     *                 root directory.
+     * @param fileName The input file name.
      * @return The return string will always begin with the root directory. It
-     *         will never be null.
+     * will never be null.
      */
     public final static String getPhysicalName(final String rootDir,
                                                final String currDir, final String fileName) {

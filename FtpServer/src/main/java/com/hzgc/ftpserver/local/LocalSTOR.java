@@ -1,7 +1,7 @@
 package com.hzgc.ftpserver.local;
 
 
-import com.hzgc.ftpserver.util.Utils;
+import com.hzgc.ftpserver.util.FtpUtil;
 import org.apache.ftpserver.command.AbstractCommand;
 import org.apache.ftpserver.ftplet.*;
 import org.apache.ftpserver.impl.*;
@@ -13,7 +13,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-public class LocalSTOR extends AbstractCommand{
+public class LocalSTOR extends AbstractCommand {
     private final Logger LOG = LoggerFactory.getLogger(LocalSTOR.class);
 
     /**
@@ -91,7 +91,7 @@ public class LocalSTOR extends AbstractCommand{
 
             LocalIODataConnection dataConnection;
             try {
-                IODataConnectionFactory customConnFactory = (IODataConnectionFactory)session.getDataConnection();
+                IODataConnectionFactory customConnFactory = (IODataConnectionFactory) session.getDataConnection();
                 dataConnection = new LocalIODataConnection(customConnFactory.createDataSocket(), customConnFactory.getSession(), customConnFactory);
             } catch (Exception e) {
                 LOG.info("Exception getting the input data stream", e);
@@ -112,10 +112,10 @@ public class LocalSTOR extends AbstractCommand{
                 //parsing JSON files
                 if (file.getName().contains(".json")) {
                     InputStream is = dataConnection.getDataInputStream();
-                    baos = Utils.inputStreamCacher(is);
+                    baos = FtpUtil.inputStreamCacher(is);
                     bais = new ByteArrayInputStream(baos.toByteArray());
-                    //String jsonStr = Utils.loadJsonFile(bais);
-                    //Utils.writeJsonLog("[" + jsonStr + "]");
+                    //String jsonStr = FtpUtil.loadJsonFile(bais);
+                    //FtpUtil.writeJsonLog("[" + jsonStr + "]");
                     transSz = dataConnection.
                             transferFromClient(session.getFtpletSession(), new BufferedInputStream(bais), outStream);
                 } else {
@@ -123,7 +123,7 @@ public class LocalSTOR extends AbstractCommand{
                 }
                 // attempt to close the output stream so that errors in
                 // closing it will return an error to the client (FTPSERVER-119)
-                if(outStream != null) {
+                if (outStream != null) {
                     outStream.close();
                 }
 

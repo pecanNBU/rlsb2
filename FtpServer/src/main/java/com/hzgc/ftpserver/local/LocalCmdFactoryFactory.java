@@ -68,12 +68,13 @@ public class LocalCmdFactoryFactory {
 
     /**
      * Create an {@link CommandFactory} based on the configuration on the factory.
+     *
      * @return The {@link CommandFactory}
      */
     public CommandFactory createCommandFactory() {
 
         Map<String, Command> mergedCommands = new HashMap<String, Command>();
-        if(useDefaultCommands) {
+        if (useDefaultCommands) {
             mergedCommands.putAll(DEFAULT_COMMAND_MAP);
         }
 
@@ -94,8 +95,7 @@ public class LocalCmdFactoryFactory {
     /**
      * Sets whether the default commands will be used.
      *
-     * @param useDefaultCommands
-     *            true if default commands should be used
+     * @param useDefaultCommands true if default commands should be used
      */
     public void setUseDefaultCommands(final boolean useDefaultCommands) {
         this.useDefaultCommands = useDefaultCommands;
@@ -112,14 +112,15 @@ public class LocalCmdFactoryFactory {
 
     /**
      * Add or override a command.
+     *
      * @param commandName The command name, e.g. STOR
-     * @param command The command
+     * @param command     The command
      */
     public void addCommand(String commandName, Command command) {
-        if(commandName == null) {
+        if (commandName == null) {
             throw new NullPointerException("commandName can not be null");
         }
-        if(command == null) {
+        if (command == null) {
             throw new NullPointerException("command can not be null");
         }
 
@@ -129,8 +130,7 @@ public class LocalCmdFactoryFactory {
     /**
      * Set commands to add or override to the default commands
      *
-     * @param commandMap
-     *            The map of commands, the key will be used to map to requests.
+     * @param commandMap The map of commands, the key will be used to map to requests.
      */
     public void setCommandMap(final Map<String, Command> commandMap) {
         if (commandMap == null) {

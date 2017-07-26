@@ -1,7 +1,7 @@
 package com.hzgc.ftpserver.kafka.producer;
 
 
-import com.hzgc.ftpserver.util.Utils;
+import com.hzgc.ftpserver.util.FtpUtil;
 import org.apache.ftpserver.util.IoUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -16,12 +16,13 @@ public class ProducerOverFtp {
     private static KafkaProducer kafkaProducer;
     private Properties kafkaPropers = new Properties();
     private FileInputStream fis;
-    private static  String PICTURE = "picture";
-    private static  String FACE = "face";
-    private static  String JSON = "json";
+    private static String PICTURE = "picture";
+    private static String FACE = "face";
+    private static String JSON = "json";
+
     public ProducerOverFtp() {
         try {
-            File file = Utils.loadResourceFile("producer-over-ftp.properties");
+            File file = FtpUtil.loadResourceFile("producer-over-ftp.properties");
             this.fis = new FileInputStream(file);
             this.kafkaPropers.load(fis);
             PICTURE = kafkaPropers.getProperty("topic-picture");

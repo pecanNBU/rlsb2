@@ -67,7 +67,7 @@ public class KafkaCmdFactoryFactory {
     public CommandFactory createCommandFactory() {
 
         Map<String, Command> mergedCommands = new HashMap<String, Command>();
-        if(useDefaultCommands) {
+        if (useDefaultCommands) {
             mergedCommands.putAll(DEFAULT_COMMAND_MAP);
         }
 
@@ -89,10 +89,10 @@ public class KafkaCmdFactoryFactory {
     }
 
     public void addCommand(String commandName, Command command) {
-        if(commandName == null) {
+        if (commandName == null) {
             throw new NullPointerException("commandName can not be null");
         }
-        if(command == null) {
+        if (command == null) {
             throw new NullPointerException("command can not be null");
         }
 
