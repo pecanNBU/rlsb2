@@ -13,6 +13,8 @@
 -------------------------
 | 对象类型 | objectType |
 -------------------------
+|   备注   |     n      |
+-------------------------
 
 create 'device',
 {NAME => 'device', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', COMPRESSION =>
