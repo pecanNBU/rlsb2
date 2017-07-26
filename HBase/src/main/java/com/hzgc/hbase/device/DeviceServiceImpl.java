@@ -3,6 +3,7 @@ package com.hzgc.hbase.device;
 import com.hzgc.dubbo.device.DeviceService;
 import com.hzgc.hbase.util.HBaseHelper;
 import com.hzgc.hbase.util.HBaseUtil;
+import com.hzgc.util.StringUtil;
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Table;
@@ -19,7 +20,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public boolean bindDevice(String platformId, String ipcID, String notes) {
-        if (HBaseUtil.strIsRight(ipcID) && HBaseUtil.strIsRight(platformId)) {
+        if (StringUtil.strIsRight(ipcID) && StringUtil.strIsRight(platformId)) {
             try {
                 Put put = new Put(Bytes.toBytes(ipcID));
                 put.addColumn(FAMILY, PLAT_ID, Bytes.toBytes(platformId));
@@ -39,7 +40,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public boolean unbindDevice(String platformId, String ipcID) {
-        if (HBaseUtil.strIsRight(platformId) && HBaseUtil.strIsRight(ipcID)) {
+        if (StringUtil.strIsRight(platformId) && StringUtil.strIsRight(ipcID)) {
             try {
                 Delete delete = new Delete(Bytes.toBytes(ipcID));
                 delete.addColumn(FAMILY, PLAT_ID);
@@ -58,12 +59,12 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public boolean renameNotes(String notes, String ipcID) {
-        if (HBaseUtil.strIsRight(ipcID)) {
+        if (StringUtil.strIsRight(ipcID)) {
             try {
                 Put put = new Put(Bytes.toBytes(ipcID));
                 put.addColumn(FAMILY, NOTES, Bytes.toBytes(notes));
                 TABLE.put(put);
-                LOG.info("Rename notes");
+                LOG.info("Rename " + ipcID + "'s notes successful!");
                 return true;
             } catch (Exception e) {
                 LOG.error("Current renameNotes is failed!");

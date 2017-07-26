@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>com.hzgc</groupId>
-            <artifactId>dubbo</artifactId>
+            <artifactId>dubbo_bigdata</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>

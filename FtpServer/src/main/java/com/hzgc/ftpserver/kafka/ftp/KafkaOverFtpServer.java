@@ -2,7 +2,7 @@ package com.hzgc.ftpserver.kafka.ftp;
 
 import com.hzgc.ftpserver.ClusterOverFtp;
 import com.hzgc.ftpserver.local.LocalPropertiesUserManagerFactory;
-import com.hzgc.ftpserver.util.FtpUtil;
+import com.hzgc.util.FileUtil;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.listener.ListenerFactory;
@@ -25,7 +25,7 @@ public class KafkaOverFtpServer extends ClusterOverFtp {
         // set customer user manager
         LocalPropertiesUserManagerFactory userManagerFactory = new LocalPropertiesUserManagerFactory();
         try {
-            userManagerFactory.setFile(FtpUtil.loadResourceFile("users.properties"));
+            userManagerFactory.setFile(FileUtil.loadResourceFile("users.properties"));
         } catch (Exception e) {
             e.printStackTrace();
         }

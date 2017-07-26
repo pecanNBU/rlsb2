@@ -1,5 +1,6 @@
 package com.hzgc.hbase.util;
 
+import com.hzgc.util.FileUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.*;
@@ -30,7 +31,7 @@ public class HBaseHelper {
     private static void initHBaseConfiguration() {
         try {
             innerHBaseConf = HBaseConfiguration.create();
-            File hbaseFile = HBaseUtil.loadResourceFile("hbase-site.xml");
+            File hbaseFile = FileUtil.loadResourceFile("hbase-site.xml");
             innerHBaseConf.addResource(hbaseFile.getPath());
         } catch (Exception e) {
             e.printStackTrace();

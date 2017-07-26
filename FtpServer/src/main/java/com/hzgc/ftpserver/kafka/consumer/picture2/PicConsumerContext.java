@@ -1,7 +1,7 @@
 package com.hzgc.ftpserver.kafka.consumer.picture2;
 
 import com.hzgc.ftpserver.kafka.consumer.ConsumerContext;
-import com.hzgc.ftpserver.util.FtpUtil;
+import com.hzgc.util.FileUtil;
 import org.apache.hadoop.hbase.client.Connection;
 
 import java.io.FileInputStream;
@@ -16,7 +16,7 @@ public class PicConsumerContext extends ConsumerContext {
     @Override
     public void run() {
         try {
-            resourceFile = FtpUtil.loadResourceFile("consumer-picture.properties");
+            resourceFile = FileUtil.loadResourceFile("src/main/resources/consumer-picture.properties");
             System.out.println("****************************************************************************");
             propers.list(System.out);
             System.out.println("****************************************************************************");

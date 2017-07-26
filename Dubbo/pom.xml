@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>dubbo</artifactId>
+    <artifactId>dubbo_bigdata</artifactId>
 
     <properties>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
@@ -55,6 +55,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hzgc</groupId>
+            <artifactId>util</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 

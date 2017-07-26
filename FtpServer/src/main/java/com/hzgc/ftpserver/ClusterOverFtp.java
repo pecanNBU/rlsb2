@@ -1,6 +1,7 @@
 package com.hzgc.ftpserver;
 
 import com.hzgc.ftpserver.util.FtpUtil;
+import com.hzgc.util.FileUtil;
 import org.apache.ftpserver.DataConnectionConfigurationFactory;
 import org.apache.log4j.Logger;
 
@@ -16,7 +17,7 @@ public abstract class ClusterOverFtp {
     public void loadConfig() throws Exception {
         Properties props = new Properties();
         dataConnConf = new DataConnectionConfigurationFactory();
-        props.load(new FileInputStream(FtpUtil.loadResourceFile("local-over-ftp.properties")));
+        props.load(new FileInputStream(FileUtil.loadResourceFile("local-over-ftp.properties")));
         log.info("Load configuration for ftp server from ./conf/local-over-ftp.properties");
 
         try {
