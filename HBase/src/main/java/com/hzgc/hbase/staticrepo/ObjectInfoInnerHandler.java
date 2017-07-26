@@ -1,7 +1,5 @@
 package com.hzgc.hbase.staticrepo;
 
-import com.hzgc.dubbo.staticrepo.ObjectInfo;
-
 import java.util.List;
 import java.util.Map;
 
