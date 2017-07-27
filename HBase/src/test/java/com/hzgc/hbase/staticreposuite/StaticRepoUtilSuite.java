@@ -131,7 +131,7 @@ public class StaticRepoUtilSuite {
         Image2Byte2Image.byte2image(photo, "C:\\nika.png");
     }
     @Test
-    public void testduiwai(){
+    public void testGetRocordOfObjectInfo(){
         SearchRecordHandlerImpl searchRecordHandler = new SearchRecordHandlerImpl();
         String rk = "b63914dc5f9448f5a0c3b0d6056c4bef";
         ObjectSearchResult o = searchRecordHandler.getRocordOfObjectInfo(rk);

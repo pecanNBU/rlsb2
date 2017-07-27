@@ -26,9 +26,8 @@ public class SearchRecordHandlerImpl implements SearchRecordHandler {
        Result result = null;
         try {
             result = table.get(get);
-            LOG.info("get data from table successed!");
         } catch (IOException e) {
-            LOG.error("get data from table failed!");
+            LOG.error("get data by rowkey from srecord table failed! used method getRocordOfObjectInfo.");
             e.printStackTrace();
         }
         objectSearchResult.setSearchStatus(Bytes.toInt(result.getValue(Bytes.toBytes("rd"),Bytes.toBytes("searchstatus"))));
@@ -44,11 +43,11 @@ public class SearchRecordHandlerImpl implements SearchRecordHandler {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            LOG.error("class not found exception!");
             e.printStackTrace();
+        }finally {
+            HBaseUtil.closTable(table);
         }
         objectSearchResult.setResults(results);
-        HBaseUtil.closTable(table);
         return objectSearchResult;
     }
 
@@ -59,13 +58,13 @@ public class SearchRecordHandlerImpl implements SearchRecordHandler {
         Result result = null;
         try {
             result = table.get(get);
-            LOG.info("get data from table successed!");
         } catch (IOException e) {
-            LOG.error("get data from table failed!");
+            LOG.error("get data by rowkey from srecord table failed! used method getSearchPhoto.");
             e.printStackTrace();
+        }finally {
+            HBaseUtil.closTable(table);
         }
         byte[] photo = result.getValue(Bytes.toBytes("rd"), Bytes.toBytes("photo"));
-        HBaseUtil.closTable(table);
         return photo;
     }
 }
