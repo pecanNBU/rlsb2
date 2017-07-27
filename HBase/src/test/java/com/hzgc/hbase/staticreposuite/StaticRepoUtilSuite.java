@@ -4,6 +4,7 @@ import com.hzgc.dubbo.staticrepo.ObjectSearchResult;
 import com.hzgc.hbase.staticrepo.ObjectInfoHandlerImpl;
 import com.hzgc.hbase.staticrepo.ObjectInfoInnerHandler;
 import com.hzgc.hbase.staticrepo.ObjectInfoInnerHandlerImpl;
+import com.hzgc.hbase.staticrepo.SearchRecordHandlerImpl;
 import com.hzgc.hbase.util.HBaseHelper;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Connection;
@@ -128,5 +129,12 @@ public class StaticRepoUtilSuite {
         byte[] photo = objectInfoHandler.getPhotoByKey(rk);
         System.out.println(photo);
         Image2Byte2Image.byte2image(photo, "C:\\nika.png");
+    }
+    @Test
+    public void testduiwai(){
+        SearchRecordHandlerImpl searchRecordHandler = new SearchRecordHandlerImpl();
+        String rk = "b63914dc5f9448f5a0c3b0d6056c4bef";
+        ObjectSearchResult o = searchRecordHandler.getRocordOfObjectInfo(rk);
+        System.out.println(o);
     }
 }
