@@ -110,7 +110,7 @@ public class StaticRepoUtilSuite {
     public void testGetPhotoByKey() throws IOException {
         byte[] photo = new ObjectInfoHandlerImpl().getPhotoByKey("e590e89a002e44b3b302257a85684d1a");
         System.out.println(photo);
-        Image2Byte2Image.byte2image(photo, "C:\\Users\\lenovo\\Desktop\\nima.png");
+        //Image2Byte2Image.byte2image(photo, "C:\\Users\\lenovo\\Desktop\\nima.png");
     }
 
     @Test
@@ -120,5 +120,13 @@ public class StaticRepoUtilSuite {
         a.add("123456");
         List<String> b = objectInfoInnerHandler.searchByPkeys(a);
         System.out.println(b);
+    }
+    @Test
+    public void testGetPhotoByRowkey() throws IOException {
+       ObjectInfoHandlerImpl objectInfoHandler = new ObjectInfoHandlerImpl();
+        String rk = "e590e89a002e44b3b302257a85684d1a";
+        byte[] photo = objectInfoHandler.getPhotoByKey(rk);
+        System.out.println(photo);
+        Image2Byte2Image.byte2image(photo, "C:\\nika.png");
     }
 }
