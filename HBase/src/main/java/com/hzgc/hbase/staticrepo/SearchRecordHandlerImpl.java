@@ -44,6 +44,7 @@ public class SearchRecordHandlerImpl implements SearchRecordHandler {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            LOG.error("class not found exception!");
             e.printStackTrace();
         }
         objectSearchResult.setResults(results);
