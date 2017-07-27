@@ -2,6 +2,7 @@ package com.hzgc.hbase.staticrepo;
 
 import com.hzgc.dubbo.staticrepo.ObjectInfoHandler;
 import com.hzgc.dubbo.staticrepo.ObjectSearchResult;
+import com.hzgc.dubbo.staticrepo.PSearchArgsModel;
 import com.hzgc.hbase.util.HBaseHelper;
 import com.hzgc.hbase.util.HBaseUtil;
 import org.apache.hadoop.hbase.Cell;
@@ -154,41 +155,53 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     }
 
     @Override
-    public ObjectSearchResult getObjectInfo(String platformId, String name, String idCard, int sex,
-                                            String rowkey, byte[] image, String feature,
-                                            int threshold, List<String> pkeys,
-                                            String creator, String cphone,
-                                            long start, long pageSize,
-                                            String serachId, String serachType,
-                                            boolean moHuSearch) {
+    public ObjectSearchResult getObjectInfo(PSearchArgsModel pSearchArgsModel) {
         ObjectSearchResult objectSearchResult;
-        switch (serachType){
+        switch (pSearchArgsModel.getSearchType()){
             case "searchByPlatFormIdAndIdCard":{
-                objectSearchResult = searchByCreator(creator, moHuSearch, start, pageSize);
+                objectSearchResult = searchByPlatFormIdAndIdCard(pSearchArgsModel.getPaltaformId(),
+                        pSearchArgsModel.getIdCard(),
+                        pSearchArgsModel.isMoHuSearch(),
+                        pSearchArgsModel.getStart(),
+                        pSearchArgsModel.getPageSize());
                 break;
             }
             case "searchByRowkey":{
-                objectSearchResult = searchByRowkey(rowkey);
+                objectSearchResult = searchByRowkey(pSearchArgsModel.getRowkey());
                 break;
             }
             case "searchByCphone":{
-                objectSearchResult = searchByCphone(cphone);
+                objectSearchResult = searchByCphone(pSearchArgsModel.getCphone());
                 break;
             }
             case "searchByCreator": {
-                objectSearchResult = searchByCreator(creator, moHuSearch, start, pageSize);
+                objectSearchResult = searchByCreator(pSearchArgsModel.getCreator(),
+                        pSearchArgsModel.isMoHuSearch(),
+                        pSearchArgsModel.getStart(), pSearchArgsModel.getPageSize());
                 break;
             }
             case "searchByName": {
-                objectSearchResult = searchByName(name, moHuSearch, start, pageSize);
+                objectSearchResult = searchByName(pSearchArgsModel.getName(),
+                        pSearchArgsModel.isMoHuSearch(),
+                        pSearchArgsModel.getStart(), pSearchArgsModel.getPageSize());
                 break;
             }
             case "serachByPhotoAndThreshold":{
-                objectSearchResult = searchByPhotoAndThreshold(paltformID, image, threshold, feature, start, pageSize);
+                objectSearchResult = searchByPhotoAndThreshold(pSearchArgsModel.getPaltaformId(),
+                        pSearchArgsModel.getImage(), pSearchArgsModel.getThredshold(),
+                        pSearchArgsModel.getFeature(),
+                        pSearchArgsModel.getStart(),
+                        pSearchArgsModel.getPageSize());
             }
             default:{
-                objectSearchResult = searchByMutiCondition(platformId, idCard, name, sex, rowkey, feature
-                        ,threshold, pkeys, creator, cphone, start, pageSize,moHuSearch);
+                objectSearchResult = searchByMutiCondition(pSearchArgsModel.getPaltaformId(),
+                        pSearchArgsModel.getIdCard(), pSearchArgsModel.getName(),
+                        pSearchArgsModel.getSex(), pSearchArgsModel.getRowkey(),
+                        pSearchArgsModel.getFeature(),pSearchArgsModel.getThredshold(),
+                        pSearchArgsModel.getPkeys(), pSearchArgsModel.getCreator(),
+                        pSearchArgsModel.getCphone(),
+                        pSearchArgsModel.getStart(),
+                        pSearchArgsModel.getPageSize(),pSearchArgsModel.isMoHuSearch());
                 break;
             }
         }
@@ -244,8 +257,8 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         if (start != -1 && pageSize != -1){
             requestBuilder.setFrom((int)start).setSize((int) pageSize);
         }
-        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(requestBuilder);
-        pool.execute(new PutRecoredToHBaseThread(paltformID, searchResult));
+        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(requestBuilder, null);
+        pool.execute(new PutRecoredToHBaseThread(paltformID, searchResult, null));
         return searchResult;
     }
 
@@ -270,8 +283,8 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         } else {
             requestBuilder.setQuery(QueryBuilders.termQuery("idcard", IdCard));
         }
-        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(requestBuilder);
-        pool.execute(new PutRecoredToHBaseThread(paltformID, searchResult));
+        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(requestBuilder, null);
+        pool.execute(new PutRecoredToHBaseThread(paltformID, searchResult, null));
         return searchResult;
     }
 
@@ -315,7 +328,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        pool.execute(new PutRecoredToHBaseThread(null, objectSearchResult));
+        pool.execute(new PutRecoredToHBaseThread(null, objectSearchResult, null));
 
         return objectSearchResult;
     }
@@ -328,8 +341,8 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
                 .setTypes("person")
                 .setQuery(QueryBuilders.termQuery("cphone", cphone))
                 .setExplain(true);
-        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(requestBuilder);
-        pool.execute(new PutRecoredToHBaseThread(paltformID, searchResult));
+        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(requestBuilder, null);
+        pool.execute(new PutRecoredToHBaseThread(paltformID, searchResult, null));
         return searchResult;
     }
 
@@ -353,8 +366,8 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         } else {
             requestBuilder.setQuery(QueryBuilders.termQuery("creator", creator));
         }
-        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(requestBuilder);
-        pool.execute(new PutRecoredToHBaseThread(paltformID, searchResult));
+        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(requestBuilder, null);
+        pool.execute(new PutRecoredToHBaseThread(paltformID, searchResult, null));
         return searchResult;
     }
 
@@ -378,8 +391,8 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
                 requestBuilder.setFrom((int)start).setSize((int)pageSize);
             }
         }
-        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(requestBuilder);
-        pool.execute(new PutRecoredToHBaseThread(paltformID, searchResult));
+        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(requestBuilder, null);
+        pool.execute(new PutRecoredToHBaseThread(paltformID, searchResult, null));
         return searchResult;
     }
 
@@ -421,7 +434,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         return null;
     }
 
-    public void putSearchRecordToHBase(String platformId, ObjectSearchResult searchResult){
+    public void putSearchRecordToHBase(String platformId, ObjectSearchResult searchResult, byte[] photo){
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         ObjectOutputStream oout = null;
         byte[] results = null;
@@ -457,6 +470,9 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         if (results != null){
             put.addColumn(Bytes.toBytes("rd"), Bytes.toBytes("results"), results);
         }
+        if (photo != null){
+            put.addColumn(Bytes.toBytes("rd"), Bytes.toBytes("photo"), photo);
+        }
         try {
             table.put(put);
             LOG.info("excute putSearchRecordToHBase done.");
@@ -469,7 +485,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         }
     }
 
-    private ObjectSearchResult dealWithSearchRequesBuilder(SearchRequestBuilder searchRequestBuilder){
+    private ObjectSearchResult dealWithSearchRequesBuilder(SearchRequestBuilder searchRequestBuilder, byte[] photo){
         SearchResponse response = searchRequestBuilder.get();
         SearchHits hits = response.getHits();
         LOG.info("总记录数是： " + hits.getTotalHits());
@@ -477,7 +493,11 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         ObjectSearchResult searchResult = new ObjectSearchResult();
         String searchId = UUID.randomUUID().toString().replace("-", "");
         searchResult.setSearchId(searchId);
-        searchResult.setPhotoId(null);
+        if (photo == null){
+            searchResult.setPhotoId(null);
+        }else {
+            searchResult.setPhotoId(searchId);
+        }
         searchResult.setSearchNums(hits.getTotalHits());
         List<Map<String, Object>> results = new ArrayList<>();
         LOG.info("需要返回的记录数是： " + searchHits.length);
@@ -500,17 +520,21 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
 
 class PutRecoredToHBaseThread implements Runnable{
     private ObjectInfoHandlerImpl objectInfoHandler = new ObjectInfoHandlerImpl();
-    public PutRecoredToHBaseThread(String platformId, ObjectSearchResult objectSearchResult){
+    private byte[] photo;
+    public PutRecoredToHBaseThread(String platformId, ObjectSearchResult objectSearchResult, byte[] photo){
         if (platformId != null){
             objectInfoHandler.setPaltformID(platformId);
         }
         if (objectSearchResult != null){
             objectInfoHandler.setObjectSearchResult(objectSearchResult);
         }
+        if (photo != null){
+            this.photo = photo;
+        }
     }
     @Override
     public void run() {
         new ObjectInfoHandlerImpl().putSearchRecordToHBase(objectInfoHandler.getPaltformID(),
-                objectInfoHandler.getObjectSearchResult());
+                objectInfoHandler.getObjectSearchResult(), photo);
     }
 }

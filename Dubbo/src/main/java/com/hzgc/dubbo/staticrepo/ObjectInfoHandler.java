@@ -35,33 +35,10 @@ public interface ObjectInfoHandler {
 
     /**
      * 可以匹配精确查找，以图搜索人员信息，模糊查找   （外）（李第亮）
-     * @param platformId 对应的是平台的ID
-     * @param idCard 身份证号
-     * @param name 人员姓名
-     * @param rowkey 对应的是一个人在HBase 数据库中的唯一标志
-     * @param image  传过来的图片
-     * @param threshold  图片比对的阈值
-     * @param pkeys 人员类型列表
-     * @param creator 布控人员
-     * @param cphone 布控人手机号
-     * @param start 需要返回的起始行
-     * @param pageSize 需要返回的每页的大小
-     * @param serachId 搜索Id
-     * @param serachType 搜索的类型，有如下搜索类型,searchByPlatFormIdAndIdCard（身份证号），
-     *                   searchByRowkey（rowke），
-     *                   serachByCphone(布控人手机号)
-     *                   searchByCreator（布控人）
-     *                   searchByMuti（多条件查询）
-     * @param moHuSearch  是否模糊查询
+     * @param pSearchArgsModel 搜索参数的封装
      * @return 返回搜索所需要的结果封装成的对象，包含搜索id，成功与否标志，记录数，记录信息，照片id
      */
-    public ObjectSearchResult getObjectInfo(String platformId, String name, String idCard, int sex,
-                                            String rowkey, byte[] image, String feature,
-                                            int threshold, List<String> pkeys,
-                                            String creator, String cphone,
-                                            long start, long pageSize,
-                                            String serachId, String serachType,
-                                            boolean moHuSearch);
+    public ObjectSearchResult getObjectInfo(PSearchArgsModel pSearchArgsModel);
 
     /**
      * 根据传进来的平台id  和身份证号进行查询  （外）（李第亮）
