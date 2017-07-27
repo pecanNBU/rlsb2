@@ -59,6 +59,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         List<String> fieldlist = new ArrayList<>();
         fieldlist.addAll(fieldset);
         String rowkey = UUID.randomUUID().toString().replace("-", "");
+        LOG.info("rowkey: " + rowkey);
         // 获取table 对象，通过封装HBaseHelper 来获取
         Table objectinfo = HBaseHelper.getTable("objectinfo");
         //构造Put 对象
@@ -411,27 +412,18 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     @Override
     public byte[] getPhotoByKey(String rowkey) {
         Table table = HBaseHelper.getTable("objectinfo");
-        Scan scan = new Scan(Bytes.toBytes(rowkey));
-        ResultScanner rs = null;
+        Get get = new Get(Bytes.toBytes(rowkey));
+        Result result = null;
         try {
-            rs = table.getScanner(scan);
-            LOG.info("Get the scan result by rowkey successed!");
+            result = table.get(get);
+            LOG.info("get data from table successed!");
         } catch (IOException e) {
-            LOG.error("Get the scan result by rowkey failed!");
+            LOG.error("get data from table failed!");
             e.printStackTrace();
         }
-        Iterator<Result> it;
-        if (null != rs) {
-            it = rs.iterator();
-            byte[] photo = null;
-            while (it.hasNext()) {
-                Result r = it.next();
-                photo = r.getValue(Bytes.toBytes("person"), Bytes.toBytes("photo"));
-            }
-            return photo;
-        }
+        byte[] photo = result.getValue(Bytes.toBytes("person"), Bytes.toBytes("photo"));
         HBaseUtil.closTable(table);
-        return null;
+        return photo;
     }
 
     public void putSearchRecordToHBase(String platformId, ObjectSearchResult searchResult, byte[] photo){
