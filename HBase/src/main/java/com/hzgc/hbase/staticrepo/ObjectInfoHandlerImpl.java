@@ -366,7 +366,9 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
                 .setTypes("person")
                 .setExplain(true);
         if(name != null && moHuSearch){
-            requestBuilder.setQuery(QueryBuilders.queryStringQuery("name:" + name + "*"));
+            name = ".*" + name + ".*";
+            QueryBuilder qb = regexpQuery("name", name);
+            requestBuilder.setQuery(qb);
             if (start != -1 && pageSize != -1){
                 requestBuilder.setFrom((int)start).setSize((int)pageSize);
             }
