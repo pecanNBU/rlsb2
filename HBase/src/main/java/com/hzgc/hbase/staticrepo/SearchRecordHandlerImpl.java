@@ -4,23 +4,20 @@ import com.hzgc.dubbo.staticrepo.ObjectSearchResult;
 import com.hzgc.dubbo.staticrepo.SearchRecordHandler;
 import com.hzgc.hbase.util.HBaseHelper;
 import com.hzgc.hbase.util.HBaseUtil;
-import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.log4j.*;
+
 public class SearchRecordHandlerImpl implements SearchRecordHandler {
     private static Logger LOG = Logger.getLogger(SearchRecordHandlerImpl.class);
+
     @Override
     public ObjectSearchResult getRocordOfObjectInfo(String rowkey) {
        Table table = HBaseHelper.getTable("srecord");
