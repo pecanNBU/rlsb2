@@ -18,7 +18,7 @@
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
                 <includes>
-                    <include>spring-content.xml</include>
+                    <include>spring-context.xml</include>
                 </includes>
             </resource>
             <resource>

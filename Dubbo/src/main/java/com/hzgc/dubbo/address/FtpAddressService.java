@@ -2,7 +2,7 @@ package com.hzgc.dubbo.address;
 
 import java.util.Properties;
 
-public interface ftpAddressService {
+public interface FtpAddressService {
 
     /**
      * 获取Ftp地址和端口号

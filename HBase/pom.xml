@@ -21,12 +21,33 @@
             <groupId>com.hzgc</groupId>
             <artifactId>dubbo_bigdata</artifactId>
             <version>1.0</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-client</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <targetPath>${project.build.directory}/classes/META-INF/spring</targetPath>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>spring-context.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <targetPath>${project.build.directory}/classes</targetPath>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>*.properties</include>
+                    <include>hbase-site.xml</include>
+                    <include>consumer.xml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 
 </project>

@@ -1,13 +1,13 @@
 package com.hzgc.ftpserver.address;
 
-import com.hzgc.dubbo.address.ftpAddressService;
+import com.hzgc.dubbo.address.FtpAddressService;
 import com.hzgc.util.FileUtil;
 import com.hzgc.util.IOUtil;
 
 import java.io.FileInputStream;
 import java.util.Properties;
 
-public class FtpAddressServiceImpl implements ftpAddressService {
+public class FtpAddressServiceImpl implements FtpAddressService {
     private static Properties proper = new Properties();
 
     public FtpAddressServiceImpl() {
