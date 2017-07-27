@@ -30,14 +30,14 @@ public class LocalPropertiesUserManager extends AbstractUserManager {
     private URL userUrl;
 
     public LocalPropertiesUserManager(PasswordEncryptor passwordEncryptor,
-                                 File userDataFile, String adminName) {
+                                      File userDataFile, String adminName) {
         super(adminName, passwordEncryptor);
 
         loadFromFile(userDataFile);
     }
 
     public LocalPropertiesUserManager(PasswordEncryptor passwordEncryptor,
-                                 URL userDataPath, String adminName) {
+                                      URL userDataPath, String adminName) {
         super(adminName, passwordEncryptor);
 
         loadFromUrl(userDataPath);

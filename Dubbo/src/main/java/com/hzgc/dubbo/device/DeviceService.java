@@ -28,4 +28,9 @@ public interface DeviceService {
      * @return 是否重命名成功
      */
     boolean renameNotes(String notes, String ipcID);
+
+    /**
+     * 关闭Table对象
+     */
+    void closeTable();
 }

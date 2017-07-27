@@ -15,7 +15,42 @@
     <dependencies>
         <dependency>
             <groupId>com.hzgc</groupId>
+            <artifactId>dubbo_bigdata</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hzgc</groupId>
             <artifactId>ftp</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hzgc</groupId>
+            <artifactId>hbase</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hzgc</groupId>
+            <artifactId>hbase2es</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hzgc</groupId>
+            <artifactId>jni</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hzgc</groupId>
+            <artifactId>kafka</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hzgc</groupId>
+            <artifactId>rocketmq</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hzgc</groupId>
+            <artifactId>streaming</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>

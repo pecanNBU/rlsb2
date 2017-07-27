@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.*;
 
-public class ConsumerHandlerThread implements Runnable{
+public class ConsumerHandlerThread implements Runnable {
     protected final Logger LOG;
     private final KafkaConsumer<String, byte[]> consumer;
     private Connection hbaseConn;
@@ -42,7 +42,7 @@ public class ConsumerHandlerThread implements Runnable{
 //                new ArrayBlockingQueue<Runnable>(1000), new ThreadPoolExecutor.CallerRunsPolicy());
         BlockingQueue<ConsumerRecord<String, byte[]>> buffer = new LinkedBlockingQueue<>();
         executors = Executors.newFixedThreadPool(workerNum);
-        final int  minBatchSize = Integer.parseInt(propers.getProperty("minBatchSize"));
+        final int minBatchSize = Integer.parseInt(propers.getProperty("minBatchSize"));
         final int commitFailure = Integer.parseInt(propers.getProperty("commitFailure"));
         int consumerTimes = 1;
         int failWorker = 0;

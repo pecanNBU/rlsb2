@@ -55,12 +55,12 @@ public interface ObjectInfoHandler {
      * @param moHuSearch  是否模糊查询
      * @return 返回搜索所需要的结果封装成的对象，包含搜索id，成功与否标志，记录数，记录信息，照片id
      */
-    public ObjectSearchResult getObjectInfo(String platformId, String name, String idCard,
-                                            String rowkey, byte[] image,
+    public ObjectSearchResult getObjectInfo(String platformId, String name, String idCard, int sex,
+                                            String rowkey, byte[] image, String feature,
                                             int threshold, List<String> pkeys,
                                             String creator, String cphone,
                                             long start, long pageSize,
-                                            int serachId, String serachType,
+                                            String serachId, String serachType,
                                             boolean moHuSearch);
 
     /**
@@ -89,7 +89,7 @@ public interface ObjectInfoHandler {
      * @param cphone 布控人手机号
      * @return 返回搜索所需要的结果封装成的对象，包含搜索id，成功与否标志，记录数，记录信息，照片id
      */
-    public ObjectSearchResult serachByCphone(String cphone);
+    public ObjectSearchResult searchByCphone(String cphone);
 
 
     /**
@@ -125,7 +125,7 @@ public interface ObjectInfoHandler {
      * @param pageSize  需要返回的记录数
      * @return 返回搜索所需要的结果封装成的对象，包含搜索id，成功与否标志，记录数，记录信息，照片id
      */
-    public ObjectSearchResult serachByPhotoAndThreshold(String platformId, byte[] photo,
+    public ObjectSearchResult searchByPhotoAndThreshold(String platformId, byte[] photo,
                                                         int threshold, String feature,
                                                         long start, long pageSize);
 
@@ -142,7 +142,7 @@ public interface ObjectInfoHandler {
      * @param rowkey 人员在对象信息库中的唯一标志。
      * @return 图片的byte[] 数组
      */
-    public byte getPhotoByKey(String rowkey);
+    public byte[] getPhotoByKey(String rowkey);
 
 
 

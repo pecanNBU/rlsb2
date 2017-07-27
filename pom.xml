@@ -18,6 +18,7 @@
         <module>Distribution</module>
         <module>JNI</module>
         <module>HBase2Es</module>
+        <module>Util</module>
     </modules>
 
     <properties>
@@ -30,6 +31,12 @@
         <kafka.version>0.10.0.0</kafka.version>
         <mina.version>2.0.7</mina.version>
         <ftplet.version>1.0.6</ftplet.version>
+        <spark.version>1.5.1</spark.version>
+        <spring.version>4.2.5.RELEASE</spring.version>
+        <zookeeper.version>3.5.1-alpha</zookeeper.version>
+        <dubbo.version>2.5.3</dubbo.version>
+        <rocketmq.version>4.1.0-incubating</rocketmq.version>
+        <zkclient.version>0.1</zkclient.version>
     </properties>
 
     <dependencyManagement>
@@ -50,14 +57,14 @@
                 <version>${kafka.version}</version>
             </dependency>
             <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>${log4j.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>jdk.tools</groupId>
                 <artifactId>jdk.tools</artifactId>
                 <version>1.6</version>
+            </dependency>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>

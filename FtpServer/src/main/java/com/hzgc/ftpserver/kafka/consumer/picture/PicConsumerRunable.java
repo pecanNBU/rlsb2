@@ -16,20 +16,20 @@ public class PicConsumerRunable extends ConsumerRunnable {
 
     @Override
     public void run() {
-            while (true){
-                ConsumerRecords<String, byte[]> records = consumer.poll(100);
-                FileOutputStream fis = null;
-                for (ConsumerRecord<String, byte[]> record : records) {
-                    System.out.printf("offset = %d, key = %s, value = %s\n", record.offset(), record.key(), record.value());
-                    try {
-                        fis = new FileOutputStream(new File("E:\\run.jpg"));
-                        fis.write(record.value());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        IoUtils.close(fis);
-                    }
+        while (true) {
+            ConsumerRecords<String, byte[]> records = consumer.poll(100);
+            FileOutputStream fis = null;
+            for (ConsumerRecord<String, byte[]> record : records) {
+                System.out.printf("offset = %d, key = %s, value = %s\n", record.offset(), record.key(), record.value());
+                try {
+                    fis = new FileOutputStream(new File("E:\\run.jpg"));
+                    fis.write(record.value());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    IoUtils.close(fis);
                 }
             }
+        }
     }
 }

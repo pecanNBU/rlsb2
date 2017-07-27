@@ -1,23 +1,24 @@
 package com.hzgc.dubbo.staticrepo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lenovo on 2017/7/11.
  */
 public class ObjectSearchResult {
     private String searchId;  // 搜索id
-    private String searchStatus;  // 查询成功与否状态，
+    private int searchStatus;  // 查询成功与否状态，
     private String photoId;  // 基础图片的图片ID
     private long searchNums;  // 搜索出来的结果数量
-    private List<ObjectInfo> results;  // 搜索出来的人员或者车的详细信息
+    private List<Map<String, Object>> results;  // 搜索出来的人员或者车的详细信息
 
     public ObjectSearchResult() {
     }
 
-    public ObjectSearchResult(String searchId, String searchStatus,
+    public ObjectSearchResult(String searchId, int searchStatus,
                               String photoId, long searchNums,
-                              List<ObjectInfo> results) {
+                              List<Map<String, Object>> results) {
         this.searchId = searchId;
         this.searchStatus = searchStatus;
         this.photoId = photoId;
@@ -33,11 +34,11 @@ public class ObjectSearchResult {
         this.searchId = searchId;
     }
 
-    public String getSearchStatus() {
+    public int getSearchStatus() {
         return searchStatus;
     }
 
-    public void setSearchStatus(String searchStatus) {
+    public void setSearchStatus(int searchStatus) {
         this.searchStatus = searchStatus;
     }
 
@@ -57,11 +58,11 @@ public class ObjectSearchResult {
         this.searchNums = searchNums;
     }
 
-    public List<ObjectInfo> getResults() {
+    public List<Map<String, Object>> getResults() {
         return results;
     }
 
-    public void setResults(List<ObjectInfo> results) {
+    public void setResults(List<Map<String, Object>> results) {
         this.results = results;
     }
 

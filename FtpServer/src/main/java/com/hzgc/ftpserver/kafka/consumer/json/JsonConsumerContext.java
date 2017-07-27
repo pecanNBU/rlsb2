@@ -1,7 +1,7 @@
 package com.hzgc.ftpserver.kafka.consumer.json;
 
 import com.hzgc.ftpserver.kafka.consumer.ConsumerContext;
-import com.hzgc.ftpserver.util.Utils;
+import com.hzgc.util.FileUtil;
 import org.apache.hadoop.hbase.client.Connection;
 
 import java.io.FileInputStream;
@@ -15,7 +15,7 @@ public class JsonConsumerContext extends ConsumerContext {
     @Override
     public void run() {
         try {
-            resourceFile = Utils.loadResourceFile("consumer-json.properties");
+            resourceFile = FileUtil.loadResourceFile("src/main/resources/consumer-json.properties");
             System.out.println("****************************************************************************");
             propers.list(System.out);
             System.out.println("****************************************************************************");
