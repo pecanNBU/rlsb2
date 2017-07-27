@@ -361,7 +361,24 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     @Override
     public ObjectSearchResult searchByName(String name, boolean moHuSearch,
                                            long start, long pageSize) {
-        return null;
+        Client client = ElasticSearchHelper.getEsClient();
+        SearchRequestBuilder requestBuilder = client.prepareSearch("objectinfo")
+                .setTypes("person")
+                .setExplain(true);
+        if(name != null && moHuSearch){
+            requestBuilder.setQuery(QueryBuilders.queryStringQuery("name:" + name + "*"));
+            if (start != -1 && pageSize != -1){
+                requestBuilder.setFrom((int)start).setSize((int)pageSize);
+            }
+        }else if(name != null && !moHuSearch){
+            requestBuilder.setQuery(QueryBuilders.termQuery("name",name));
+            if (start != -1 && pageSize != -1){
+                requestBuilder.setFrom((int)start).setSize((int)pageSize);
+            }
+        }
+        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(requestBuilder);
+        pool.execute(new PutRecoredToHBaseThread(paltformID, searchResult));
+        return searchResult;
     }
 
     @Override
