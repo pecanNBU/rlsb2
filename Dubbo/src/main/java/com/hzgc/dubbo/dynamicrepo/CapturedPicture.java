@@ -27,11 +27,19 @@ public class CapturedPicture {
     /**
      * 图片的附加信息，扩展预留
      */
-    private Map<String, Object> extend;
+    private String extend;
     /**
      * 图片数据
      */
-    private byte[] image;
+    private byte[] smallImage;
+    /**
+     * 大图
+     */
+    private byte[] bigImage;
+    /**
+     * 时间戳
+     */
+    private long timeStamp;
 
     public String getId() {
         return id;
@@ -65,20 +73,36 @@ public class CapturedPicture {
         this.similarity = similarity;
     }
 
-    public Map<String, Object> getExtend() {
+    public String getExtend() {
         return extend;
     }
 
-    public void setExtend(Map<String, Object> extend) {
+    public void setExtend(String extend) {
         this.extend = extend;
     }
 
-    public byte[] getImage() {
-        return image;
+    public byte[] getSmallImage() {
+        return smallImage;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setSmallImage(byte[] smallImage) {
+        this.smallImage = smallImage;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public byte[] getBigImage() {
+        return bigImage;
+    }
+
+    public void setBigImage(byte[] bigImage) {
+        this.bigImage = bigImage;
     }
 
     @Override
@@ -89,7 +113,9 @@ public class CapturedPicture {
                 ", description='" + description + '\'' +
                 ", similarity=" + similarity +
                 ", extend=" + extend +
-                ", image=" + Arrays.toString(image) +
+                ", smallImage=" + Arrays.toString(smallImage) +
+                ", bigImage=" + Arrays.toString(bigImage) +
+                ", timeStamp=" + timeStamp +
                 '}';
     }
 }
