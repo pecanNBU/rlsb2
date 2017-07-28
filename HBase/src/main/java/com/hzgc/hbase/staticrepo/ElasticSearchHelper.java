@@ -1,6 +1,5 @@
 package com.hzgc.hbase.staticrepo;
 
-import com.hzgc.hbase.util.HBaseUtil;
 import com.hzgc.util.FileUtil;
 import org.apache.log4j.Logger;
 import org.elasticsearch.client.transport.TransportClient;
