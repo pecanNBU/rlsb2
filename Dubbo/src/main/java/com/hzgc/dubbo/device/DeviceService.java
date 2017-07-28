@@ -29,8 +29,4 @@ public interface DeviceService {
      */
     boolean renameNotes(String notes, String ipcID);
 
-    /**
-     * 关闭Table对象
-     */
-    void closeTable();
 }

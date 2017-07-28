@@ -4,17 +4,17 @@ public class WarnRule {
     /**
      * 需要对比对象类型
      */
-    String objectType;
+    private String objectType;
 
     /**
      * 相似度阈值（0-100）
      */
-    Integer threshold;
+    private Integer threshold;
 
     /**
      * 天数阈值，只对离线告警起作用
      */
-    Integer dayThreshold;
+    private Integer dayThreshold;
 
     /**
      * 告警类型
@@ -24,5 +24,37 @@ public class WarnRule {
      * 需要产生离线告警，告警信息中需要有对比库 id ，以及离线数据的信息，时间段只对识别告警与新增告警起作用，离线告
      * 警需要全天匹配。
      */
-    int code;
+    private Integer code;
+
+    public String getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
+    }
+
+    public Integer getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(Integer threshold) {
+        this.threshold = threshold;
+    }
+
+    public Integer getDayThreshold() {
+        return dayThreshold;
+    }
+
+    public void setDayThreshold(Integer dayThreshold) {
+        this.dayThreshold = dayThreshold;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
 }

@@ -12,25 +12,23 @@ import org.apache.log4j.Logger;
 
 public class DeviceServiceImpl implements DeviceService {
     private static Logger LOG = Logger.getLogger(DeviceServiceImpl.class);
-    private final static String TABLE_NAME = "device";
-    private final static byte[] FAMILY = Bytes.toBytes("device");
-    private final static byte[] PLAT_ID = Bytes.toBytes("p");
-    private final static byte[] NOTES = Bytes.toBytes("n");
-    private final static Table TABLE = HBaseHelper.getTable(TABLE_NAME);
 
     @Override
     public boolean bindDevice(String platformId, String ipcID, String notes) {
+        Table table = HBaseHelper.getTable(DeviceTable.getTableName());
         if (StringUtil.strIsRight(ipcID) && StringUtil.strIsRight(platformId)) {
             try {
                 Put put = new Put(Bytes.toBytes(ipcID));
-                put.addColumn(FAMILY, PLAT_ID, Bytes.toBytes(platformId));
-                put.addColumn(FAMILY, NOTES, Bytes.toBytes(notes));
-                TABLE.put(put);
+                put.addColumn(DeviceTable.getFamily(), DeviceTable.getPlatId(), Bytes.toBytes(platformId));
+                put.addColumn(DeviceTable.getFamily(), DeviceTable.getNotes(), Bytes.toBytes(notes));
+                table.put(put);
                 LOG.info("Put data[" + ipcID + ", " + platformId + "] successful");
                 return true;
             } catch (Exception e) {
                 LOG.error("Current bind is failed!");
                 return false;
+            } finally {
+                HBaseUtil.closTable(table);
             }
         } else {
             LOG.error("Please check the arguments!");
@@ -40,16 +38,19 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public boolean unbindDevice(String platformId, String ipcID) {
+        Table table = HBaseHelper.getTable(DeviceTable.getTableName());
         if (StringUtil.strIsRight(platformId) && StringUtil.strIsRight(ipcID)) {
             try {
                 Delete delete = new Delete(Bytes.toBytes(ipcID));
-                delete.addColumn(FAMILY, PLAT_ID);
-                TABLE.delete(delete);
+                delete.addColumn(DeviceTable.getFamily(), DeviceTable.getPlatId());
+                table.delete(delete);
                 LOG.info("Unbind device:" + ipcID + " and " + platformId + " successful");
                 return true;
             } catch (Exception e) {
                 LOG.error("Current unbind is failed!");
                 return false;
+            } finally {
+                HBaseUtil.closTable(table);
             }
         } else {
             LOG.error("Please check the arguments!");
@@ -59,11 +60,12 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public boolean renameNotes(String notes, String ipcID) {
+        Table table = HBaseHelper.getTable(DeviceTable.getTableName());
         if (StringUtil.strIsRight(ipcID)) {
             try {
                 Put put = new Put(Bytes.toBytes(ipcID));
-                put.addColumn(FAMILY, NOTES, Bytes.toBytes(notes));
-                TABLE.put(put);
+                put.addColumn(DeviceTable.getFamily(), DeviceTable.getNotes(), Bytes.toBytes(notes));
+                table.put(put);
                 LOG.info("Rename " + ipcID + "'s notes successful!");
                 return true;
             } catch (Exception e) {
@@ -74,10 +76,5 @@ public class DeviceServiceImpl implements DeviceService {
             LOG.error("Please check the arguments!");
             return false;
         }
-    }
-
-    @Override
-    public void closeTable() {
-        HBaseUtil.closTable(TABLE);
     }
 }
