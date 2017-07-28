@@ -3,7 +3,7 @@ package com.hzgc.dubbo.dynamicrepo;
 import java.util.Map;
 
 /**
- * 以图搜图接口，内含四个方法（外）（彭聪）
+ * 以图搜图接口，内含五个方法（外）（彭聪）
  */
 public interface CapturePictureSearchService {
     /**
@@ -33,11 +33,20 @@ public interface CapturePictureSearchService {
     Map<String, String> getSearchFilterParams(int type);
 
     /**
-     * 根据id（rowkey）获取原图
+     * 根据id（rowkey）获取原图 （刘思阳）
      *
      * @param imageId rowkey
-     * @param type    图片类型，人还是车
-     * @return 以二进制数组的形式返回图片
+     * @param type    图片类型，人/车
+     * @return byte[]  图片
      */
     byte[] getPicture(String imageId, int type);
+
+    /**
+     * 根据id（rowkey）获取动态信息库内容（DynamicObject对象）（刘思阳）
+     *
+     * @param imageId id（rowkey）
+     * @param type    图片类型，人/车
+     * @return DynamicObject    动态库对象
+     */
+    public DynamicObject getCaptureMessage(String imageId, int type);
 }
