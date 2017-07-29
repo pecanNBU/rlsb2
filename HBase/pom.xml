@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>com.hzgc</groupId>
-            <artifactId>dubbo_bigdata</artifactId>
+            <artifactId>bigdata-api</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
