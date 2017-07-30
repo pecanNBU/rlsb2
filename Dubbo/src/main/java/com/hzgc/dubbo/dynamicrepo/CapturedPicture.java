@@ -27,7 +27,7 @@ public class CapturedPicture {
     /**
      * 图片的附加信息，扩展预留
      */
-    private String extend;
+    private Map<String, Object> extend;
     /**
      * 图片数据
      */
@@ -73,11 +73,11 @@ public class CapturedPicture {
         this.similarity = similarity;
     }
 
-    public String getExtend() {
+    public Map<String, Object> getExtend() {
         return extend;
     }
 
-    public void setExtend(String extend) {
+    public void setExtend(Map<String, Object> extend) {
         this.extend = extend;
     }
 
