@@ -1,6 +1,7 @@
 package com.hzgc.hbase.staticrepo;
 
 import com.hzgc.dubbo.staticrepo.ObjectInfoHandler;
+import com.hzgc.dubbo.staticrepo.ObjectInfoTable;
 import com.hzgc.dubbo.staticrepo.ObjectSearchResult;
 import com.hzgc.dubbo.staticrepo.PSearchArgsModel;
 import com.hzgc.hbase.util.HBaseHelper;
@@ -61,16 +62,16 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         String rowkey = UUID.randomUUID().toString().replace("-", "");
         LOG.info("rowkey: " + rowkey);
         // 获取table 对象，通过封装HBaseHelper 来获取
-        Table objectinfo = HBaseHelper.getTable("objectinfo");
+        Table objectinfo = HBaseHelper.getTable(ObjectInfoTable.TABLE_NAME);
         //构造Put 对象
         Put put = new Put(Bytes.toBytes(rowkey));
         // 添加列族属性
         for (String field : fieldlist) {
-            if ("photo".equals(field)) {
-                put.addColumn(Bytes.toBytes("person"), Bytes.toBytes(field),
+            if (ObjectInfoTable.PHOTO.equals(field)) {
+                put.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF), Bytes.toBytes(field),
                         (byte[]) person.get(field));
             } else {
-                put.addColumn(Bytes.toBytes("person"), Bytes.toBytes(field),
+                put.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF), Bytes.toBytes(field),
                         Bytes.toBytes((String) person.get(field)));
             }
         }
@@ -78,9 +79,12 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateString = format.format(date);
-        put.addColumn(Bytes.toBytes("person"), Bytes.toBytes("createtime"), Bytes.toBytes(dateString));
-        put.addColumn(Bytes.toBytes("person"), Bytes.toBytes("updatetime"), Bytes.toBytes(dateString));
-        put.addColumn(Bytes.toBytes("person"), Bytes.toBytes("platformId"), Bytes.toBytes(platformId));
+        put.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                Bytes.toBytes(ObjectInfoTable.CREATETIME), Bytes.toBytes(dateString));
+        put.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                Bytes.toBytes(ObjectInfoTable.UPDATETIME), Bytes.toBytes(dateString));
+        put.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                Bytes.toBytes(ObjectInfoTable.PLATFORMID), Bytes.toBytes(platformId));
         // 执行Put 操作，往表格里面添加一行数据
         try {
             objectinfo.put(put);
@@ -99,7 +103,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     @Override
     public int deleteObjectInfo(List<String> rowkeys) {
         // 获取table 对象，通过封装HBaseHelper 来获取
-        Table table = HBaseHelper.getTable("objectinfo");
+        Table table = HBaseHelper.getTable(ObjectInfoTable.TABLE_NAME);
         List<Delete> deletes = new ArrayList<>();
         Delete delete;
         for (String rowkey : rowkeys) {
@@ -124,8 +128,8 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     @Override
     public int updateObjectInfo(Map<String, Object> person) {
         // 获取table 对象，通过封装HBaseHelper 来获取
-        Table table = HBaseHelper.getTable("objectinfo");
-        String id = (String) person.get("id");
+        Table table = HBaseHelper.getTable(ObjectInfoTable.TABLE_NAME);
+        String id = (String) person.get(ObjectInfoTable.ROWKEY);
         Set<String> fieldset = person.keySet();
         Iterator<String> it = fieldset.iterator();
         List<String> fieldlist = new ArrayList<>();
@@ -134,14 +138,20 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         }
         Put put = new Put(Bytes.toBytes(id));
         for (String field : fieldlist) {
-            if ("photo".equals(field)) {
-                put.addColumn(Bytes.toBytes("person"), Bytes.toBytes(field),
+            if (ObjectInfoTable.PHOTO.equals(field)) {
+                put.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF), Bytes.toBytes(field),
                         (byte[]) person.get(field));
             } else {
-                put.addColumn(Bytes.toBytes("person"), Bytes.toBytes(field),
+                put.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF), Bytes.toBytes(field),
                         Bytes.toBytes((String) person.get(field)));
             }
         }
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = format.format(date);
+        put.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                Bytes.toBytes(ObjectInfoTable.UPDATETIME), Bytes.toBytes(dateString));
+
         try {
             table.put(put);
             LOG.info("table update successed!");
