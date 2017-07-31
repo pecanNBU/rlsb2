@@ -150,27 +150,11 @@ public class DynamicTable {
      */
     public static final byte[] SEARCHRES_COLUMN_SEARCHIMAGEID = Bytes.toBytes("q");
     /**
-     * 设备
-     */
-    public static final byte[] SEARCHRES_COLUMN_IPCID = Bytes.toBytes("f");
-    /**
      * 返回图片ID
      */
     public static final byte[] SEARCHRES_COLUMN_RESIMAGEID = Bytes.toBytes("r");
     /**
-     * 小图
-     */
-    public static final byte[] SEARCHRES_COLUMN_SMALLIMAGE = Bytes.toBytes("s");
-    /**
      * 相似度
      */
-    public static final byte[] SEARCHRES_COLUMN_SIMILITUDE = Bytes.toBytes("si");
-    /**
-     * 描述信息
-     */
-    public static final byte[] SEARCHRES_COLUMN_DESCRIBE = Bytes.toBytes("d");
-    /**
-     * 附加信息
-     */
-    public static final byte[] SEARCHRES_COLUMN_EXTRA = Bytes.toBytes("e");
+    public static final byte[] SEARCHRES_COLUMN_SIMILARITY = Bytes.toBytes("si");
 }

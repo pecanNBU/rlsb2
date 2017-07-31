@@ -4,14 +4,32 @@ package com.hzgc.dubbo.dynamicrepo;
  * 图片类型
  */
 public enum PictureType {
+
     /**
-     * 人脸图
+     * 人脸大图小图
      */
     PERSON(0),
     /**
-     *车辆图
+     * 车辆大图小图
      */
-    CAR(1);
+    CAR(1),
+    /**
+     * 人脸小图
+     */
+    SMALL_PERSON(2),
+    /**
+     * 车辆小图
+     */
+    SMALL_CAR(3),
+    /**
+     * 人脸大图
+     */
+    BIG_PERSON(4),
+    /**
+     * 车辆大图
+     */
+    BIG_CAR(5);
+
 
     private int type;
 
