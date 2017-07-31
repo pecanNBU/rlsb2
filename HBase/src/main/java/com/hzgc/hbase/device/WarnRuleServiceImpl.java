@@ -6,22 +6,21 @@ import com.hzgc.hbase.util.HBaseHelper;
 import com.hzgc.hbase.util.HBaseUtil;
 import com.hzgc.util.ObjectUtil;
 import com.hzgc.util.StringUtil;
-import org.apache.hadoop.hbase.client.Delete;
-import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.client.Table;
+import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.CellScanner;
+import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class WarnRuleServiceImpl implements WarnRuleService {
     private static Logger LOG = Logger.getLogger(WarnRuleServiceImpl.class);
-    private static final Table OBJTYPETABLE = HBaseHelper.getTable("objToDevice");
+    private static final String OBJTYEPTABLE = "objToDevice";
     private static final byte[] CF = Bytes.toBytes("objType");
+    private static final byte[] OFFLINERK = Bytes.toBytes("offlineWarnRowKey");
+    private static final byte[] OFFLINECOL = Bytes.toBytes("objTypes");
 
     @Override
     public Map<String, Boolean> configRules(List<String> ipcIDs, List<WarnRule> rules) {
@@ -32,7 +31,7 @@ public class WarnRuleServiceImpl implements WarnRuleService {
             if (ipcIDs != null && rules != null) {
                 for (String ipcID : ipcIDs) {
                     id = ipcID;
-                    Map<Integer, Map<String, Integer>> temp = parseRuleAndInsert(id, rules);
+                    Map<Integer, Map<String, Integer>> temp = parseRuleAndInsert(id, rules, table);
                     Put put = new Put(Bytes.toBytes(id));
                     put.addColumn(DeviceTable.getFamily(), DeviceTable.getWarn(), ObjectUtil.objectToByte(temp));
                     table.put(put);
@@ -60,6 +59,7 @@ public class WarnRuleServiceImpl implements WarnRuleService {
                     delete.addColumn(DeviceTable.getFamily(), DeviceTable.getWarn());
                     table.delete(delete);
                     reply.put(id, true);
+                    delOfflineWarn(ipcID, table);
                 }
             } catch (IOException e) {
                 reply.put(id, false);
@@ -72,11 +72,61 @@ public class WarnRuleServiceImpl implements WarnRuleService {
 
     @Override
     public List<String> objectTypeHasRule(String objectType) {
-        return null;
+        Table table = null;
+        List<String> reply = new ArrayList<>();;
+        if (StringUtil.strIsRight(objectType)) {
+            try {
+                table = HBaseHelper.getTable(OBJTYEPTABLE);
+                Get get = new Get(Bytes.toBytes(objectType));
+                get.addFamily(CF);
+                Result result = table.get(get);
+                CellScanner scanner =result.cellScanner();
+                while (scanner.advance()) {
+                    Cell cell = scanner.current();
+                    byte[] qualifiers = scanner.current().getQualifierArray();
+                    reply.add(new String(qualifiers, cell.getQualifierOffset(), cell.getQualifierLength()));
+                }
+                return reply;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                HBaseUtil.closTable(table);
+            }
+        }
+        return reply;
     }
 
     @Override
     public int deleteObjectTypeOfRules(String objectType, List<String> ipcIDs) {
+        Table objTable = null;
+        Table deviceTable = null;
+        if (StringUtil.strIsRight(objectType) && ipcIDs != null) {
+            try {
+                objTable = HBaseHelper.getTable(OBJTYEPTABLE);
+                deviceTable = HBaseHelper.getTable(DeviceTable.getTableName());
+                Get objGet = new Get(Bytes.toBytes(objectType));
+                Result objResult = objTable.get(objGet);
+                for (String str : ipcIDs) {
+                    Map<Integer, String> map = deSerializObj(objResult.getValue(CF, Bytes.toBytes(str)));
+                    Get deviceGet = new Get(Bytes.toBytes(str));
+                    deviceGet.addColumn(DeviceTable.getFamily(), DeviceTable.getWarn());
+                    Result deviceResult = deviceTable.get(deviceGet);
+                    byte[] deviceByte = deviceResult.getValue(DeviceTable.getFamily(), DeviceTable.getWarn());
+                    Map<Integer, Map<String, Integer>> deviceMap = deSerializDevice(deviceByte);
+                    Put devicePut = new Put(Bytes.toBytes(str));
+                    for (Integer key : map.keySet()) {
+                        deviceMap.get(key).remove(objectType);
+                    }
+                    devicePut.addColumn(DeviceTable.getFamily(), DeviceTable.getWarn(), ObjectUtil.objectToByte(deviceMap));
+                    deviceTable.put(devicePut);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                HBaseUtil.closTable(deviceTable);
+                HBaseUtil.closTable(objTable);
+            }
+        }
         return 0;
     }
 
@@ -90,7 +140,7 @@ public class WarnRuleServiceImpl implements WarnRuleService {
         return null;
     }
 
-    private Map<Integer, Map<String, Integer>> parseRuleAndInsert(String ipcID, List<WarnRule> rules) {
+    private Map<Integer, Map<String, Integer>> parseRuleAndInsert(String ipcID, List<WarnRule> rules, Table deviceTable) {
         Map<Integer, Map<String, Integer>> result = null;
         Map<String, Map<String, Map<Integer, String>>> objType = new HashMap<>();
         if (null != rules & StringUtil.strIsRight(ipcID)) {
@@ -108,6 +158,7 @@ public class WarnRuleServiceImpl implements WarnRuleService {
                     if (Objects.equals(code, DeviceTable.getOFFLINE())) {
                         result.get(code).put(rule.getObjectType(), rule.getDayThreshold());
                         addMembers(objType, rule, ipcID);
+                        addToOfflineWarn(rule, ipcID, deviceTable);
                     }
                 }
             }
@@ -130,13 +181,74 @@ public class WarnRuleServiceImpl implements WarnRuleService {
     }
 
     private void putObjectTypeInfo(Map<String, Map<String, Map<Integer, String>>> objType, String ipcID) {
+        Table table = null;
         if (objType != null) {
             try {
+                table = HBaseHelper.getTable(OBJTYEPTABLE);
                 for (String key : objType.keySet()) {
                     Map<String, Map<Integer, String>> value = objType.get(key);
                     Put put = new Put(Bytes.toBytes(key));
                     put.addColumn(CF, Bytes.toBytes(ipcID), ObjectUtil.objectToByte(value.get(ipcID)));
-                    OBJTYPETABLE.put(put);
+                    table.put(put);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                HBaseUtil.closTable(table);
+            }
+        }
+    }
+
+    private Map<Integer, String> deSerializObj(byte[] bytes) {
+        if (bytes != null) {
+            return (Map<Integer, String>)ObjectUtil.byteToObject(bytes);
+        }
+        return null;
+    }
+
+    public Map<Integer, Map<String, Integer>> deSerializDevice(byte[] bytes) {
+        if (bytes != null) {
+            return (Map<Integer, Map<String, Integer>>)ObjectUtil.byteToObject(bytes);
+        }
+        return null;
+    }
+
+    private  void addToOfflineWarn(WarnRule rule, String ipcID, Table deviceTable) {
+        if (rule != null && deviceTable != null && StringUtil.strIsRight(ipcID)) {
+            try {
+                Get get = new Get(OFFLINERK);
+                Result result = deviceTable.get(get);
+                if (result.containsColumn(DeviceTable.getFamily(), OFFLINECOL)) {
+                    Map<String, Map<String, String>> map = (Map<String, Map<String, String>>)ObjectUtil.byteToObject(result.getValue(DeviceTable.getFamily(), OFFLINECOL));
+                    map.get(rule.getObjectType()).put(ipcID, "");
+                    Put put = new Put(OFFLINERK);
+                    put.addColumn(DeviceTable.getFamily(), OFFLINECOL, ObjectUtil.objectToByte(map));
+                    deviceTable.put(put);
+                } else {
+                    Put put = new Put(OFFLINERK);
+                    Map<String, Map<String, String>> map = new HashMap<>();
+                    Map<String, String> ipcMap = new HashMap<>();
+                    ipcMap.put(ipcID, "");
+                    map.put(rule.getObjectType(), ipcMap);
+                    put.addColumn(DeviceTable.getFamily(), OFFLINECOL, ObjectUtil.objectToByte(map));
+                    deviceTable.put(put);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void delOfflineWarn(String ipcID, Table deviceTable) {
+        if (StringUtil.strIsRight(ipcID) && deviceTable != null) {
+            try {
+                Get get = new Get(OFFLINERK);
+                Result result = deviceTable.get(get);
+                if (result.containsColumn(DeviceTable.getFamily(), OFFLINECOL)) {
+                    Map<String, Map<String, String>> map = (Map<String, Map<String, String>>)ObjectUtil.byteToObject(result.getValue(DeviceTable.getFamily(),  OFFLINECOL));
+                    map.remove(ipcID);
+                    Put put = new Put(OFFLINERK);
+                    put.addColumn(DeviceTable.getFamily(), OFFLINECOL, ObjectUtil.objectToByte(map));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
