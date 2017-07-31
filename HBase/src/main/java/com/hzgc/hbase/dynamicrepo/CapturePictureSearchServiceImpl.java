@@ -71,11 +71,9 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
                     searchResult.setFinished(true);
                     String imageId = Bytes.toString(result.getValue(DynamicTable.SEARCHRES_COLUMNFAMILY, DynamicTable.SEARCHRES_COLUMN_SEARCHIMAGEID));
                     searchResult.setImageId(imageId);
-
                     CapturedPicture capturedPicture = null;
                     String returnId = Bytes.toString(result.getValue(DynamicTable.SEARCHRES_COLUMNFAMILY, DynamicTable.SEARCHRES_COLUMN_RESIMAGEID));
                     capturedPicture.setId(returnId);
-
                     int similarity = Bytes.toInt(result.getValue(DynamicTable.SEARCHRES_COLUMNFAMILY, DynamicTable.SEARCHRES_COLUMN_SIMILARITY));
                     capturedPicture.setSimilarity(similarity);
 
@@ -84,19 +82,14 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
 
                     String description = Bytes.toString(personResult.getValue(DynamicTable.PERSON_COLUMNFAMILY, DynamicTable.PERSON_COLUMN_DESCRIBE));
                     capturedPicture.setDescription(description);
-
                     String ipcID = Bytes.toString(personResult.getValue(DynamicTable.PERSON_COLUMNFAMILY, DynamicTable.PERSON_COLUMN_IPCID));
                     capturedPicture.setIpcId(ipcID);
-
-
                     String extend = Bytes.toString(personResult.getValue(DynamicTable.PERSON_COLUMNFAMILY, DynamicTable.PERSON_COLUMN_EXTRA));
                     Map<String, Object> mapEx = new HashMap<>();
                     mapEx.put("ex", extend);
                     capturedPicture.setExtend(mapEx);
-
                     byte[] smallImage = personResult.getValue(DynamicTable.PERSON_COLUMNFAMILY, DynamicTable.PERSON_COLUMN_IMGE);
                     capturedPicture.setSmallImage(smallImage);
-
 
                     capturedPictureList.add(capturedPicture);
                     capturedPictureCutList = capturedPictureList.subList(offset - 1, offset + count - 1);
@@ -107,12 +100,13 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
                 }
                 searchResult.setSearchId(searchId);
                 searchResult.setTotal(capturedPictureList.size());
-
-
-                LOG.error("get SearchResult Object by searchId from table_searchres failed! used method CapturePictureSearchServiceImpl.getSearchResult.");
             }
         } catch (IOException e) {
             e.printStackTrace();
+            LOG.error("get SearchResult Object by searchId from table_searchres failed! used method CapturePictureSearchServiceImpl.getSearchResult.");
+        }finally {
+            HBaseUtil.closTable(searchResTable);
+            HBaseUtil.closTable(personTable);
         }
         return searchResult;
     }
@@ -166,14 +160,11 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
                     try {
                         Get get = new Get(Bytes.toBytes(imageId));
                         Result result = person.get(get);
-
                         setSmallImageToCapturedPicture_person(capturedPicture, result);
-
                         setCapturedPicture_person(capturedPicture, result, mapEx);
 
                         Get bigImageGet = new Get(Bytes.toBytes(bigImageRowKey.toString()));
                         Result bigImageResult = person.get(bigImageGet);
-
                         setBigImageToCapturedPicture_person(capturedPicture, bigImageResult);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -186,14 +177,11 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
                     try {
                         Get get = new Get(Bytes.toBytes(imageId));
                         Result result = car.get(get);
-
                         setSmallImageToCapturedPicture_car(capturedPicture, result);
-
                         setCapturedPicture_car(capturedPicture, result, mapEx);
 
                         Get bigImageGet = new Get(Bytes.toBytes(bigImageRowKey.toString()));
                         Result bigImageResult = car.get(bigImageGet);
-
                         setBigImageToCapturedPicture_car(capturedPicture, bigImageResult);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -208,9 +196,7 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
                         Result result = person.get(get);
 
                         setSmallImageToCapturedPicture_person(capturedPicture, result);
-
                         setCapturedPicture_person(capturedPicture, result, mapEx);
-
                     } catch (IOException e) {
                         e.printStackTrace();
                         LOG.error("get CapturedPicture by rowkey from table_person failed! used method CapturePictureSearchServiceImpl.getCaptureMessage.case 2");
@@ -224,9 +210,7 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
                         Result result = car.get(get);
 
                         setSmallImageToCapturedPicture_car(capturedPicture, result);
-
                         setCapturedPicture_car(capturedPicture, result, mapEx);
-
                     } catch (IOException e) {
                         e.printStackTrace();
                         LOG.error("get CapturedPicture by rowkey from table_car failed! used method CapturePictureSearchServiceImpl.getCaptureMessage.case 3");
@@ -238,14 +222,11 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
                     try {
                         Get get = new Get(Bytes.toBytes(imageId));
                         Result result = person.get(get);
-
                         setCapturedPicture_person(capturedPicture, result, mapEx);
 
                         Get bigImageGet = new Get(Bytes.toBytes(bigImageRowKey.toString()));
                         Result bigImageResult = person.get(bigImageGet);
-
                         setBigImageToCapturedPicture_person(capturedPicture, bigImageResult);
-
                     } catch (IOException e) {
                         e.printStackTrace();
                         LOG.error("get CapturedPicture by rowkey from table_person failed! used method CapturePictureSearchServiceImpl.getCaptureMessage.case 4");
@@ -257,14 +238,11 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
                     try {
                         Get get = new Get(Bytes.toBytes(imageId));
                         Result result = car.get(get);
-
                         setCapturedPicture_car(capturedPicture, result, mapEx);
 
                         Get bigImageGet = new Get(Bytes.toBytes(bigImageRowKey.toString()));
                         Result bigImageResult = car.get(bigImageGet);
-
                         setBigImageToCapturedPicture_car(capturedPicture, bigImageResult);
-
                     } catch (IOException e) {
                         e.printStackTrace();
                         LOG.error("get CapturedPicture by rowkey from table_car failed! used method CapturePictureSearchServiceImpl.getCaptureMessage.case 5");
@@ -276,14 +254,12 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
         } else {
             LOG.error("method CapturePictureSearchServiceImpl.getCaptureMessage param is empty.");
         }
-
         return capturedPicture;
     }
 
     private CapturedPicture setSmallImageToCapturedPicture_person(CapturedPicture capturedPicture, Result result) {
         byte[] smallImage = result.getValue(DynamicTable.PERSON_COLUMNFAMILY, DynamicTable.PERSON_COLUMN_IMGE);
         capturedPicture.setSmallImage(smallImage);
-
         return capturedPicture;
     }
 
@@ -294,22 +270,18 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
         String ex = Bytes.toString(result.getValue(DynamicTable.PERSON_COLUMNFAMILY, DynamicTable.PERSON_COLUMN_EXTRA));
         mapEx.put("ex", ex);
         capturedPicture.setExtend(mapEx);
-
         return capturedPicture;
     }
 
     private CapturedPicture setBigImageToCapturedPicture_person(CapturedPicture capturedPicture, Result bigImageResult) {
-
         byte[] bigImage = bigImageResult.getValue(DynamicTable.PERFEA_COLUMNFAMILY, DynamicTable.PERSON_COLUMN_IMGE);
         capturedPicture.setBigImage(bigImage);
-
         return capturedPicture;
     }
 
     private CapturedPicture setSmallImageToCapturedPicture_car(CapturedPicture capturedPicture, Result result) {
         byte[] smallImage = result.getValue(DynamicTable.CAR_COLUMNFAMILY, DynamicTable.CAR_COLUMN_IMGE);
         capturedPicture.setSmallImage(smallImage);
-
         return capturedPicture;
     }
 
@@ -320,14 +292,12 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
         String ex = Bytes.toString(result.getValue(DynamicTable.CAR_COLUMNFAMILY, DynamicTable.CAR_COLUMN_EXTRA));
         mapEx.put("ex", ex);
         capturedPicture.setExtend(mapEx);
-
         return capturedPicture;
     }
 
     private CapturedPicture setBigImageToCapturedPicture_car(CapturedPicture capturedPicture, Result bigImageResult) {
         byte[] bigImage = bigImageResult.getValue(DynamicTable.CAR_COLUMNFAMILY, DynamicTable.CAR_COLUMN_IMGE);
         capturedPicture.setBigImage(bigImage);
-
         return capturedPicture;
     }
 }
