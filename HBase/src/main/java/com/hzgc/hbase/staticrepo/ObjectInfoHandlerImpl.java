@@ -16,6 +16,7 @@ import org.apache.log4j.*;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -168,6 +169,13 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
                         pSearchArgsModel.getPageSize());
                 break;
             }
+            case "searchByPhotoAndThreshold":{
+                objectSearchResult = searchByPhotoAndThreshold(pSearchArgsModel.getPaltaformId(),
+                                                pSearchArgsModel.getImage(), pSearchArgsModel.getThredshold(),
+                                                pSearchArgsModel.getFeature(), pSearchArgsModel.getStart(),
+                                                pSearchArgsModel.getPageSize());
+                break;
+            }
             case "searchByRowkey":{
                 objectSearchResult = searchByRowkey(pSearchArgsModel.getRowkey());
                 break;
@@ -200,12 +208,11 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             default:{
                 objectSearchResult = searchByMutiCondition(pSearchArgsModel.getPaltaformId(),
                         pSearchArgsModel.getIdCard(), pSearchArgsModel.getName(),
-                        pSearchArgsModel.getSex(), pSearchArgsModel.getRowkey(),
-                        pSearchArgsModel.getFeature(),pSearchArgsModel.getThredshold(),
-                        pSearchArgsModel.getPkeys(), pSearchArgsModel.getCreator(),
-                        pSearchArgsModel.getCphone(),
-                        pSearchArgsModel.getStart(),
-                        pSearchArgsModel.getPageSize(),pSearchArgsModel.isMoHuSearch());
+                        pSearchArgsModel.getSex(), pSearchArgsModel.getFeature(),
+                        pSearchArgsModel.getThredshold(), pSearchArgsModel.getPkeys(),
+                        pSearchArgsModel.getCreator(), pSearchArgsModel.getCphone(),
+                        pSearchArgsModel.getStart(), pSearchArgsModel.getPageSize(),
+                        pSearchArgsModel.isMoHuSearch());
                 break;
             }
         }
@@ -214,49 +221,50 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
 
     //功能跟有待完善
     public ObjectSearchResult searchByMutiCondition(String platformId, String idCard,String name, Integer sex,
-                                                    String rowkey,String feature,int threshold,
+                                                    String feature,int threshold,
                                                     List<String> pkeys, String creator, String cphone,
                                                     int start, int pageSize,boolean moHuSearch){
         SearchResponse response = null;
         SearchRequestBuilder requestBuilder = ElasticSearchHelper.getEsClient()
-                .prepareSearch("objectinfo")
-                .setTypes("person")
+                .prepareSearch(ObjectInfoTable.TABLE_NAME)
+                .setTypes(ObjectInfoTable.PERSON_COLF)
                 .setExplain(true).setSize(10000);
+        BoolQueryBuilder booleanQueryBuilder = QueryBuilders.boolQuery();
+        // 传入平台ID ，必须是确定的
         if (platformId != null){
-            requestBuilder.setQuery(QueryBuilders.boolQuery()
-                    .must(QueryBuilders.termQuery("platformid", platformId)));
+            booleanQueryBuilder.must(QueryBuilders.termQuery(ObjectInfoTable.PLATFORMID, platformId));
         }
+        // 性别要么是1，要么是0，即要么是男，要么是女
         if (sex != null){
-            requestBuilder.setQuery(QueryBuilders.boolQuery()
-                    .must(QueryBuilders.termQuery("sex", sex)));
+            booleanQueryBuilder.must(QueryBuilders.termQuery(ObjectInfoTable.SEX, sex));
         }
+        // 多条件下，输入手机号，只支持精确的手机号
         if (cphone != null){
-            requestBuilder.setQuery(QueryBuilders.boolQuery()
-                    .must(QueryBuilders.termQuery("chone", cphone)));
+            booleanQueryBuilder.must(QueryBuilders.matchPhraseQuery(ObjectInfoTable.CPHONE, cphone)
+                    .analyzer("standard"));
         }
-        if (rowkey != null){
-            requestBuilder.setQuery(QueryBuilders.boolQuery()
-                    .must(QueryBuilders.termQuery("rowkey", rowkey)));
-        }
+        // 人员类型，也是精确的lists
         if (pkeys !=null && pkeys.size() >0){
-            requestBuilder.setQuery(QueryBuilders.boolQuery()
-                    .must(QueryBuilders.termsQuery("rowkey", pkeys)));
+            booleanQueryBuilder.should(QueryBuilders.termsQuery(ObjectInfoTable.PKEY, pkeys));
         }
+        // 身份证号可以是模糊的
         if (idCard != null){
-            requestBuilder.setQuery(QueryBuilders.boolQuery()
-                    .should(QueryBuilders.termQuery("idcard", idCard)));
+            booleanQueryBuilder.should(QueryBuilders.matchQuery(ObjectInfoTable.IDCARD, idCard));
         }
+        // 名字可以是模糊的
         if (name != null){
-            requestBuilder.setQuery(QueryBuilders.boolQuery()
-                    .should(QueryBuilders.termQuery("name", name)));
+            booleanQueryBuilder.should(QueryBuilders.matchQuery(ObjectInfoTable.NAME, name));
         }
+        // 创建者姓名可以是模糊的
         if (creator != null){
-            requestBuilder.setQuery(QueryBuilders.boolQuery()
-                    .should(QueryBuilders.termQuery("creator", creator)));
+            booleanQueryBuilder.should(QueryBuilders.matchQuery(ObjectInfoTable.CREATOR, creator));
         }
+        requestBuilder.setQuery(booleanQueryBuilder);
         ObjectSearchResult searchResult = dealWithSearchRequesBuilder(platformId, requestBuilder, null,
                 null, null,
                 start, pageSize, moHuSearch);
+        // 后续，根据查出来的人员信息，如果有图片，特征值，以及阈值，（则调用算法进行比对，得出相似度比较高的）
+        // 由或者多条件查询里面不支持传入图片以及阈值，特征值。
         return searchResult;
     }
 
