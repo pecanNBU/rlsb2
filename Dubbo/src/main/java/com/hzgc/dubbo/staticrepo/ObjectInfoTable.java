@@ -13,7 +13,7 @@ public class ObjectInfoTable {
     public static final String PHOTO = "photo";         // 照片
     public static final String FEATURE = "feature";  // 特征值
     public static final String REASON = "reason";     // 理由
-    public static final String CTREATOR = "creator";    // 布控人
+    public static final String CREATOR = "creator";    // 布控人
     public static final String CPHONE = "cphone";      // 布控人手机号
     public static final String CREATETIME = "createtime";     // 创建时间
     public static final String UPDATETIME = "updatetime";     // 更新时间

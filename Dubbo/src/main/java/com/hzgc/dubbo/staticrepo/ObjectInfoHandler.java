@@ -51,7 +51,7 @@ public interface ObjectInfoHandler {
      */
     public ObjectSearchResult searchByPlatFormIdAndIdCard(String platformId,
                                                           String IdCard, boolean moHuSearch,
-                                                          long start, long pageSize);
+                                                          int start, int pageSize);
 
     /**
      * 根据rowkey 进行查询 （外）
@@ -66,7 +66,7 @@ public interface ObjectInfoHandler {
      * @param cphone 布控人手机号
      * @return 返回搜索所需要的结果封装成的对象，包含搜索id，成功与否标志，记录数，记录信息，照片id
      */
-    public ObjectSearchResult searchByCphone(String cphone);
+    public ObjectSearchResult searchByCphone(String cphone, int start, int pageSize);
 
 
     /**
@@ -78,7 +78,7 @@ public interface ObjectInfoHandler {
      * @return  返回搜索所需要的结果封装成的对象，包含搜索id，成功与否标志，记录数，记录信息，照片id
      */
     public ObjectSearchResult searchByCreator(String creator, boolean moHuSearch,
-                                              long start, long pageSize);
+                                              int start, int pageSize);
 
     /**
      * 根据人员信息表中的人员姓名进行查询   （外） （李第亮）
@@ -89,7 +89,7 @@ public interface ObjectInfoHandler {
      * @return  返回搜索所需要的结果封装成的对象，包含搜索id，成功与否标志，记录数，记录信息，照片id
      */
     public ObjectSearchResult searchByName(String name, boolean moHuSearch,
-                                           long start, long pageSize);
+                                           int start, int pageSize);
 
     /**
      * 根据图片进行搜索，涉及特征值对比算法，以及该怎么对比。  （外） （李第亮）
