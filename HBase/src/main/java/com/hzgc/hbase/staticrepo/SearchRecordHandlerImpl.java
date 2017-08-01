@@ -61,6 +61,7 @@ public class SearchRecordHandlerImpl implements SearchRecordHandler {
                         filterList = results.subList(from - 1, results.size());
                     }
                 } catch (Exception e) {
+                    LOG.error("change the results format from the method getRocordOfObjectInfo failed!");
                     e.printStackTrace();
                 } finally {
                     HBaseUtil.closTable(table);
