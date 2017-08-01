@@ -2,6 +2,7 @@ package com.hzgc.hbase.staticrepo;
 
 import com.hzgc.dubbo.staticrepo.ObjectSearchResult;
 import com.hzgc.dubbo.staticrepo.SearchRecordHandler;
+import com.hzgc.dubbo.staticrepo.SrecordTable;
 import com.hzgc.hbase.util.HBaseHelper;
 import com.hzgc.hbase.util.HBaseUtil;
 import org.apache.hadoop.hbase.client.Get;
@@ -19,35 +20,54 @@ public class SearchRecordHandlerImpl implements SearchRecordHandler {
     private static Logger LOG = Logger.getLogger(SearchRecordHandlerImpl.class);
 
     @Override
-    public ObjectSearchResult getRocordOfObjectInfo(String rowkey) {
-       Table table = HBaseHelper.getTable("srecord");
-       Get get = new Get(Bytes.toBytes(rowkey));
-       ObjectSearchResult objectSearchResult = new ObjectSearchResult();
-       Result result = null;
+    public ObjectSearchResult getRocordOfObjectInfo(String rowkey,int from,int size) {
+        Table table = HBaseHelper.getTable(SrecordTable.TABLE_NAME);
+        Get get = new Get(Bytes.toBytes(rowkey));
+        ObjectSearchResult objectSearchResult = new ObjectSearchResult();
+        List<Map<String,Object>> filterList = null;
+        Result result = null;
         try {
             result = table.get(get);
         } catch (IOException e) {
             LOG.error("get data by rowkey from srecord table failed! used method getRocordOfObjectInfo.");
             e.printStackTrace();
         }
-        objectSearchResult.setSearchStatus(Bytes.toInt(result.getValue(Bytes.toBytes("rd"),Bytes.toBytes("searchstatus"))));
-        objectSearchResult.setPhotoId(Bytes.toString(result.getValue(Bytes.toBytes("rd"),Bytes.toBytes("photoid"))));
-        objectSearchResult.setSearchId(rowkey);
-        objectSearchResult.setSearchNums(Bytes.toInt(result.getValue(Bytes.toBytes("rd"),Bytes.toBytes("searchnums"))));
-        byte[] resultBySearch = result.getValue(Bytes.toBytes("rd"),Bytes.toBytes("results"));
-        ObjectInputStream ois = null;
-        List<Map<String, Object>> results = null;
-        try {
-            ois = new ObjectInputStream(new ByteArrayInputStream(resultBySearch));
-            results = (List<Map<String, Object>>) ois.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }finally {
-            HBaseUtil.closTable(table);
+        if (result != null) {
+            String useString = result + ".";
+            if (useString.contains(SrecordTable.SEARCH_STATUS)) {
+                objectSearchResult.setSearchStatus(Bytes.toInt(result.getValue(Bytes.toBytes(SrecordTable.RD_CLOF),
+                        Bytes.toBytes(SrecordTable.SEARCH_STATUS))));
+            }
+            if(useString.contains(SrecordTable.PHOTOID)) {
+                objectSearchResult.setPhotoId(Bytes.toString(result.getValue(Bytes.toBytes(SrecordTable.RD_CLOF),
+                        Bytes.toBytes(SrecordTable.PHOTOID))));
+            }
+            objectSearchResult.setSearchId(rowkey);
+            if (useString.contains(SrecordTable.SEARCH_NUMS)) {
+                objectSearchResult.setSearchNums(Bytes.toInt(result.getValue(Bytes.toBytes(SrecordTable.RD_CLOF),
+                        Bytes.toBytes(SrecordTable.SEARCH_NUMS))));
+            }
+            if(useString.contains(SrecordTable.RESULTS)) {
+                byte[] resultBySearch = result.getValue(Bytes.toBytes(SrecordTable.RD_CLOF),
+                        Bytes.toBytes(SrecordTable.RESULTS));
+                ObjectInputStream ois;
+                List<Map<String, Object>> results;
+                try {
+                    ois = new ObjectInputStream(new ByteArrayInputStream(resultBySearch));
+                    results = (List<Map<String, Object>>) ois.readObject();
+                    if(from + size - 1 < results.size()) {
+                        filterList = results.subList(from - 1, from + size - 1);
+                    }else{
+                        filterList = results.subList(from - 1, results.size());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    HBaseUtil.closTable(table);
+                }
+                objectSearchResult.setResults(filterList);
+            }
         }
-        objectSearchResult.setResults(results);
         return objectSearchResult;
     }
 
@@ -64,7 +84,6 @@ public class SearchRecordHandlerImpl implements SearchRecordHandler {
         }finally {
             HBaseUtil.closTable(table);
         }
-        byte[] photo = result.getValue(Bytes.toBytes("rd"), Bytes.toBytes("photo"));
-        return photo;
+        return result.getValue(Bytes.toBytes(SrecordTable.RD_CLOF), Bytes.toBytes(SrecordTable.PHOTO));
     }
 }
