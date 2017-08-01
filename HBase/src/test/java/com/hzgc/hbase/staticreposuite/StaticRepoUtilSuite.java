@@ -145,8 +145,8 @@ public class StaticRepoUtilSuite {
     @Test
     public void testGetRocordOfObjectInfo(){
         SearchRecordHandlerImpl searchRecordHandler = new SearchRecordHandlerImpl();
-        String rk = "b63914dc5f9448f5a0c3b0d6056c4bef";
-        ObjectSearchResult o = searchRecordHandler.getRocordOfObjectInfo(rk);
+        String rk = "fd62eda051c54cf984368972908bc7df";
+        ObjectSearchResult o = searchRecordHandler.getRocordOfObjectInfo(rk,1,3);
         System.out.println(o);
     }
 
@@ -171,5 +171,12 @@ public class StaticRepoUtilSuite {
             System.out.println(demos[i].substring(0, demos[i].indexOf("/")));
             clos.add(demos[i].substring(0, demos[i].indexOf("/")));
         }
+    }
+    @Test
+    public void testgetSearchPhoto(){
+        SearchRecordHandlerImpl searchRecordHandler = new SearchRecordHandlerImpl();
+        String rk = "fd62eda051c54cfmmnc7df";
+        byte[] a = searchRecordHandler.getSearchPhoto(rk);
+        System.out.println(a);
     }
 }
