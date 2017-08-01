@@ -2,8 +2,10 @@ package com.hzgc.dubbo.staticrepo;
 
 public class ObjectInfoTable {
     public static final String TABLE_NAME = "objectinfo"; // 表名
-    public static final String ROWKEY = "id";
+    public static final String ROWKEY = "id";              // 对象信息的唯一标志
     public static final String PERSON_COLF = "person";  // person列族
+
+    // 以下是和平台组公用的属性
     public static final String PLATFORMID = "platformid";  // 平台ID
     public static final String TAG = "tag";            // 人车标志
     public static final String PKEY = "pkey";          // 人员类型
