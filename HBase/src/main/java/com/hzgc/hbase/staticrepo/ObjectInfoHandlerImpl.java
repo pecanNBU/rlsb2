@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.apache.log4j.*;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -23,28 +21,8 @@ import org.elasticsearch.search.SearchHits;
 
 public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     private static Logger LOG = Logger.getLogger(ObjectInfoHandlerImpl.class);
-    private String paltformID;
-    private ObjectSearchResult objectSearchResult;
-    private static ExecutorService pool = Executors.newCachedThreadPool();
 
     public ObjectInfoHandlerImpl(){}
-
-
-    public String getPaltformID() {
-        return paltformID;
-    }
-
-    public void setPaltformID(String paltformID) {
-        this.paltformID = paltformID;
-    }
-
-    public ObjectSearchResult getObjectSearchResult() {
-        return objectSearchResult;
-    }
-
-    public void setObjectSearchResult(ObjectSearchResult objectSearchResult) {
-        this.objectSearchResult = objectSearchResult;
-    }
 
     @Override
     public byte addObjectInfo(String platformId, Map<String, Object> person) {
@@ -152,7 +130,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             LOG.error("table update failed!");
         } finally {
             //关闭表连接
-            HBaseUtil.closTable(table);;
+            HBaseUtil.closTable(table);
         }
         return 0;
     }
@@ -220,7 +198,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     }
 
     //功能跟有待完善
-    public ObjectSearchResult searchByMutiCondition(String platformId, String idCard,String name, Integer sex,
+    private ObjectSearchResult searchByMutiCondition(String platformId, String idCard,String name, Integer sex,
                                                     String feature,int threshold,
                                                     List<String> pkeys, String creator, String cphone,
                                                     int start, int pageSize,boolean moHuSearch){
@@ -260,12 +238,11 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             booleanQueryBuilder.should(QueryBuilders.matchQuery(ObjectInfoTable.CREATOR, creator));
         }
         requestBuilder.setQuery(booleanQueryBuilder);
-        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(platformId, requestBuilder, null,
-                null, null,
-                start, pageSize, moHuSearch);
         // 后续，根据查出来的人员信息，如果有图片，特征值，以及阈值，（则调用算法进行比对，得出相似度比较高的）
         // 由或者多条件查询里面不支持传入图片以及阈值，特征值。
-        return searchResult;
+        return dealWithSearchRequesBuilder(platformId, requestBuilder, null,
+                null, null,
+                start, pageSize, moHuSearch);
     }
 
     @Override
@@ -292,10 +269,9 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
                         .analyzer("standard"));
             }
         }
-        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(platformId, requestBuilder, null,
+        return dealWithSearchRequesBuilder(platformId, requestBuilder, null,
                 null, null,
                 start, pageSize, moHuSearch);
-        return searchResult;
     }
 
     @Override
@@ -353,15 +329,14 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
                 .setTypes(ObjectInfoTable.PERSON_COLF)
                 .setQuery(QueryBuilders.termQuery(ObjectInfoTable.CPHONE, cphone))
                 .setExplain(true).setSize(10000);
-        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(null, requestBuilder, null,
+        return  dealWithSearchRequesBuilder(null, requestBuilder, null,
                 null, null,
                 start, pageSize, false);
-        return searchResult;
     }
 
     // 处理精确查找下，IK 分词器返回多余信息的情况，
     // 比如只需要小王炸，但是返回了小王炸 和小王炸小以及小王炸大的情况
-    public void dealWithCreatorAndNameInNoMoHuSearch(ObjectSearchResult searchResult,String searchType,
+    private void dealWithCreatorAndNameInNoMoHuSearch(ObjectSearchResult searchResult,String searchType,
                                                      String nameOrCreator,
                                                      boolean moHuSearch){
         List<Map<String, Object>> exectResult = new ArrayList<>();
@@ -396,10 +371,9 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         } else {
             requestBuilder.setQuery(QueryBuilders.matchPhraseQuery(ObjectInfoTable.CREATOR, creator));
         }
-        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(null, requestBuilder, null,
+        return dealWithSearchRequesBuilder(null, requestBuilder, null,
                 ObjectInfoTable.CREATOR, creator,
                 start, pageSize, moHuSearch);
-        return searchResult;
     }
 
     @Override
@@ -409,15 +383,14 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         SearchRequestBuilder requestBuilder = client.prepareSearch(ObjectInfoTable.TABLE_NAME)
                 .setTypes(ObjectInfoTable.PERSON_COLF)
                 .setExplain(true).setSize(10000);
-        if(name != null && moHuSearch){
+        if(moHuSearch){
             requestBuilder.setQuery(QueryBuilders.matchQuery(ObjectInfoTable.NAME, name));
-        }else if(name != null && !moHuSearch){
+        }else {
             requestBuilder.setQuery(QueryBuilders.matchPhraseQuery(ObjectInfoTable.NAME,name));
         }
-        ObjectSearchResult searchResult = dealWithSearchRequesBuilder(null, requestBuilder, null,
+        return dealWithSearchRequesBuilder(null, requestBuilder, null,
                 ObjectInfoTable.NAME, name,
                 start, pageSize, moHuSearch);
-        return searchResult;
     }
 
     @Override
@@ -436,8 +409,8 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     public byte[] getPhotoByKey(String rowkey) {
         Table table = HBaseHelper.getTable(ObjectInfoTable.TABLE_NAME);
         Get get = new Get(Bytes.toBytes(rowkey));
-        Result result = null;
-        byte[] photo = null;
+        Result result;
+        byte[] photo;
         try {
             result = table.get(get);
             photo = result.getValue(Bytes.toBytes("person"), Bytes.toBytes("photo"));
@@ -453,7 +426,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     }
 
     // 保存历史查询记录
-    public void putSearchRecordToHBase(String platformId, ObjectSearchResult searchResult, byte[] photo){
+    private void putSearchRecordToHBase(String platformId, ObjectSearchResult searchResult, byte[] photo){
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         ObjectOutputStream oout = null;
         byte[] results = null;
@@ -467,43 +440,47 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
                 e.printStackTrace();
             } finally {
                 try {
-                    oout.close();
+                    if (oout != null){
+                        oout.close();
+                    }
                     bout.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-        Table table = HBaseHelper.getTable(SrecordTable.TABLE_NAME);
-        Put put = new Put(Bytes.toBytes(searchResult.getSearchId()));
-        LOG.info("srecord rowkey is:  " + searchResult.getSearchId());
-        put.addColumn(Bytes.toBytes(SrecordTable.RD_CLOF), Bytes.toBytes(SrecordTable.SEARCH_STATUS),
-                Bytes.toBytes(searchResult.getSearchStatus()))
-                .addColumn(Bytes.toBytes(SrecordTable.RD_CLOF), Bytes.toBytes(SrecordTable.SEARCH_NUMS),
-                        Bytes.toBytes(searchResult.getSearchNums()));
-        if (platformId != null){
-            put.addColumn(Bytes.toBytes(SrecordTable.RD_CLOF), Bytes.toBytes(SrecordTable.PLATFORM_ID),
-                    Bytes.toBytes(platformId));
-        }
-        if (searchResult.getPhotoId() != null){
-            put.addColumn(Bytes.toBytes(SrecordTable.RD_CLOF), Bytes.toBytes(SrecordTable.PHOTOID),
-                    Bytes.toBytes(searchResult.getPhotoId()));
-        }
-        if (results != null){
-            put.addColumn(Bytes.toBytes(SrecordTable.RD_CLOF), Bytes.toBytes(SrecordTable.RESULTS), results);
-        }
-        if (photo != null){
-            put.addColumn(Bytes.toBytes(SrecordTable.RD_CLOF), Bytes.toBytes(SrecordTable.PHOTO), photo);
-        }
-        try {
-            table.put(put);
-            LOG.info("excute putSearchRecordToHBase done.");
-        } catch (IOException e) {
-            LOG.info("excute putSearchRecordToHBase failed.");
-            e.printStackTrace();
-        } finally {
-            LOG.info("释放table 对象......");
-            HBaseUtil.closTable(table);
+        if (searchResult != null){
+            Table table = HBaseHelper.getTable(SrecordTable.TABLE_NAME);
+            Put put = new Put(Bytes.toBytes(searchResult.getSearchId()));
+            LOG.info("srecord rowkey is:  " + searchResult.getSearchId());
+            put.addColumn(Bytes.toBytes(SrecordTable.RD_CLOF), Bytes.toBytes(SrecordTable.SEARCH_STATUS),
+                    Bytes.toBytes(searchResult.getSearchStatus()))
+                    .addColumn(Bytes.toBytes(SrecordTable.RD_CLOF), Bytes.toBytes(SrecordTable.SEARCH_NUMS),
+                            Bytes.toBytes(searchResult.getSearchNums()));
+            if (platformId != null){
+                put.addColumn(Bytes.toBytes(SrecordTable.RD_CLOF), Bytes.toBytes(SrecordTable.PLATFORM_ID),
+                        Bytes.toBytes(platformId));
+            }
+            if (searchResult.getPhotoId() != null){
+                put.addColumn(Bytes.toBytes(SrecordTable.RD_CLOF), Bytes.toBytes(SrecordTable.PHOTOID),
+                        Bytes.toBytes(searchResult.getPhotoId()));
+            }
+            if (results != null){
+                put.addColumn(Bytes.toBytes(SrecordTable.RD_CLOF), Bytes.toBytes(SrecordTable.RESULTS), results);
+            }
+            if (photo != null){
+                put.addColumn(Bytes.toBytes(SrecordTable.RD_CLOF), Bytes.toBytes(SrecordTable.PHOTO), photo);
+            }
+            try {
+                table.put(put);
+                LOG.info("excute putSearchRecordToHBase done.");
+            } catch (IOException e) {
+                LOG.info("excute putSearchRecordToHBase failed.");
+                e.printStackTrace();
+            } finally {
+                LOG.info("释放table 对象......");
+                HBaseUtil.closTable(table);
+            }
         }
     }
 
@@ -541,7 +518,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         // 处理精确查找下，IK 分词器返回多余信息的情况，
         // 比如只需要小王炸，但是返回了小王炸 和小王炸小以及小王炸大的情况
         dealWithCreatorAndNameInNoMoHuSearch(searchResult, searchType, creatorOrName, moHuSearch);
-        // putSearchRecordToHBase(paltformID, searchResult, photo);
+        putSearchRecordToHBase(paltformID, searchResult, photo);
         //处理搜索的数据,根据是否需要分页进行返回
         HBaseUtil.dealWithPaging(searchResult, start, pageSize);
         LOG.info("最终返回的记录数是： " + searchResult.getResults().size() + " 条");
