@@ -38,8 +38,10 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
 
         if (null != option) {
             if (!option.getDeviceIds().isEmpty() && null != option.getSearchType()) {
-                List<String> rowKeyList = new FilterByRowkey().filterByDeviceId(option, scan);
+                List<String> rowKeyListByDeviceId = new FilterByRowkey().filterByDeviceId(option, scan);
 
+            } else if (option.getPlateNumber() != null && option.getSearchType() == SearchType.CAR) {
+                List<String> rowKeyListByPlateNumber = new FilterByRowkey().filterByPlateNumber(option, scan);
             }
         }
 
