@@ -13,7 +13,7 @@ public interface SearchRecordHandler {
      * 里面包含了本次查询ID，查询成功标识，
      * 查询照片ID（无照片，此参数为空），结果数，人员信息列表
      */
-    public ObjectSearchResult getRocordOfObjectInfo(String rowkey);
+    public ObjectSearchResult getRocordOfObjectInfo(String rowkey,int from,int size);
 
     /**
      * 根据穿过来的rowkey 返回照片 （外） （李第亮）
