@@ -30,11 +30,6 @@
         </dependency>
         <dependency>
             <groupId>com.hzgc</groupId>
-            <artifactId>hbase2es</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.hzgc</groupId>
             <artifactId>jni</artifactId>
             <version>1.0</version>
         </dependency>
