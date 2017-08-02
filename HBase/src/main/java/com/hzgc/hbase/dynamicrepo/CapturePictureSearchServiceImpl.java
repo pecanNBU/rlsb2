@@ -13,6 +13,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,9 +61,9 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
         Scan scan = new Scan();
         scan.setFilter(filter);
 
-        SearchResult searchResult = null;
-        List<CapturedPicture> capturedPictureList = null;
-        List<CapturedPicture> capturedPictureCutList = null;
+        SearchResult searchResult = new SearchResult();
+        List<CapturedPicture> capturedPictureList = new ArrayList<>();
+        List<CapturedPicture> capturedPictureCutList = new ArrayList<>();
 
         try {
             ResultScanner resultScanner = searchResTable.getScanner(scan);
@@ -71,7 +72,7 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
                     searchResult.setFinished(true);
                     String imageId = Bytes.toString(result.getValue(DynamicTable.SEARCHRES_COLUMNFAMILY, DynamicTable.SEARCHRES_COLUMN_SEARCHIMAGEID));
                     searchResult.setImageId(imageId);
-                    CapturedPicture capturedPicture = null;
+                    CapturedPicture capturedPicture = new CapturedPicture();
                     String returnId = Bytes.toString(result.getValue(DynamicTable.SEARCHRES_COLUMNFAMILY, DynamicTable.SEARCHRES_COLUMN_RESIMAGEID));
                     capturedPicture.setId(returnId);
                     int similarity = Bytes.toInt(result.getValue(DynamicTable.SEARCHRES_COLUMNFAMILY, DynamicTable.SEARCHRES_COLUMN_SIMILARITY));
@@ -92,10 +93,13 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
                     capturedPicture.setSmallImage(smallImage);
 
                     capturedPictureList.add(capturedPicture);
-                    capturedPictureCutList = capturedPictureList.subList(offset - 1, offset + count - 1);
+                    if (offset + count - 1 > capturedPictureList.size()) {
+                        capturedPictureCutList = capturedPictureList.subList(offset - 1, capturedPictureList.size());
+                    } else {
+                        capturedPictureCutList = capturedPictureList.subList(offset - 1, offset + count - 1);
+                    }
                 }
                 if (null != capturedPictureCutList) {
-
                     searchResult.setPictures(capturedPictureCutList);
                 }
                 searchResult.setSearchId(searchId);
