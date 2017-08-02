@@ -91,7 +91,7 @@
 
         <!-- RocketMQ 模块conf文件-->
         <fileSet>
-            <directory>../RocketMQ/src/main/resources/</directory>
+            <directory>../RocketMQ/src/main/resources/conf/</directory>
             <includes>
                 <include>**</include>
             </includes>
@@ -111,7 +111,7 @@
         <moduleSet>
             <useAllReactorProjects>true</useAllReactorProjects>
             <includes>
-                <include>com.hzgc:dubbo</include>
+                <include>com.hzgc:bigdata-api</include>
                 <include>com.hzgc:ftp</include>
                 <include>com.hzgc:hbase</include>
                 <include>com.hzgc:hbase2es</include>
