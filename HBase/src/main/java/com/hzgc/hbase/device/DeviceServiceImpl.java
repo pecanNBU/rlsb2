@@ -9,18 +9,19 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class DeviceServiceImpl implements DeviceService {
     private static Logger LOG = Logger.getLogger(DeviceServiceImpl.class);
 
     @Override
     public boolean bindDevice(String platformId, String ipcID, String notes) {
-        Table table = HBaseHelper.getTable(DeviceTable.getTableName());
+        Table table = HBaseHelper.getTable(DeviceTable.TABLE_DEVICE);
         if (StringUtil.strIsRight(ipcID) && StringUtil.strIsRight(platformId)) {
             try {
                 Put put = new Put(Bytes.toBytes(ipcID));
-                put.addColumn(DeviceTable.getFamily(), DeviceTable.getPlatId(), Bytes.toBytes(platformId));
-                put.addColumn(DeviceTable.getFamily(), DeviceTable.getNotes(), Bytes.toBytes(notes));
+                put.addColumn(DeviceTable.CF_DEVICE, DeviceTable.PLAT_ID, Bytes.toBytes(platformId));
+                put.addColumn(DeviceTable.CF_DEVICE, DeviceTable.NOTES, Bytes.toBytes(notes));
                 table.put(put);
                 LOG.info("Put data[" + ipcID + ", " + platformId + "] successful");
                 return true;
@@ -38,11 +39,11 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public boolean unbindDevice(String platformId, String ipcID) {
-        Table table = HBaseHelper.getTable(DeviceTable.getTableName());
+        Table table = HBaseHelper.getTable(DeviceTable.TABLE_DEVICE);
         if (StringUtil.strIsRight(platformId) && StringUtil.strIsRight(ipcID)) {
             try {
                 Delete delete = new Delete(Bytes.toBytes(ipcID));
-                delete.addColumn(DeviceTable.getFamily(), DeviceTable.getPlatId());
+                delete.addColumn(DeviceTable.CF_DEVICE, DeviceTable.PLAT_ID);
                 table.delete(delete);
                 LOG.info("Unbind device:" + ipcID + " and " + platformId + " successful");
                 return true;
@@ -60,11 +61,11 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public boolean renameNotes(String notes, String ipcID) {
-        Table table = HBaseHelper.getTable(DeviceTable.getTableName());
+        Table table = HBaseHelper.getTable(DeviceTable.TABLE_DEVICE);
         if (StringUtil.strIsRight(ipcID)) {
             try {
                 Put put = new Put(Bytes.toBytes(ipcID));
-                put.addColumn(DeviceTable.getFamily(), DeviceTable.getNotes(), Bytes.toBytes(notes));
+                put.addColumn(DeviceTable.CF_DEVICE, DeviceTable.NOTES, Bytes.toBytes(notes));
                 table.put(put);
                 LOG.info("Rename " + ipcID + "'s notes successful!");
                 return true;
