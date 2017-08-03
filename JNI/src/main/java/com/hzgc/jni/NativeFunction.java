@@ -10,6 +10,6 @@ public class NativeFunction {
     public static native float compare(float[] currentFeature, float[] historyFeature);
 
     static {
-        System.loadLibrary("libFaceLib");
+        System.loadLibrary("FaceLib");
     }
 }
