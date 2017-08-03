@@ -1,6 +1,8 @@
 package com.hzgc.dubbo.staticrepo;
 
-public class ObjectInfoTable {
+import java.io.Serializable;
+
+public class ObjectInfoTable implements Serializable {
     public static final String TABLE_NAME = "objectinfo"; // 表名
     public static final String ROWKEY = "id";              // 对象信息的唯一标志
     public static final String PERSON_COLF = "person";  // person列族

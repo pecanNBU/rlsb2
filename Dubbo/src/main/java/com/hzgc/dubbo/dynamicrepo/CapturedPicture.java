@@ -1,12 +1,13 @@
 package com.hzgc.dubbo.dynamicrepo;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
 
 /**
  * 动态图片定义
  */
-public class CapturedPicture {
+public class CapturedPicture implements Serializable {
 
     /**
      * 图片 id (rowkey)用于获取图片

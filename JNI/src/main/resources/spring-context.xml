@@ -4,9 +4,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://code.alibabatech.com/schema/dubbo
-	http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
->
-    <dubbo:application name="consumer-of-device"/>
-    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
-    <dubbo:reference id="DeviceService" interface="com.hzgc.dubbo.device.DeviceService"/>
+	http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--device 模块的接口和实现-->
+    <bean id="FaceExtract" class="com.hzgc.jni.FaceExtractImpl"/>
+    <dubbo:service interface="com.hzgc.dubbo.feature.FaceExtract" ref="FaceExtract" />
+
 </beans>
