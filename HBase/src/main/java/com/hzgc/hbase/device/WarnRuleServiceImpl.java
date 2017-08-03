@@ -363,7 +363,7 @@ public class WarnRuleServiceImpl implements WarnRuleService {
             Result offlineResult = deviceTable.get(offlinGet);
             if (!offlineResult.isEmpty()) {
                 Map<String, Map<String, Integer>> tempMap = deSerializOffLine(offlineResult.
-                        getValue(DeviceTable.OFFLINERK, DeviceTable.OBJTYPE_COL));
+                        getValue(DeviceTable.CF_DEVICE, DeviceTable.OFFLINECOL));
                 for (String type : offlineMap.keySet()) {
                     if (tempMap.containsKey(type)) {
                         for (String ipc : offlineMap.get(type).keySet()) {
