@@ -63,8 +63,7 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>*.properties</include>
-                    <include>hbase-site.xml</include>
-                    <include>consumer.xml</include>
+                    <include>*.xml</include>
                 </includes>
             </resource>
         </resources>
