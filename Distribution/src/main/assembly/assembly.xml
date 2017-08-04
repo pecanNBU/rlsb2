@@ -43,6 +43,9 @@
             <includes>
                 <include>**</include>
             </includes>
+            <excludes>
+                <exclude>spring-context.xml</exclude>
+            </excludes>
             <outputDirectory>\conf</outputDirectory>
         </fileSet>
 
@@ -50,8 +53,12 @@
         <fileSet>
             <directory>../HBase/src/main/resources/</directory>
             <includes>
-                <include>conf/**</include>
+                <include>**</include>
             </includes>
+            <excludes>
+                <exclude>spring-context.xml</exclude>
+                <exclude>sql/</exclude>
+            </excludes>
             <outputDirectory>\conf</outputDirectory>
         </fileSet>
         <fileSet>
@@ -59,9 +66,11 @@
             <includes>
                 <include>sql/**</include>
             </includes>
+            <excludes>
+                <exclude>spring-context.xml</exclude>
+            </excludes>
             <outputDirectory>\</outputDirectory>
         </fileSet>
-
         <!-- JNI 模块conf文件-->
         <fileSet>
             <directory>../JNI/src/main/resources/</directory>
@@ -77,15 +86,21 @@
             <includes>
                 <include>**</include>
             </includes>
+            <excludes>
+                <exclude>spring-context.xml</exclude>
+            </excludes>
             <outputDirectory>\conf</outputDirectory>
         </fileSet>
 
         <!-- RocketMQ 模块conf文件-->
         <fileSet>
-            <directory>../RocketMQ/src/main/resources/conf/</directory>
+            <directory>../RocketMQ/src/main/resources</directory>
             <includes>
                 <include>**</include>
             </includes>
+            <excludes>
+                <exclude>spring-context.xml</exclude>
+            </excludes>
             <outputDirectory>\conf</outputDirectory>
         </fileSet>
 
@@ -95,6 +110,9 @@
             <includes>
                 <include>**</include>
             </includes>
+            <excludes>
+                <exclude>spring-context.xml</exclude>
+            </excludes>
             <outputDirectory>\conf</outputDirectory>
         </fileSet>
     </fileSets>

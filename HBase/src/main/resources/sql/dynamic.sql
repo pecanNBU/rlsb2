@@ -10,7 +10,7 @@
 -------------------------------------------------------------------------------------
 create 'person',
 {NAME => 'i', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', COMPRESSION =>
-'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '524280',
+'SNAPPY', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '524280',
  IN_MEMORY => 'true', BLOCKCACHE => 'true'}
  
  -------------------------------------------------------------
@@ -28,7 +28,7 @@ create 'person',
 
 create 'perFea',
 {NAME => 'f', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', COMPRESSION =>
-'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '65535',
+'SNAPPY', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '65535',
  IN_MEMORY => 'true', BLOCKCACHE => 'true'}
  
  -------------------------------------------------------------
@@ -46,7 +46,7 @@ create 'perFea',
 
 create 'car',
 {NAME => 'i', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', COMPRESSION =>
-'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '524280',
+'SNAPPY', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '524280',
  IN_MEMORY => 'true', BLOCKCACHE => 'true'}
  
 -------------------------------------------------------------
@@ -64,7 +64,7 @@ create 'car',
  
  create 'carFea',
 {NAME => 'f', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', COMPRESSION =>
-'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '65535',
+'SNAPPY', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '65535',
  IN_MEMORY => 'true', BLOCKCACHE => 'true'}
  
  应用平台上传的图片
@@ -82,7 +82,7 @@ create 'car',
 
 create 'upPerFea',
 {NAME => 'i', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', COMPRESSION =>
-'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '65535',
+'SNAPPY', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '65535',
  IN_MEMORY => 'true', BLOCKCACHE => 'true'}
  
  车辆图：
@@ -98,7 +98,7 @@ create 'upPerFea',
 
 create 'upCarFea',
 {NAME => 'i', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', COMPRESSION =>
-'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '65535',
+'SNAPPY', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '65535',
  IN_MEMORY => 'true', BLOCKCACHE => 'true'}
  
  查询结果：
@@ -114,5 +114,5 @@ create 'upCarFea',
 
 create 'searchRes',
 {NAME => 'i', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', COMPRESSION =>
-'snappy', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '65535',
+'SNAPPY', VERSIONS => '1', MIN_VERSIONS => '0', KEEP_DELETED_CELLS => 'false', BLOCKSIZE => '65535',
  IN_MEMORY => 'true', BLOCKCACHE => 'true'}

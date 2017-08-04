@@ -4,10 +4,29 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://code.alibabatech.com/schema/dubbo
-	http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
->
+	http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
+    <!--device 模块的接口和实现-->
     <bean id="DeviceService" class="com.hzgc.hbase.device.DeviceServiceImpl"/>
     <dubbo:service interface="com.hzgc.dubbo.device.DeviceService" ref="DeviceService" />
+
+    <bean id="WarnRuleService" class="com.hzgc.hbase.device.WarnRuleServiceImpl"/>
+    <dubbo:service interface="com.hzgc.dubbo.device.WarnRuleService" ref="WarnRuleService"/>
+
+    <!--dynamicrepo 模块接口以及实现-->
+    <bean id="CapturePictureSearchService" class="com.hzgc.hbase.dynamicrepo.CapturePictureSearchServiceImpl"/>
+    <dubbo:service interface="com.hzgc.dubbo.dynamicrepo.CapturePictureSearchService" ref="CapturePictureSearchService" />
+
+    <!--静态信息库的接口，以及相应的实现类-->
+    <!--对象信息的处理-->
+    <bean id="ObjectInfoHandler" class="com.hzgc.hbase.staticrepo.ObjectInfoHandlerImpl"/>
+    <dubbo:service interface="com.hzgc.dubbo.staticrepo.ObjectInfoHandler" ref="ObjectInfoHandler"/>
+
+    <!--对象搜索记录的处理-->
+    <bean id="SearchRecordHandler" class="com.hzgc.hbase.staticrepo.SearchRecordHandlerImpl"/>
+    <dubbo:service interface="com.hzgc.dubbo.staticrepo.SearchRecordHandler" ref="SearchRecordHandler" />
+
+    <bean id="HBaseHelper" class="com.hzgc.hbase.util.HBaseHelper"/>
+    <bean id="DeviceTable" class="com.hzgc.hbase.device.DeviceTable"/>
 
 </beans>

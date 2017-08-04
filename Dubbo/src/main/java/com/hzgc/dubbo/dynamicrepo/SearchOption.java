@@ -1,5 +1,6 @@
 package com.hzgc.dubbo.dynamicrepo;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 /**
  * 搜索选项
  */
-public class SearchOption {
+public class SearchOption implements Serializable {
     /**
      * 搜索类型，PERSON（人）,CAR（车）
      */

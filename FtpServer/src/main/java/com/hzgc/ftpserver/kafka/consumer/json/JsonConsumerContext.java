@@ -15,7 +15,7 @@ public class JsonConsumerContext extends ConsumerContext {
     @Override
     public void run() {
         try {
-            resourceFile = FileUtil.loadResourceFile("src/main/resources/consumer-json.properties");
+            resourceFile = FileUtil.loadResourceFile("consumer-json.properties");
             System.out.println("****************************************************************************");
             propers.list(System.out);
             System.out.println("****************************************************************************");

@@ -1,1 +1,0 @@
-java -cp xxxx  com.alibaba.dubbo.container.main.Main
