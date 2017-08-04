@@ -484,7 +484,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         }
     }
 
-    // 根据ES 的SearchRequesBuilder 来查询，并封装返回结果。
+    // 根据ES的SearchRequesBuilder 来查询，并封装返回结果
     private ObjectSearchResult dealWithSearchRequesBuilder(String paltformID, SearchRequestBuilder searchRequestBuilder,
                                                            byte[] photo, String searchType, String creatorOrName,
                                                            int start, int pageSize, boolean moHuSearch){

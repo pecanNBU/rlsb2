@@ -28,5 +28,5 @@
 
     <bean id="HBaseHelper" class="com.hzgc.hbase.util.HBaseHelper"/>
     <bean id="DeviceTable" class="com.hzgc.hbase.device.DeviceTable"/>
-
+    <bean id="ElasticSearchHelper" class="com.hzgc.hbase.staticrepo.ElasticSearchHelper"/>
 </beans>

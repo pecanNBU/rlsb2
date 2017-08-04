@@ -32,11 +32,11 @@
         <mina.version>2.0.7</mina.version>
         <ftplet.version>1.0.6</ftplet.version>
         <spark.version>1.5.1</spark.version>
-        <spring.version>4.2.5.RELEASE</spring.version>
+        <spring.version>4.1.1.RELEASE</spring.version>
         <zookeeper.version>3.5.1-alpha</zookeeper.version>
-        <dubbo.version>2.5.3</dubbo.version>
+        <dubbo.version>2.8.4a</dubbo.version>
         <rocketmq.version>4.1.0-incubating</rocketmq.version>
-        <zkclient.version>0.1</zkclient.version>
+        <zkclient.version>0.10</zkclient.version>
     </properties>
 
     <dependencyManagement>
