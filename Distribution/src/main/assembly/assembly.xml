@@ -71,18 +71,6 @@
             </excludes>
             <outputDirectory>\</outputDirectory>
         </fileSet>
-        <!-- HBase2Es 模块conf文件-->
-        <fileSet>
-            <directory>../HBase2Es/src/main/resources/</directory>
-            <includes>
-                <include>**</include>
-            </includes>
-            <excludes>
-                <exclude>spring-context.xml</exclude>
-            </excludes>
-            <outputDirectory>\conf</outputDirectory>
-        </fileSet>
-
         <!-- JNI 模块conf文件-->
         <fileSet>
             <directory>../JNI/src/main/resources/</directory>
@@ -135,7 +123,6 @@
                 <include>com.hzgc:bigdata-api</include>
                 <include>com.hzgc:ftp</include>
                 <include>com.hzgc:hbase</include>
-                <include>com.hzgc:hbase2es</include>
                 <include>com.hzgc:jni</include>
                 <include>com.hzgc:kafka</include>
                 <include>com.hzgc:rocketmq</include>
