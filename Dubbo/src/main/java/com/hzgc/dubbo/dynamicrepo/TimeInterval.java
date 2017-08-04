@@ -1,9 +1,11 @@
 package com.hzgc.dubbo.dynamicrepo;
 
+import java.io.Serializable;
+
 /**
  * 一天内的时间区间
  */
-public class TimeInterval {
+public class TimeInterval implements Serializable {
     /**
      * 开始时间，以一天内的分钟数计算
      */

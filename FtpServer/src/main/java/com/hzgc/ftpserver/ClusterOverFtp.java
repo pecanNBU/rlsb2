@@ -17,8 +17,8 @@ public abstract class ClusterOverFtp {
     public void loadConfig() throws Exception {
         Properties props = new Properties();
         dataConnConf = new DataConnectionConfigurationFactory();
-        props.load(new FileInputStream(FileUtil.loadResourceFile("local-over-ftp.properties")));
-        log.info("Load configuration for ftp server from ./conf/local-over-ftp.properties");
+        props.load(new FileInputStream(FileUtil.loadResourceFile("cluster-over-ftp.properties")));
+        log.info("Load configuration for ftp server from ./conf/cluster-over-ftp.properties");
 
         try {
             listenerPort = Integer.parseInt(props.getProperty("listener-port"));

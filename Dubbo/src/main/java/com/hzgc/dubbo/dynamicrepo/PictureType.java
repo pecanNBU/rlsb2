@@ -1,9 +1,11 @@
 package com.hzgc.dubbo.dynamicrepo;
 
+import java.io.Serializable;
+
 /**
  * 图片类型
  */
-public enum PictureType {
+public enum PictureType implements Serializable {
 
     /**
      * 人脸大图小图

@@ -3,6 +3,7 @@ package com.hzgc.ftpserver.kafka.ftp;
 import com.hzgc.ftpserver.kafka.producer.ProducerOverFtp;
 import com.hzgc.ftpserver.local.LocalIODataConnection;
 import com.hzgc.ftpserver.util.FtpUtil;
+import com.hzgc.rocketmq.util.RocketMQProducer;
 import org.apache.ftpserver.command.AbstractCommand;
 import org.apache.ftpserver.ftplet.*;
 import org.apache.ftpserver.impl.*;
@@ -110,25 +111,27 @@ public class KafkaSTOR extends AbstractCommand {
                 value = FtpUtil.inputStreamCacher(is);
                 String key;
                 ProducerOverFtp kafkaProducer = kafkaContext.getProducerOverFtp();
+                RocketMQProducer rocketMQProducer = kafkaContext.getProducerRocketMQ();
                 long transSz;
                 //parsing JSON files
                 if (file.getName().contains(".json")) {
                     key = FtpUtil.transformNameToKey(fileName);
                     LOG.info("Kafka Producer Send message[" + file.getName() + "] to Kafka");
-                    kafkaProducer.sendKafkaMessage(kafkaProducer.getJson(), key, value.toByteArray());
+                    kafkaProducer.sendKafkaMessage(ProducerOverFtp.getJson(), key, value.toByteArray());
                     transSz = value.toByteArray().length;
                 } else if (fileName.contains(".jpg")) {
                     key = FtpUtil.transformNameToKey(fileName);
                     //it is picture
                     if (FtpUtil.pickPicture(fileName) == 0) {
                         LOG.info("Kafka Producer Send message[" + file.getName() + "] to Kafka");
-                        kafkaProducer.sendKafkaMessage(kafkaProducer.getPicture(), key, value.toByteArray());
+                        kafkaProducer.sendKafkaMessage(ProducerOverFtp.getPicture(), key, value.toByteArray());
                         transSz = value.toByteArray().length;
                     } else if (FtpUtil.pickPicture(fileName) > 0) {
                         LOG.info("Kafka Producer Send message[" + file.getName() + "] to Kafka");
                         int faceNum = FtpUtil.pickPicture(fileName);
                         String faceKey = FtpUtil.faceKey(faceNum, key);
-                        kafkaProducer.sendKafkaMessage(kafkaProducer.getFace(), faceKey, value.toByteArray());
+                        kafkaProducer.sendKafkaMessage(ProducerOverFtp.getFace(), faceKey, value.toByteArray());
+                        rocketMQProducer.send(FtpUtil.getRowKeyMessage(faceKey).get("ipID"), value.toByteArray());
                         transSz = value.toByteArray().length;
                     } else {
                         LOG.info("Contains illegal file[" + file.getName() + "], write to local default");

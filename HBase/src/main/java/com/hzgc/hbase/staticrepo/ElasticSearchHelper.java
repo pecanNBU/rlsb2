@@ -25,7 +25,7 @@ public class ElasticSearchHelper {
         // 从外部读取Es集群配置信息
         Properties properties_es_config = new Properties();
         try {
-            File file = FileUtil.loadResourceFile("es_cluster_config_staticrepo.properties");
+            File file = FileUtil.loadResourceFile("es-config.properties");
             if (file != null) {
                 properties_es_config.load(new FileInputStream(file));
             }

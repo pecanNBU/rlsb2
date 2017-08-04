@@ -25,7 +25,7 @@ public class LocalOverFtpServer extends ClusterOverFtp {
         // set customer user manager
         LocalPropertiesUserManagerFactory userManagerFactory = new LocalPropertiesUserManagerFactory();
         try {
-            userManagerFactory.setFile(FileUtil.loadResourceFile("src/main/resources/users.properties"));
+            userManagerFactory.setFile(FileUtil.loadResourceFile("users.properties"));
         } catch (Exception e) {
             e.printStackTrace();
         }

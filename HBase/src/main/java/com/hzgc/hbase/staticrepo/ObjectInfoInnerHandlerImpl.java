@@ -1,6 +1,5 @@
 package com.hzgc.hbase.staticrepo;
 
-import org.apache.hadoop.hbase.util.Bytes;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.QueryBuilders;

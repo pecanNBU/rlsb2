@@ -104,7 +104,7 @@ public class FtpUtil {
         return key.toString();
     }
 
-    public static Map getRowKeyMessage(String rowKey) {
+    public static Map<String, String> getRowKeyMessage(String rowKey) {
         String ipcID = rowKey.substring(0, rowKey.indexOf("_"));
         String timeStr = rowKey.substring(33, rowKey.lastIndexOf("_"));
 

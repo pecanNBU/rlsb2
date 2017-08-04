@@ -15,7 +15,7 @@ public class FaceConsumerContext extends ConsumerContext {
     @Override
     public void run() {
         try {
-            resourceFile = FileUtil.loadResourceFile("src/main/resources/consumer-face.properties");
+            resourceFile = FileUtil.loadResourceFile("consumer-face.properties");
             System.out.println("****************************************************************************");
             propers.list(System.out);
             System.out.println("****************************************************************************");

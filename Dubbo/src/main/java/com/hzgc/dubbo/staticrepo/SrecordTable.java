@@ -1,6 +1,8 @@
 package com.hzgc.dubbo.staticrepo;
 
-public class SrecordTable {
+import java.io.Serializable;
+
+public class SrecordTable implements Serializable {
     public static final String TABLE_NAME ="srecord";  // 表示的是历史记录的表格名字
     public static final String RD_CLOF = "rd";        // 列族
     public static final String ROWKEY = "id";        // 历史记录唯一标志

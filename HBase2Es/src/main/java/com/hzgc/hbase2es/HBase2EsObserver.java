@@ -17,7 +17,6 @@ import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequestBuilder;
 import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateRequestBuilder;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.Settings;
@@ -37,10 +36,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-
+/**
+ * Hbase 协处理器，监听插入修改和删除HBase 数据，把数据同步到Elastic Search
+ * 此类中，没有用到外部的文件
+ */
 public class HBase2EsObserver  extends BaseRegionObserver{
 
-    private static Logger logger = Logger.getLogger(BaseRegionObserver.class);
+    private static Logger LOG = Logger.getLogger(BaseRegionObserver.class);
 
     //  从外部获取Es 集群的信息
     private static void readConfiguration(CoprocessorEnvironment env){
@@ -50,20 +52,20 @@ public class HBase2EsObserver  extends BaseRegionObserver{
         EsClientUtils.nodePort = conf.getInt("es_port", 9300);  // es的端口
         EsClientUtils.indexName = conf.get("es_index");  // 索引
         EsClientUtils.typeName = conf.get("es_type");       // 类型
-
-
-        logger.info("======================================");
-        logger.info("the es cluster info :===================== cluser_name " + EsClientUtils.clusterName
+        LOG.info("==============================================================");
+        LOG.info("the es cluster info :===================== cluser_name " + EsClientUtils.clusterName
                 +  ", cluster_hosts: , " + EsClientUtils.nodeHosts
                 + ", cluster_port: " + EsClientUtils.nodePort + ",index: " + EsClientUtils.indexName +
                 ",type: " + EsClientUtils.typeName  + "===========================");
-        logger.info("=======================================");
+        LOG.info("=======================================");
     }
 
     @Override
     public void start(CoprocessorEnvironment env) throws IOException {
         readConfiguration(env);       // 读取Es 配置信息
-        EsClientUtils.initEsClient();  // 初始化Es 客户端
+        if (EsClientUtils.client == null){
+            EsClientUtils.initEsClient();  // 初始化Es 客户端
+        }
     }
 
     @Override
@@ -73,20 +75,20 @@ public class HBase2EsObserver  extends BaseRegionObserver{
 
     @Override
     public void postPut(ObserverContext<RegionCoprocessorEnvironment> e, Put put, WALEdit edit, Durability durability) {
-        logger.info("============something triggred when afere put================");
+        LOG.info("============something triggred when afere put================");
         String indexId = new String(put.getRow());   // 通过Put 对象获取rowkey 作为id，
         NavigableMap<byte[], List<Cell>> familyMap = put.getFamilyCellMap();
-        Map<String, Object> infoJson = new HashMap<String, Object>();
+        Map<String, Object> infoJson = new HashMap<>();
         for (Map.Entry<byte[], List<Cell>> entry : familyMap.entrySet()) {
             for (Cell cell : entry.getValue()) {
                 String key = Bytes.toString(CellUtil.cloneQualifier(cell));
                 String value = Bytes.toString(CellUtil.cloneValue(cell));
-                logger.info("===================属性====================");
-                logger.info("=============key: " + key + "  value: " + value);
+                LOG.info("===================属性====================");
+                LOG.info("=============key: " + key + "  value: " + value);
                 if (!"photo".equals(key) && !"reason".equals(key)){
                     infoJson.put(key, value);
                 } else {
-                    logger.info("++++++++++++++++ Skip someunusethines +++++++++++");
+                    LOG.info("++++++++++++++++ Skip someunusethines +++++++++++");
                 }
             }
         }
@@ -97,10 +99,10 @@ public class HBase2EsObserver  extends BaseRegionObserver{
     @Override
     public void postDelete(ObserverContext<RegionCoprocessorEnvironment> e,
                            Delete delete, WALEdit edit, Durability durability) {
-        logger.info("=======================================================");
-        logger.info("===============something triggred when afere DELETE===========");
+        LOG.info("===========================================================================");
+        LOG.info("===============to delete the index of es after delete hbase data===========");
         String indexId = new String(delete.getRow());
-        logger.info("========inde: " + indexId + " ====================");
+        LOG.info("========inde: " + indexId + " ====================");
         try {
             ElasticSearchBulkOperator.addDeleteBuilderToBulk(
                     EsClientUtils.client.prepareDelete(EsClientUtils.indexName,
@@ -112,6 +114,7 @@ public class HBase2EsObserver  extends BaseRegionObserver{
 }
 
 class EsClientUtils{
+    private static Logger LOG = Logger.getLogger(EsClientUtils.class);
     public static String clusterName;
     public static String nodeHosts;
     public static int nodePort;
@@ -122,7 +125,7 @@ class EsClientUtils{
     public static void initEsClient() throws UnknownHostException {
         Settings settings = Settings.builder()
                 .put("cluster.name", EsClientUtils.clusterName).build();
-        System.out.println("++++++++++++++++++++++"  + EsClientUtils.nodeHosts);
+        LOG.info("====================== "  + EsClientUtils.nodeHosts + "=======================");
         for (String host:EsClientUtils.nodeHosts.split("_")){
             client = new PreBuiltTransportClient(settings)
                     .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(host),
@@ -217,7 +220,7 @@ class ElasticSearchBulkOperator {
      * add delete builder to bulk
      * use commitLock to protected bulk as thread-save
      *
-     * @param builder
+     * @param builder 删除索引的对象
      */
     public static void addDeleteBuilderToBulk(DeleteRequestBuilder builder) {
         commitLock.lock();

@@ -16,7 +16,7 @@ public class PicConsumerContext extends ConsumerContext {
     @Override
     public void run() {
         try {
-            resourceFile = FileUtil.loadResourceFile("src/main/resources/consumer-picture.properties");
+            resourceFile = FileUtil.loadResourceFile("consumer-picture.properties");
             System.out.println("****************************************************************************");
             propers.list(System.out);
             System.out.println("****************************************************************************");

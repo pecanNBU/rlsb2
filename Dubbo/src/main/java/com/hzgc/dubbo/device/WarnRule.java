@@ -1,6 +1,8 @@
 package com.hzgc.dubbo.device;
 
-public class WarnRule {
+import java.io.Serializable;
+
+public class WarnRule implements Serializable {
     /**
      * 需要对比对象类型
      */

@@ -1,9 +1,11 @@
 package com.hzgc.dubbo.dynamicrepo;
 
+import java.io.Serializable;
+
 /**
  * 搜索过滤条件
  */
-public class SearchFilter {
+public class SearchFilter implements Serializable {
     /**
      * 过滤参数，对不同的人车属性进行拼接
      */

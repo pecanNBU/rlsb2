@@ -1,9 +1,10 @@
 package com.hzgc.dubbo.staticrepo;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-public class PSearchArgsModel {
+public class PSearchArgsModel implements Serializable {
     private String rowkey;  // 即id
     private String paltaformId; // 平台Id
     private String name;  // 姓名

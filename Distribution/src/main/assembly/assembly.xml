@@ -43,6 +43,9 @@
             <includes>
                 <include>**</include>
             </includes>
+            <excludes>
+                <exclude>spring-context.xml</exclude>
+            </excludes>
             <outputDirectory>\conf</outputDirectory>
         </fileSet>
 
@@ -50,8 +53,12 @@
         <fileSet>
             <directory>../HBase/src/main/resources/</directory>
             <includes>
-                <include>conf/**</include>
+                <include>**</include>
             </includes>
+            <excludes>
+                <exclude>spring-context.xml</exclude>
+                <exclude>sql/</exclude>
+            </excludes>
             <outputDirectory>\conf</outputDirectory>
         </fileSet>
         <fileSet>
@@ -59,24 +66,20 @@
             <includes>
                 <include>sql/**</include>
             </includes>
+            <excludes>
+                <exclude>spring-context.xml</exclude>
+            </excludes>
             <outputDirectory>\</outputDirectory>
         </fileSet>
-
-        <!-- HBase2Es 模块conf文件-->
-        <fileSet>
-            <directory>../HBase2Es/src/main/resources/</directory>
-            <includes>
-                <include>**</include>
-            </includes>
-            <outputDirectory>\conf</outputDirectory>
-        </fileSet>
-
         <!-- JNI 模块conf文件-->
         <fileSet>
             <directory>../JNI/src/main/resources/</directory>
             <includes>
                 <include>**</include>
             </includes>
+            <excludes>
+                <exclude>spring-context.xml</exclude>
+            </excludes>
             <outputDirectory>\conf</outputDirectory>
         </fileSet>
 
@@ -86,15 +89,21 @@
             <includes>
                 <include>**</include>
             </includes>
+            <excludes>
+                <exclude>spring-context.xml</exclude>
+            </excludes>
             <outputDirectory>\conf</outputDirectory>
         </fileSet>
 
         <!-- RocketMQ 模块conf文件-->
         <fileSet>
-            <directory>../RocketMQ/src/main/resources/</directory>
+            <directory>../RocketMQ/src/main/resources</directory>
             <includes>
                 <include>**</include>
             </includes>
+            <excludes>
+                <exclude>spring-context.xml</exclude>
+            </excludes>
             <outputDirectory>\conf</outputDirectory>
         </fileSet>
 
@@ -104,6 +113,9 @@
             <includes>
                 <include>**</include>
             </includes>
+            <excludes>
+                <exclude>spring-context.xml</exclude>
+            </excludes>
             <outputDirectory>\conf</outputDirectory>
         </fileSet>
     </fileSets>
@@ -111,10 +123,9 @@
         <moduleSet>
             <useAllReactorProjects>true</useAllReactorProjects>
             <includes>
-                <include>com.hzgc:dubbo</include>
+                <include>com.hzgc:bigdata-api</include>
                 <include>com.hzgc:ftp</include>
                 <include>com.hzgc:hbase</include>
-                <include>com.hzgc:hbase2es</include>
                 <include>com.hzgc:jni</include>
                 <include>com.hzgc:kafka</include>
                 <include>com.hzgc:rocketmq</include>
