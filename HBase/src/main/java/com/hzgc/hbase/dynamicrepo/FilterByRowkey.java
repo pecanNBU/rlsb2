@@ -5,14 +5,12 @@ import com.hzgc.dubbo.dynamicrepo.SearchType;
 import com.hzgc.hbase.util.HBaseHelper;
 import com.hzgc.hbase.util.HBaseUtil;
 import org.apache.hadoop.hbase.client.*;
-import org.apache.hadoop.hbase.filter.CompareFilter;
-import org.apache.hadoop.hbase.filter.Filter;
-import org.apache.hadoop.hbase.filter.RegexStringComparator;
-import org.apache.hadoop.hbase.filter.RowFilter;
+import org.apache.hadoop.hbase.filter.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class FilterByRowkey {
@@ -114,6 +112,91 @@ public class FilterByRowkey {
             }
         } else {
             LOG.error("param is empty,used method FilterByRowkey.filterByPlateNumber.");
+        }
+        return rowKeyList;
+    }
+
+    /**
+     * 根据时间段过滤rowKey范围
+     *
+     * @param option 搜索选项
+     * @param scan   scan对象
+     * @return List<String> 符合条件的rowKey集合
+     */
+    public List<String> filterByTime(SearchOption option, Scan scan) {
+        List<String> rowKeyList = new ArrayList<>();
+        SimpleDateFormat df = new SimpleDateFormat("yy-MM-dd");
+        Table person = HBaseHelper.getTable(DynamicTable.TABLE_PERFEA);
+        Table car = HBaseHelper.getTable(DynamicTable.TABLE_CARFEA);
+        if (option.getSearchType() == SearchType.PERSON) {
+            if (option.getStartDate() != null && option.getEndDate() != null) {
+                String startDate = df.format(option.getStartDate()).replace("-", "");
+                String endDate = df.format(option.getEndDate()).replace("-", "");
+                filterByDate(rowKeyList, startDate, endDate, scan, person);
+
+            } else if (option.getStartDate() != null && option.getEndDate() == null) {
+                String startDate = df.format(option.getStartDate()).replace("-", "");
+                String endDate = df.format(new Date()).replace("-", "");
+                filterByDate(rowKeyList, startDate, endDate, scan, person);
+
+            } else if (option.getStartDate() == null && option.getEndDate() != null) {
+                String startDate = "1970-01-01".replace("-", "");
+                String endDate = df.format(option.getEndDate()).replace("-", "");
+                filterByDate(rowKeyList, startDate, endDate, scan, person);
+
+            } else if (option.getStartDate() == null && option.getEndDate() == null) {
+                LOG.error("Date is null,used method FilterByRowkey.filterByTime");
+            }
+        } else if (option.getSearchType() == SearchType.CAR) {
+            if (option.getStartDate() != null && option.getEndDate() != null) {
+                String startDate = df.format(option.getStartDate()).replace("-", "");
+                String endDate = df.format(option.getEndDate()).replace("-", "");
+                filterByDate(rowKeyList, startDate, endDate, scan, car);
+
+            } else if (option.getStartDate() != null && option.getEndDate() == null) {
+                String startDate = df.format(option.getStartDate()).replace("-", "");
+                String endDate = df.format(new Date()).replace("-", "");
+                filterByDate(rowKeyList, startDate, endDate, scan, car);
+
+            } else if (option.getStartDate() == null && option.getEndDate() != null) {
+                String startDate = "1970-01-01".replace("-", "");
+                String endDate = df.format(option.getEndDate()).replace("-", "");
+                filterByDate(rowKeyList, startDate, endDate, scan, car);
+
+            } else if (option.getStartDate() == null && option.getEndDate() == null) {
+                LOG.error("Date is null,used method FilterByRowkey.filterByTime");
+            }
+        } else {
+            LOG.error("param SearchType is empty,used method FilterByRowkey.filterByTime");
+        }
+
+        return rowKeyList;
+    }
+
+    public List<String> filterByDate(List<String> rowKeyList, String startDate, String endDate, Scan scan, Table table) {
+        int start = Integer.parseInt(startDate);
+        int end = Integer.parseInt(endDate);
+
+        List<Filter> filterList = new ArrayList<>();
+        Filter startFilter = new RowFilter(CompareFilter.CompareOp.GREATER_OR_EQUAL, new RegexStringComparator(".*" + start + ".*"));
+        filterList.add(startFilter);
+        Filter endFilter = new RowFilter(CompareFilter.CompareOp.LESS_OR_EQUAL, new RegexStringComparator(".*" + end + "_" + ".*"));
+        filterList.add(endFilter);
+        FilterList filter = new FilterList(FilterList.Operator.MUST_PASS_ALL, filterList);
+
+        scan.setFilter(filter);
+        try {
+            ResultScanner scanner = table.getScanner(scan);
+            for (Result result : scanner) {
+                byte[] bytes = result.getRow();
+                String string = Bytes.toString(bytes);
+                rowKeyList.add(string);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOG.error("filter rowkey by Date failed! used method FilterByRowkey.filterByDate.");
+        } finally {
+            HBaseUtil.closTable(table);
         }
         return rowKeyList;
     }

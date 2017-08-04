@@ -20,7 +20,9 @@ public class ConsumerHandlerThread implements Runnable {
     private final ConcurrentHashMap<String, Boolean> isCommit;
     protected String tableName;
     protected String columnFamily;
-    protected String column;
+    protected String column_pic;
+    protected String column_ipcID;
+    protected String column_time;
 
 
     public ConsumerHandlerThread(Properties propers, Connection conn, Class logClass) {
@@ -47,7 +49,7 @@ public class ConsumerHandlerThread implements Runnable {
         int consumerTimes = 1;
         int failWorker = 0;
         for (int i = 0; i < workerNum; i++) {
-            executors.submit(new WorkerThread(hbaseConn, buffer, tableName, columnFamily, column, isCommit));
+            executors.submit(new WorkerThread(hbaseConn, buffer, tableName, columnFamily, column_pic, column_ipcID, column_time, isCommit));
         }
         try {
             while (true) {
