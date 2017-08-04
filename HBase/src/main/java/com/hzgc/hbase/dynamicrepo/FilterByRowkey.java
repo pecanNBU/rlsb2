@@ -26,10 +26,10 @@ public class FilterByRowkey {
     public List<String> filterByDeviceId(SearchOption option, Scan scan) {
         SearchType searchType = option.getSearchType();
         List<String> deviceIdList = option.getDeviceIds();
-        List<String> rowKeyList = null;
+        List<String> rowKeyList = new ArrayList<>();
 
         if (searchType.equals(SearchType.PERSON)) {
-            Table person = HBaseHelper.getTable(DynamicTable.TABLE_PERSON);
+            Table person = HBaseHelper.getTable(DynamicTable.TABLE_PERFEA);
             for (String device : deviceIdList) {
                 Filter filter = new RowFilter(CompareFilter.CompareOp.EQUAL, new RegexStringComparator(device + ".*"));
                 scan.setFilter(filter);
@@ -48,7 +48,7 @@ public class FilterByRowkey {
                 }
             }
         } else if (searchType.equals(SearchType.CAR)) {
-            Table car = HBaseHelper.getTable(DynamicTable.TABLE_CAR);
+            Table car = HBaseHelper.getTable(DynamicTable.TABLE_CARFEA);
             for (String device : deviceIdList) {
                 Filter filter = new RowFilter(CompareFilter.CompareOp.EQUAL, new RegexStringComparator(device + ".*"));
                 scan.setFilter(filter);
@@ -82,14 +82,14 @@ public class FilterByRowkey {
 
         if (option.getPlateNumber() == null) {
             String plateNumber = option.getPlateNumber();
-            Table car = HBaseHelper.getTable(DynamicTable.TABLE_CAR);
+            Table car = HBaseHelper.getTable(DynamicTable.TABLE_CARFEA);
             try {
                 ResultScanner scanner = car.getScanner(scan);
                 Map<String, String> map = new HashMap<>();
                 for (Result result : scanner) {
                     byte[] rowKey = result.getRow();
                     String rowKeyStr = Bytes.toString(rowKey);
-                    byte[] plateNum = result.getValue(DynamicTable.CAR_COLUMNFAMILY, DynamicTable.CAR_COLUMN_PLATENUM);
+                    byte[] plateNum = result.getValue(DynamicTable.CARFEA_COLUMNFAMILY, DynamicTable.CARFEA_COLUMN_PLATNUM);
                     String plateNumStr = Bytes.toString(plateNum);
                     map.put(rowKeyStr, plateNumStr);
                 }
