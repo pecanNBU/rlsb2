@@ -91,7 +91,9 @@ public class FilterByRowkey {
                     String rowKeyStr = Bytes.toString(rowKey);
                     byte[] plateNum = result.getValue(DynamicTable.CARFEA_COLUMNFAMILY, DynamicTable.CARFEA_COLUMN_PLATNUM);
                     String plateNumStr = Bytes.toString(plateNum);
-                    map.put(rowKeyStr, plateNumStr);
+                    if (rowKey != null && rowKey.length > 0 && plateNumStr != null && plateNumStr.length() > 0) {
+                        map.put(rowKeyStr, plateNumStr);
+                    }
                 }
                 if (!map.isEmpty()) {
                     Iterator<String> iter = map.keySet().iterator();
