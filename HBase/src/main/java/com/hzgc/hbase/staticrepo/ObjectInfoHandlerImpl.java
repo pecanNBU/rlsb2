@@ -3,6 +3,8 @@ package com.hzgc.hbase.staticrepo;
 import com.hzgc.dubbo.staticrepo.*;
 import com.hzgc.hbase.util.HBaseHelper;
 import com.hzgc.hbase.util.HBaseUtil;
+import com.hzgc.jni.FaceFunction;
+import com.hzgc.jni.NativeFunction;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import java.io.ByteArrayOutputStream;
@@ -22,7 +24,9 @@ import org.elasticsearch.search.SearchHits;
 public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     private static Logger LOG = Logger.getLogger(ObjectInfoHandlerImpl.class);
 
-    public ObjectInfoHandlerImpl(){}
+    public ObjectInfoHandlerImpl(){
+        NativeFunction.init();
+    }
 
     @Override
     public byte addObjectInfo(String platformId, Map<String, Object> person) {
@@ -402,7 +406,11 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
 
     @Override
     public String getFeature(String tag, byte[] photo) {
-        return null;
+        float[] floatFeature = FaceFunction.featureExtract(photo);
+        if (floatFeature != null && floatFeature.length == 2048) {
+            return FaceFunction.floatArray2string(floatFeature);
+        }
+        return "";
     }
 
     @Override

@@ -8,6 +8,7 @@ public class FaceFunction {
 
     /**
      * 特征提取方法 （内）（赵喆）
+     *
      * @param imageData 将图片转为字节数组传入
      * @return 输出float[]形式的特征值
      */
@@ -41,6 +42,7 @@ public class FaceFunction {
 
     /**
      * 特征提取方法 （内）（赵喆）
+     *
      * @param imagePath 传入图片的绝对路径
      * @return 返回float[]形式的特征值
      */
@@ -113,18 +115,22 @@ public class FaceFunction {
      * @return 输出指定编码为ISO-8859-1的String
      * @throws Exception
      */
-    public static String floatArray2string(float[] feature) throws Exception {
+    public static String floatArray2string(float[] feature) {
         if (null != feature && feature.length > 0) {
-            byte[] byteFeature = new byte[feature.length * 4];
-            int temp = 0;
-            for (float f: feature) {
-                byte[] tempbyte = float2byte(f);
-                for (int i = 0; i < tempbyte.length; i++) {
-                    byteFeature[temp + i] = tempbyte[i];
+            try {
+                byte[] byteFeature = new byte[feature.length * 4];
+                int temp = 0;
+                for (float f : feature) {
+                    byte[] tempbyte = float2byte(f);
+                    for (int i = 0; i < tempbyte.length; i++) {
+                        byteFeature[temp + i] = tempbyte[i];
+                    }
+                    temp = temp + 4;
                 }
-                temp = temp + 4;
+                return new String(byteFeature, "ISO-8859-1");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
-            return new String(byteFeature, "ISO-8859-1");
         }
         return "";
     }
@@ -136,34 +142,39 @@ public class FaceFunction {
      * @return 返回float[]类型的特征值
      * @throws Exception
      */
-    public static float[] string2floatArray(String feature) throws Exception {
+    public static float[] string2floatArray(String feature) {
         float[] floatFeature;
         if (null != feature && feature.length() > 0) {
-            byte[]  byteFeature = feature.getBytes("ISO-8859-1");
-            floatFeature = new float[byteFeature.length / 4];
-            byte[] buffer = new byte[4];
-            int countByte = 0;
-            int countFloat = 0;
-            while (countByte < byteFeature.length && countFloat < floatFeature.length) {
-                buffer[0] = byteFeature[countByte];
-                buffer[1] = byteFeature[countByte + 1];
-                buffer[2] = byteFeature[countByte + 2];
-                buffer[3] = byteFeature[countByte + 3];
-                if (countByte % 4 == 0) {
-                    floatFeature[countFloat] = byte2float(buffer, 0);
+            try {
+                byte[] byteFeature = feature.getBytes("ISO-8859-1");
+                floatFeature = new float[byteFeature.length / 4];
+                byte[] buffer = new byte[4];
+                int countByte = 0;
+                int countFloat = 0;
+                while (countByte < byteFeature.length && countFloat < floatFeature.length) {
+                    buffer[0] = byteFeature[countByte];
+                    buffer[1] = byteFeature[countByte + 1];
+                    buffer[2] = byteFeature[countByte + 2];
+                    buffer[3] = byteFeature[countByte + 3];
+                    if (countByte % 4 == 0) {
+                        floatFeature[countFloat] = byte2float(buffer, 0);
+                    }
+                    countByte = countByte + 4;
+                    countFloat++;
                 }
-                countByte = countByte + 4;
-                countFloat ++;
+                return floatFeature;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
-            return floatFeature;
         }
         return null;
     }
 
     /**
      * 内部方法：将字节数组转为float
+     *
      * @param featureByte 传入字节数组
-     * @param index 从指定位置开始读取4个字节
+     * @param index       从指定位置开始读取4个字节
      * @return 返回4个字节组成的float数组
      */
     private static float byte2float(byte[] featureByte, int index) {
@@ -180,6 +191,7 @@ public class FaceFunction {
 
     /**
      * 内部方法：将float转为4个长度的字节数组
+     *
      * @param featureFloat 传入单一float
      * @return 返回4ge长度的字节数组
      */
