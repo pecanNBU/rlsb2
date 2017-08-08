@@ -1,7 +1,6 @@
 package com.hzgc.hbase.device;
 
 import org.junit.Test;
-
 import java.util.Map;
 
 /**
