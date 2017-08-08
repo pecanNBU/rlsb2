@@ -1,6 +1,7 @@
 package com.hzgc.hbase.device;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DeviceUtil {
     /**
@@ -10,38 +11,19 @@ public interface DeviceUtil {
      * @return 平台ID，长度为0则未绑定平台ID
      */
     public String getplatfromID(String ipcID);
-    /**
-     * 查看是否布控某种告警类型（内）（赵喆）
-     *
-     * @param ipcID 设备的ipcID
-     * @param warnType 告警类型
-     * 0：代表识别告警
-     * 1：代表新增告警
-     * 2：代表离线告警
-     * @return 0为未绑定，1为绑定
-     */
-    public int isWarnTypeBinding(String ipcID, String warnType);
 
     /**
-     * 获取某种告警类型包含的对象类型列表（内）（赵喆）
+     * 获取设备所有布控规则（内）（赵喆）
      *
-     * @param ipcID 设备的ipcID
-     * @param warnType
-     * 0：代表识别告警
-     * 1：代表新增告警
-     * 2：代表离线告警
-     * @return objectType列表
+     * @param ipcID 设备ID
+     * @return 设备绑定的布控规则的数据类型
      */
-    public List<String> getObjectTypeList(String ipcID, String warnType);
+    public Map<Integer, Map<String, Integer>> isWarnTypeBinding(String ipcID);
+
     /**
-     *支持获取设备的阈值（内）（赵喆）
+     * 获取离线告警规则（内）（赵喆）
      *
-     * @param ipcID 设备的ipcID
-     * @param warnType
-     * 0：代表识别告警
-     * 1：代表新增告警
-     * 2：代表离线告警
-     * @return 若warnType为0或1，返回相似度阈值，如果warnType为2，则返回离线天数阈值
+     * @return 离线告警规则数据类型
      */
-    public Integer getThreshold(String ipcID, String warnType);
+    public Map<String, Map<String, Integer>> getThreshold();
 }

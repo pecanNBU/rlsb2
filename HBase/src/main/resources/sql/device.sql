@@ -3,7 +3,7 @@
 #数据基本以对象转字节数组进行存储，有三种数据类型
 #objectType数据Map<String, Map<Integer, String>>
 #设备布控预案数据类型Map<Integer, Map<String, Integer>>
-#离线告警数据类型Map<String, Map<String, String>>
+#离线告警数据类型Map<String, Map<String, Integer>>
 
 -------------------------
 |   name   |   field    |
