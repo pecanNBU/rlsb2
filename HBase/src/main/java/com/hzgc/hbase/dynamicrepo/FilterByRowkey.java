@@ -202,44 +202,4 @@ public class FilterByRowkey {
         }
         return rowKeyList;
     }
-
-    /**
-     * 根据小图rowKey获取小图特征值 （内）（刘思阳）
-     *
-     * @param imageId 小图rowKey
-     * @param type    人/车
-     * @return byte[] 小图特征值
-     */
-    public byte[] getFeature(String imageId, SearchType type) {
-        byte[] feature = null;
-        if (null != imageId) {
-            Table personTable = HBaseHelper.getTable(DynamicTable.TABLE_PERFEA);
-            Table carTable = HBaseHelper.getTable(DynamicTable.TABLE_CARFEA);
-            Get get = new Get(Bytes.toBytes(imageId));
-            if (type == SearchType.PERSON) {
-                try {
-                    Result result = personTable.get(get);
-                    feature = result.getValue(DynamicTable.PERFEA_COLUMNFAMILY, DynamicTable.PERFEA_COLUMN_FEA);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    LOG.error("get feature by imageId from table_person failed! used method FilterByRowkey.getSmallImage");
-                } finally {
-                    HBaseUtil.closTable(personTable);
-                }
-            } else if (type == SearchType.CAR) {
-                try {
-                    Result result = carTable.get(get);
-                    feature = result.getValue(DynamicTable.CARFEA_COLUMNFAMILY, DynamicTable.CARFEA_COLUMN_FEA);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    LOG.error("get feature by imageId from table_car failed! used method FilterByRowkey.getSmallImage");
-                } finally {
-                    HBaseUtil.closTable(personTable);
-                }
-            }
-        } else {
-            LOG.error("method FilterByRowkey.getFeature param is empty");
-        }
-        return feature;
-    }
 }

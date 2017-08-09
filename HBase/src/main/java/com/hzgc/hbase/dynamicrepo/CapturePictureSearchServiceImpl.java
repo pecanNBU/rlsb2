@@ -4,6 +4,7 @@ import com.hzgc.dubbo.dynamicrepo.*;
 import com.hzgc.ftpserver.util.FtpUtil;
 import com.hzgc.hbase.util.HBaseHelper;
 import com.hzgc.hbase.util.HBaseUtil;
+import com.hzgc.util.ObjectUtil;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.filter.Filter;
@@ -13,10 +14,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 以图搜图接口实现类，内含四个方法（外）（彭聪）
@@ -47,7 +45,7 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
     }
 
     /**
-     * @param searchId 搜索的 id（rowkey）
+     * @param searchId 搜索的 id（rowkey）（刘思阳）
      * @param offset   从第几条开始
      * @param count    条数
      * @return SearchResult对象
@@ -57,25 +55,30 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
         Table searchResTable = HBaseHelper.getTable(DynamicTable.TABLE_SEARCHRES);
         Table personTable = HBaseHelper.getTable(DynamicTable.TABLE_PERSON);
 
-        Filter filter = new RowFilter(CompareFilter.CompareOp.EQUAL, new RegexStringComparator(searchId + ".*"));
-        Scan scan = new Scan();
-        scan.setFilter(filter);
-
         SearchResult searchResult = new SearchResult();
         List<CapturedPicture> capturedPictureList = new ArrayList<>();
         List<CapturedPicture> capturedPictureCutList = new ArrayList<>();
 
+        Get get = new Get(Bytes.toBytes(searchId));
+        Result result = null;
         try {
-            ResultScanner resultScanner = searchResTable.getScanner(scan);
-            if (resultScanner != null) {
-                for (Result result : resultScanner) {
-                    searchResult.setFinished(true);
-                    String imageId = Bytes.toString(result.getValue(DynamicTable.SEARCHRES_COLUMNFAMILY, DynamicTable.SEARCHRES_COLUMN_SEARCHIMAGEID));
-                    searchResult.setImageId(imageId);
+            searchResult.setFinished(true);
+            result = searchResTable.get(get);
+            String searchImageID = Bytes.toString(result.getValue(DynamicTable.SEARCHRES_COLUMNFAMILY, DynamicTable.SEARCHRES_COLUMN_SEARCHIMAGEID));
+            searchResult.setImageId(searchImageID);
+
+            byte[] searchMessage = result.getValue(DynamicTable.SEARCHRES_COLUMNFAMILY, DynamicTable.SEARCHRES_COLUMN_SEARCHMESSAGE);
+            Map<String, Float> searchMessageMap = new HashMap<>();
+            searchMessageMap = (Map<String, Float>) ObjectUtil.byteToObject(searchMessage);
+            String returnId = null;
+            Float similarity = null;
+            if (!searchMessageMap.isEmpty()) {
+                Iterator<String> iter = searchMessageMap.keySet().iterator();
+                while (iter.hasNext()) {
+                    returnId = iter.next();
+                    similarity = searchMessageMap.get(returnId);
                     CapturedPicture capturedPicture = new CapturedPicture();
-                    String returnId = Bytes.toString(result.getValue(DynamicTable.SEARCHRES_COLUMNFAMILY, DynamicTable.SEARCHRES_COLUMN_RESIMAGEID));
                     capturedPicture.setId(returnId);
-                    int similarity = Bytes.toInt(result.getValue(DynamicTable.SEARCHRES_COLUMNFAMILY, DynamicTable.SEARCHRES_COLUMN_SIMILARITY));
                     capturedPicture.setSimilarity(similarity);
 
                     Get get1 = new Get(Bytes.toBytes(returnId));
@@ -91,24 +94,26 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
                     capturedPicture.setExtend(mapEx);
                     byte[] smallImage = personResult.getValue(DynamicTable.PERSON_COLUMNFAMILY, DynamicTable.PERSON_COLUMN_IMGE);
                     capturedPicture.setSmallImage(smallImage);
-
                     capturedPictureList.add(capturedPicture);
-                    if (offset + count - 1 > capturedPictureList.size()) {
-                        capturedPictureCutList = capturedPictureList.subList(offset - 1, capturedPictureList.size());
-                    } else {
-                        capturedPictureCutList = capturedPictureList.subList(offset - 1, offset + count - 1);
-                    }
                 }
-                searchResult.setPictures(capturedPictureCutList);
-                searchResult.setSearchId(searchId);
-                searchResult.setTotal(capturedPictureList.size());
             }
+            if (offset + count - 1 > capturedPictureList.size()) {
+                capturedPictureCutList = capturedPictureList.subList(offset - 1, capturedPictureList.size());
+            } else {
+                capturedPictureCutList = capturedPictureList.subList(offset - 1, offset + count - 1);
+            }
+            if (null != capturedPictureCutList) {
+                searchResult.setPictures(capturedPictureCutList);
+            }
+            searchResult.setSearchId(searchId);
+            searchResult.setTotal(capturedPictureList.size());
+
+
         } catch (IOException e) {
             e.printStackTrace();
-            LOG.error("get SearchResult Object by searchId from table_searchres failed! used method CapturePictureSearchServiceImpl.getSearchResult.");
+            LOG.error("get data by searchId from table_searchRes failed! used method DynamicPhotoServiceImpl.getSearchRes.");
         } finally {
             HBaseUtil.closTable(searchResTable);
-            HBaseUtil.closTable(personTable);
         }
         return searchResult;
     }

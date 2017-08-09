@@ -150,11 +150,7 @@ public class DynamicTable {
      */
     public static final byte[] SEARCHRES_COLUMN_SEARCHIMAGEID = Bytes.toBytes("q");
     /**
-     * 返回图片ID
+     * 查询信息
      */
-    public static final byte[] SEARCHRES_COLUMN_RESIMAGEID = Bytes.toBytes("r");
-    /**
-     * 相似度
-     */
-    public static final byte[] SEARCHRES_COLUMN_SIMILARITY = Bytes.toBytes("si");
+    public static final byte[] SEARCHRES_COLUMN_SEARCHMESSAGE = Bytes.toBytes("m");
 }
