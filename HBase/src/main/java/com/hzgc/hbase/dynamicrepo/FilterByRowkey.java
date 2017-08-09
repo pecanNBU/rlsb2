@@ -2,12 +2,21 @@ package com.hzgc.hbase.dynamicrepo;
 
 import com.hzgc.dubbo.dynamicrepo.SearchOption;
 import com.hzgc.dubbo.dynamicrepo.SearchType;
+import com.hzgc.hbase.staticrepo.ElasticSearchHelper;
 import com.hzgc.hbase.util.HBaseHelper;
 import com.hzgc.hbase.util.HBaseUtil;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.filter.*;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.hadoop.yarn.webapp.hamlet.Hamlet;
 import org.apache.log4j.Logger;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -16,59 +25,59 @@ import java.util.*;
 public class FilterByRowkey {
     private static Logger LOG = Logger.getLogger(FilterByRowkey.class);
 
-    /**
-     * 根据设备id过滤rowKey范围
-     *
-     * @param option 搜索选项
-     * @param scan   scan对象
-     * @return List<String> 符合条件的rowKey集合
-     */
-    public List<String> filterByDeviceId(SearchOption option, Scan scan) {
+    public SearchRequestBuilder getSearchRequestBuilder(SearchOption option){
         SearchType searchType = option.getSearchType();
-        List<String> deviceIdList = option.getDeviceIds();
-        List<String> rowKeyList = new ArrayList<>();
-
-        if (searchType.equals(SearchType.PERSON)) {
-            Table person = HBaseHelper.getTable(DynamicTable.TABLE_PERFEA);
-            for (String device : deviceIdList) {
-                Filter filter = new RowFilter(CompareFilter.CompareOp.EQUAL, new RegexStringComparator(device + ".*"));
-                scan.setFilter(filter);
-                try {
-                    ResultScanner scanner = person.getScanner(scan);
-                    for (Result result : scanner) {
-                        byte[] bytes = result.getRow();
-                        String string = Bytes.toString(bytes);
-                        rowKeyList.add(string);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    LOG.error("filter rowkey by deciceId from table_person failed! used method FilterByRowkey.filterByDeviceId.");
-                } finally {
-                    HBaseUtil.closTable(person);
+        List<String> deviceId = option.getDeviceIds();
+        Iterator it = deviceId.iterator();
+        Date startTime = option.getStartDate();
+        Date endTime = option.getEndDate();
+        String index ="dynamic";
+        String type = "person";
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
+        if(searchType.equals(searchType.PERSON)){
+            if (deviceId != null){
+                while (it.hasNext()){
+                    String t = (String) it.next();
+                    boolQueryBuilder1.should(QueryBuilders.matchPhraseQuery("f", t).analyzer("standard"));
                 }
+                boolQueryBuilder.must(boolQueryBuilder1);
             }
-        } else if (searchType.equals(SearchType.CAR)) {
-            Table car = HBaseHelper.getTable(DynamicTable.TABLE_CARFEA);
-            for (String device : deviceIdList) {
-                Filter filter = new RowFilter(CompareFilter.CompareOp.EQUAL, new RegexStringComparator(device + ".*"));
-                scan.setFilter(filter);
-                try {
-                    ResultScanner scanner = car.getScanner(scan);
-                    for (Result result : scanner) {
-                        byte[] bytes = result.getRow();
-                        String string = Bytes.toString(bytes);
-                        rowKeyList.add(string);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    LOG.error("filter rowkey by deciceId from table_car failed! used method FilterByRowkey.filterByDeviceId.");
-                } finally {
-                    HBaseUtil.closTable(car);
-                }
+            if (startTime != null && endTime != null){
+                String start = simpleDateFormat.format(startTime);
+                String end = simpleDateFormat.format(endTime);
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("t").gt(start).lt(end));
+            }
+        }else {
+
+        }
+        return ElasticSearchHelper.getEsClient().prepareSearch(index)
+                .setTypes(type).setExplain(true).setQuery(boolQueryBuilder);
+    }
+    public List<String> getSearchResponse(SearchRequestBuilder searchRequestBuilder){
+        SearchResponse searchResponse = searchRequestBuilder.get();
+        SearchHits hits = searchResponse.getHits();
+        List<String> RowKey = new ArrayList<>();
+        SearchHit[] hits1 = hits.getHits();
+        if (hits1.length > 0 ) {
+            for (SearchHit hit : hits1) {
+                String rowKey = hit.getId();
+                RowKey.add(rowKey);
             }
         }
-        return rowKeyList;
+        return RowKey;
     }
+    /**
+     *
+     * @param option 搜索选项
+     * @return List<String> 符合条件的rowKey集合
+     */
+    public List<String> getRowKey(SearchOption option){
+        SearchRequestBuilder searchRequestBuilder = getSearchRequestBuilder(option);
+        return getSearchResponse(searchRequestBuilder);
+    }
+
 
     /**
      * 根据车牌号过滤rowKey范围
@@ -91,7 +100,9 @@ public class FilterByRowkey {
                     String rowKeyStr = Bytes.toString(rowKey);
                     byte[] plateNum = result.getValue(DynamicTable.CARFEA_COLUMNFAMILY, DynamicTable.CARFEA_COLUMN_PLATNUM);
                     String plateNumStr = Bytes.toString(plateNum);
-                    map.put(rowKeyStr, plateNumStr);
+                    if (rowKey != null && rowKey.length > 0 && plateNumStr != null && plateNumStr.length() > 0) {
+                        map.put(rowKeyStr, plateNumStr);
+                    }
                 }
                 if (!map.isEmpty()) {
                     Iterator<String> iter = map.keySet().iterator();
@@ -116,62 +127,8 @@ public class FilterByRowkey {
         return rowKeyList;
     }
 
-    /**
-     * 根据时间段过滤rowKey范围
-     *
-     * @param option 搜索选项
-     * @param scan   scan对象
-     * @return List<String> 符合条件的rowKey集合
-     */
-    public List<String> filterByTime(SearchOption option, Scan scan) {
-        List<String> rowKeyList = new ArrayList<>();
-        SimpleDateFormat df = new SimpleDateFormat("yy-MM-dd");
-        Table person = HBaseHelper.getTable(DynamicTable.TABLE_PERFEA);
-        Table car = HBaseHelper.getTable(DynamicTable.TABLE_CARFEA);
-        if (option.getSearchType() == SearchType.PERSON) {
-            if (option.getStartDate() != null && option.getEndDate() != null) {
-                String startDate = df.format(option.getStartDate()).replace("-", "");
-                String endDate = df.format(option.getEndDate()).replace("-", "");
-                filterByDate(rowKeyList, startDate, endDate, scan, person);
 
-            } else if (option.getStartDate() != null && option.getEndDate() == null) {
-                String startDate = df.format(option.getStartDate()).replace("-", "");
-                String endDate = df.format(new Date()).replace("-", "");
-                filterByDate(rowKeyList, startDate, endDate, scan, person);
 
-            } else if (option.getStartDate() == null && option.getEndDate() != null) {
-                String startDate = "1970-01-01".replace("-", "");
-                String endDate = df.format(option.getEndDate()).replace("-", "");
-                filterByDate(rowKeyList, startDate, endDate, scan, person);
-
-            } else if (option.getStartDate() == null && option.getEndDate() == null) {
-                LOG.error("Date is null,used method FilterByRowkey.filterByTime");
-            }
-        } else if (option.getSearchType() == SearchType.CAR) {
-            if (option.getStartDate() != null && option.getEndDate() != null) {
-                String startDate = df.format(option.getStartDate()).replace("-", "");
-                String endDate = df.format(option.getEndDate()).replace("-", "");
-                filterByDate(rowKeyList, startDate, endDate, scan, car);
-
-            } else if (option.getStartDate() != null && option.getEndDate() == null) {
-                String startDate = df.format(option.getStartDate()).replace("-", "");
-                String endDate = df.format(new Date()).replace("-", "");
-                filterByDate(rowKeyList, startDate, endDate, scan, car);
-
-            } else if (option.getStartDate() == null && option.getEndDate() != null) {
-                String startDate = "1970-01-01".replace("-", "");
-                String endDate = df.format(option.getEndDate()).replace("-", "");
-                filterByDate(rowKeyList, startDate, endDate, scan, car);
-
-            } else if (option.getStartDate() == null && option.getEndDate() == null) {
-                LOG.error("Date is null,used method FilterByRowkey.filterByTime");
-            }
-        } else {
-            LOG.error("param SearchType is empty,used method FilterByRowkey.filterByTime");
-        }
-
-        return rowKeyList;
-    }
 
     public List<String> filterByDate(List<String> rowKeyList, String startDate, String endDate, Scan scan, Table table) {
         int start = Integer.parseInt(startDate);
@@ -199,45 +156,5 @@ public class FilterByRowkey {
             HBaseUtil.closTable(table);
         }
         return rowKeyList;
-    }
-
-    /**
-     * 根据小图rowKey获取小图特征值 （内）（刘思阳）
-     *
-     * @param imageId 小图rowKey
-     * @param type    人/车
-     * @return byte[] 小图特征值
-     */
-    public byte[] getFeature(String imageId, SearchType type) {
-        byte[] feature = null;
-        if (null != imageId) {
-            Table personTable = HBaseHelper.getTable(DynamicTable.TABLE_PERFEA);
-            Table carTable = HBaseHelper.getTable(DynamicTable.TABLE_CARFEA);
-            Get get = new Get(Bytes.toBytes(imageId));
-            if (type == SearchType.PERSON) {
-                try {
-                    Result result = personTable.get(get);
-                    feature = result.getValue(DynamicTable.PERFEA_COLUMNFAMILY, DynamicTable.PERFEA_COLUMN_FEA);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    LOG.error("get feature by imageId from table_person failed! used method FilterByRowkey.getSmallImage");
-                } finally {
-                    HBaseUtil.closTable(personTable);
-                }
-            } else if (type == SearchType.CAR) {
-                try {
-                    Result result = carTable.get(get);
-                    feature = result.getValue(DynamicTable.CARFEA_COLUMNFAMILY, DynamicTable.CARFEA_COLUMN_FEA);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    LOG.error("get feature by imageId from table_car failed! used method FilterByRowkey.getSmallImage");
-                } finally {
-                    HBaseUtil.closTable(personTable);
-                }
-            }
-        } else {
-            LOG.error("method FilterByRowkey.getFeature param is empty");
-        }
-        return feature;
     }
 }

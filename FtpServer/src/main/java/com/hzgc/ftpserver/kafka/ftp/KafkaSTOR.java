@@ -4,6 +4,7 @@ import com.hzgc.ftpserver.kafka.producer.ProducerOverFtp;
 import com.hzgc.ftpserver.local.LocalIODataConnection;
 import com.hzgc.ftpserver.util.FtpUtil;
 import com.hzgc.rocketmq.util.RocketMQProducer;
+import com.hzgc.util.IOUtil;
 import org.apache.ftpserver.command.AbstractCommand;
 import org.apache.ftpserver.ftplet.*;
 import org.apache.ftpserver.impl.*;
@@ -26,9 +27,6 @@ public class KafkaSTOR extends AbstractCommand {
             kafkaContext = (KafkaFtpServerContext) context;
         }
         try {
-
-            // get state variable
-            long skipLen = session.getFileOffset();
 
             // argument check
             String fileName = request.getArgument();
@@ -75,7 +73,6 @@ public class KafkaSTOR extends AbstractCommand {
                 return;
             }
             fileName = file.getAbsolutePath();
-
             // get permission
             if (!file.isWritable()) {
                 session.write(LocalizedFtpReply.translate(session, request, kafkaContext,
@@ -104,59 +101,41 @@ public class KafkaSTOR extends AbstractCommand {
 
             // transfer data
             boolean failure = false;
-            OutputStream outStream = null;
+            ByteArrayOutputStream value = null;
+            InputStream is = null;
             try {
-                ByteArrayOutputStream value;
-                InputStream is = dataConnection.getDataInputStream();
+                is = dataConnection.getDataInputStream();
                 value = FtpUtil.inputStreamCacher(is);
                 String key;
                 ProducerOverFtp kafkaProducer = kafkaContext.getProducerOverFtp();
                 RocketMQProducer rocketMQProducer = kafkaContext.getProducerRocketMQ();
-                long transSz;
                 //parsing JSON files
                 if (file.getName().contains(".json")) {
                     key = FtpUtil.transformNameToKey(fileName);
-                    LOG.info("Kafka Producer Send message[" + file.getName() + "] to Kafka");
                     kafkaProducer.sendKafkaMessage(ProducerOverFtp.getJson(), key, value.toByteArray());
-                    transSz = value.toByteArray().length;
                 } else if (fileName.contains(".jpg")) {
                     key = FtpUtil.transformNameToKey(fileName);
                     //it is picture
                     if (FtpUtil.pickPicture(fileName) == 0) {
-                        LOG.info("Kafka Producer Send message[" + file.getName() + "] to Kafka");
                         kafkaProducer.sendKafkaMessage(ProducerOverFtp.getPicture(), key, value.toByteArray());
-                        transSz = value.toByteArray().length;
                     } else if (FtpUtil.pickPicture(fileName) > 0) {
-                        LOG.info("Kafka Producer Send message[" + file.getName() + "] to Kafka");
                         int faceNum = FtpUtil.pickPicture(fileName);
                         String faceKey = FtpUtil.faceKey(faceNum, key);
                         kafkaProducer.sendKafkaMessage(ProducerOverFtp.getFace(), faceKey, value.toByteArray());
                         rocketMQProducer.send(FtpUtil.getRowKeyMessage(faceKey).get("ipID"), value.toByteArray());
-                        transSz = value.toByteArray().length;
                     } else {
                         LOG.info("Contains illegal file[" + file.getName() + "], write to local default");
-                        outStream = file.createOutputStream(skipLen);
-                        ByteArrayInputStream bis = new ByteArrayInputStream(value.toByteArray());
-                        transSz = dataConnection.transferFromClient(session.getFtpletSession(), bis, outStream);
                     }
-                } else {
-                    LOG.info("Contains illegal file[" + fileName + "], write to local default");
-                    outStream = file.createOutputStream(skipLen);
-                    ByteArrayInputStream bis = new ByteArrayInputStream(value.toByteArray());
-                    transSz = dataConnection.transferFromClient(session.getFtpletSession(), bis, outStream);
                 }
                 // attempt to close the output stream so that errors in
                 // closing it will return an error to the client (FTPSERVER-119)
-                if (outStream != null) {
-                    outStream.close();
-                }
 
                 LOG.info("File uploaded {}", fileName);
 
                 // notify the statistics component
                 ServerFtpStatistics ftpStat = (ServerFtpStatistics) kafkaContext
                         .getFtpStatistics();
-                ftpStat.setUpload(session, file, transSz);
+                ftpStat.setUpload(session, file, Long.MAX_VALUE);
 
             } catch (SocketException ex) {
                 LOG.info("Socket exception during data transfer", ex);
@@ -176,8 +155,8 @@ public class KafkaSTOR extends AbstractCommand {
                                         FtpReply.REPLY_551_REQUESTED_ACTION_ABORTED_PAGE_TYPE_UNKNOWN,
                                         "STOR", fileName));
             } finally {
-                // make sure we really close the output stream
-                IoUtils.close(outStream);
+                IOUtil.closeStream(is);
+                IOUtil.closeStream(value);
             }
 
             // if data transfer ok - send transfer complete message

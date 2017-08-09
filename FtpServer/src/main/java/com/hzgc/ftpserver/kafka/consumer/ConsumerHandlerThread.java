@@ -40,7 +40,7 @@ public class ConsumerHandlerThread implements Runnable {
     public void run() {
         int workerNum = Integer.parseInt(propers.getProperty("workerNum"));
         long getTimeOut = Long.parseLong(propers.getProperty("getTimeOut"));
-//        executors = new ThreadPoolExecutor(workerNum, workerNum, 0L, TimeUnit.MILLISECONDS,
+//        ThreadPoolExecutor executors = new ThreadPoolExecutor(workerNum, workerNum, 0L, TimeUnit.MILLISECONDS,
 //                new ArrayBlockingQueue<Runnable>(1000), new ThreadPoolExecutor.CallerRunsPolicy());
         BlockingQueue<ConsumerRecord<String, byte[]>> buffer = new LinkedBlockingQueue<>();
         executors = Executors.newFixedThreadPool(workerNum);

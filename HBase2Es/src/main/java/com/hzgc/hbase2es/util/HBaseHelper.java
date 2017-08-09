@@ -1,5 +1,6 @@
-package com.hzgc.hbase2es;
+package com.hzgc.hbase2es.util;
 
+import com.hzgc.util.FileUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.*;
@@ -10,8 +11,8 @@ import org.apache.hadoop.hbase.client.Table;
 import org.apache.log4j.Logger;
 
 
+import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
 
 public class HBaseHelper {
@@ -24,10 +25,9 @@ public class HBaseHelper {
     private static void initHbaseConf(){
         LOG.info("to init hbase configuration.");
         innerHBaseConf = HBaseConfiguration.create();
-        URL url = HBaseHelper.class.getClassLoader()
-                .getResource("/hbase-site.xml");
-        if (url != null){
-            innerHBaseConf.addResource(url.getPath());
+        File file = FileUtil.loadResourceFile("hbase-site.xml");
+        if (file.exists()){
+            innerHBaseConf.addResource(file.getPath());
         }
     }
 

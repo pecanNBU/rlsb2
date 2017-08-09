@@ -47,6 +47,11 @@
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.hzgc</groupId>
+            <artifactId>util</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
@@ -61,6 +66,7 @@
                 <filtering>false</filtering>
                 <includes>
                     <include>*.properties</include>
+                    <include>*.xml</include>
                 </includes>
             </resource>
         </resources>

@@ -1,5 +1,6 @@
-package com.hzgc.hbase2es;
+package com.hzgc.hbase2es.table;
 
+import com.hzgc.hbase2es.util.HBaseHelper;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.log4j.Logger;
 
@@ -28,7 +29,7 @@ public class CreateSrecordTable {
             try {
                 srecordProp = new FileInputStream(args[0]);
             } catch (FileNotFoundException e) {
-                LOG.info("srecord 表格的配置文件不存在，请检查数据的路径。");
+                LOG.error("srecord 表格的配置文件不存在，请检查数据的路径。");
                 e.printStackTrace();
             }
         } else {
@@ -49,7 +50,7 @@ public class CreateSrecordTable {
         // 如果表已经存在，直接返回
         try {
             if (HBaseHelper.getHBaseConnection().getAdmin().tableExists(TableName.valueOf(tableName))){
-                LOG.info("表格已经存在，请进行确认是否删除表格，需要手动到HBase 客户端删除表格。");
+                LOG.error("表格:" + tableName + "已经存在，请进行确认是否删除表格，需要手动到HBase 客户端删除表格。");
                 return;
             }
         } catch (IOException e) {

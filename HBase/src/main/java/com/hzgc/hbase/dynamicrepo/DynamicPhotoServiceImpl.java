@@ -2,13 +2,23 @@ package com.hzgc.hbase.dynamicrepo;
 
 import com.hzgc.dubbo.dynamicrepo.DynamicPhotoService;
 import com.hzgc.dubbo.dynamicrepo.PictureType;
+import com.hzgc.dubbo.dynamicrepo.SearchType;
 import com.hzgc.hbase.util.HBaseHelper;
 import com.hzgc.hbase.util.HBaseUtil;
 import com.hzgc.jni.FaceFunction;
+import com.hzgc.util.ObjectUtil;
+import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 动态库实现类
@@ -18,6 +28,7 @@ public class DynamicPhotoServiceImpl implements DynamicPhotoService {
 
     /**
      * 将rowKey、特征值插入人脸/车辆特征库 （内）（刘思阳）
+     * 表名：perFea/carFea
      *
      * @param type    图片类型（人/车）
      * @param rowKey  图片id（rowkey）
@@ -60,4 +71,101 @@ public class DynamicPhotoServiceImpl implements DynamicPhotoService {
         }
         return false;
     }
+
+    /**
+     * 根据小图rowKey获取小图特征值 （内）（刘思阳）
+     * 表名：perFea/carFea
+     *
+     * @param imageId 小图rowKey
+     * @param type    人/车
+     * @return byte[] 小图特征值
+     */
+    @Override
+    public byte[] getFeature(String imageId, SearchType type) {
+        byte[] feature = null;
+        if (null != imageId) {
+            Table personTable = HBaseHelper.getTable(DynamicTable.TABLE_PERFEA);
+            Table carTable = HBaseHelper.getTable(DynamicTable.TABLE_CARFEA);
+            Get get = new Get(Bytes.toBytes(imageId));
+            if (type == SearchType.PERSON) {
+                try {
+                    Result result = personTable.get(get);
+                    feature = result.getValue(DynamicTable.PERFEA_COLUMNFAMILY, DynamicTable.PERFEA_COLUMN_FEA);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    LOG.error("get feature by imageId from table_person failed! used method FilterByRowkey.getSmallImage");
+                } finally {
+                    HBaseUtil.closTable(personTable);
+                }
+            } else if (type == SearchType.CAR) {
+                try {
+                    Result result = carTable.get(get);
+                    feature = result.getValue(DynamicTable.CARFEA_COLUMNFAMILY, DynamicTable.CARFEA_COLUMN_FEA);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    LOG.error("get feature by imageId from table_car failed! used method FilterByRowkey.getSmallImage");
+                } finally {
+                    HBaseUtil.closTable(personTable);
+                }
+            }
+        } else {
+            LOG.error("method FilterByRowkey.getFeature param is empty");
+        }
+        return feature;
+    }
+
+    /**
+     * 将查询ID、查询相关信息插入查询结果库 （内）（刘思阳）
+     * 表名：searchRes
+     *
+     * @param searchId     查询ID（rowKey）
+     * @param queryImageId 查询图片ID
+     * @param resList      查询信息（返回图片ID、相识度）
+     * @return boolean 是否插入成功
+     */
+    @Override
+    public boolean insertSearchRes(String searchId, String queryImageId, Map<String, Float> resList) {
+        Table searchRes = HBaseHelper.getTable(DynamicTable.TABLE_SEARCHRES);
+        try{
+            Put put = new Put(Bytes.toBytes(searchId));
+            put.addColumn(DynamicTable.SEARCHRES_COLUMNFAMILY,DynamicTable.SEARCHRES_COLUMN_SEARCHIMAGEID,Bytes.toBytes(queryImageId));
+            byte[] searchMessage = ObjectUtil.objectToByte((Object) resList);
+            put.addColumn(DynamicTable.SEARCHRES_COLUMNFAMILY,DynamicTable.SEARCHRES_COLUMN_SEARCHMESSAGE,searchMessage);
+            searchRes.put(put);
+            return true;
+        }catch (Exception e) {
+            e.printStackTrace();
+            LOG.error("inserte data by searchId from table_searchRes failed! used method DynamicPhotoServiceImpl.insertSearchRes.");
+        }finally {
+            HBaseUtil.closTable(searchRes);
+        }
+        return false;
+    }
+
+    /**
+     * 根据动态库查询ID获取查询结果 （内）（刘思阳）
+     * 表名：searchRes
+     *
+     * @param searchID 查询ID（rowKey）
+     * @return List<Map<String,Float>> search结果数据列表
+     */
+    @Override
+    public Map<String, Float> getSearchRes(String searchID) {
+        Map<String,Float> searchMessageMap = new HashMap<>();
+        Table searchRes = HBaseHelper.getTable(DynamicTable.TABLE_SEARCHRES);
+        Get get = new Get(Bytes.toBytes(searchID));
+        try{
+            Result result = searchRes.get(get);
+            byte[] searchMessage = result.getValue(DynamicTable.SEARCHRES_COLUMNFAMILY,DynamicTable.SEARCHRES_COLUMN_SEARCHMESSAGE);
+            searchMessageMap = (Map<String,Float>)ObjectUtil.byteToObject(searchMessage);
+        }catch (Exception e) {
+            e.printStackTrace();
+            LOG.error("get data by searchId from table_searchRes failed! used method DynamicPhotoServiceImpl.getSearchRes.");
+        }finally {
+            HBaseUtil.closTable(searchRes);
+        }
+        return searchMessageMap;
+    }
+
+
 }

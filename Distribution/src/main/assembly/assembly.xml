@@ -83,6 +83,20 @@
             <outputDirectory>\conf</outputDirectory>
         </fileSet>
 
+        <fileSet>
+            <directory>../HBase2Es/src/main/resources</directory>
+            <includes>
+                <include>**</include>
+            </includes>
+            <outputDirectory>\conf</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../HBase2Es/target</directory>
+            <includes>
+                <include>hbase2es-1.0-jar-with-dependencies.jar</include>
+            </includes>
+            <outputDirectory>\lib</outputDirectory>
+        </fileSet>
         <!-- Kafka 模块conf文件-->
         <fileSet>
             <directory>../Kafka/src/main/resources/</directory>
