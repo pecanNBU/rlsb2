@@ -78,6 +78,7 @@ public class DynamicPhotoServiceImpl implements DynamicPhotoService {
      * @param feature 特征值
      * @return
      */
+
     @Override
     public boolean upPictureInsert(PictureType type, String rowKey, float[] feature, byte[] image) {
         Table table = HBaseHelper.getTable(DynamicTable.TABLE_UPFEA);
