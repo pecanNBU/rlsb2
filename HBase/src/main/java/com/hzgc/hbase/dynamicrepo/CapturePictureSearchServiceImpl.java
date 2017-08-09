@@ -33,9 +33,7 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
      */
     @Override
     public SearchResult search(SearchOption option) {
-        SearchResult searchResult = new SearchResult();
         Scan scan = new Scan();
-
         if (null != option) {
             if (!option.getDeviceIds().isEmpty() && null != option.getSearchType()) {
                 List<String> rowKeyListByDeviceId = new FilterByRowkey().filterByDeviceId(option, scan);
@@ -101,9 +99,7 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
                         capturedPictureCutList = capturedPictureList.subList(offset - 1, offset + count - 1);
                     }
                 }
-                if (null != capturedPictureCutList) {
-                    searchResult.setPictures(capturedPictureCutList);
-                }
+                searchResult.setPictures(capturedPictureCutList);
                 searchResult.setSearchId(searchId);
                 searchResult.setTotal(capturedPictureList.size());
             }
@@ -296,47 +292,41 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
         return capturedPicture;
     }
 
-    private CapturedPicture setSmallImageToCapturedPicture_person(CapturedPicture capturedPicture, Result result) {
+    private void setSmallImageToCapturedPicture_person(CapturedPicture capturedPicture, Result result) {
         byte[] smallImage = result.getValue(DynamicTable.PERSON_COLUMNFAMILY, DynamicTable.PERSON_COLUMN_IMGE);
         capturedPicture.setSmallImage(smallImage);
-        return capturedPicture;
     }
 
-    private CapturedPicture setCapturedPicture_person(CapturedPicture capturedPicture, Result result, Map<String, Object> mapEx) {
+    private void setCapturedPicture_person(CapturedPicture capturedPicture, Result result, Map<String, Object> mapEx) {
         String des = Bytes.toString(result.getValue(DynamicTable.PERSON_COLUMNFAMILY, DynamicTable.PERSON_COLUMN_DESCRIBE));
         capturedPicture.setDescription(des);
 
         String ex = Bytes.toString(result.getValue(DynamicTable.PERSON_COLUMNFAMILY, DynamicTable.PERSON_COLUMN_EXTRA));
         mapEx.put("ex", ex);
         capturedPicture.setExtend(mapEx);
-        return capturedPicture;
     }
 
-    private CapturedPicture setBigImageToCapturedPicture_person(CapturedPicture capturedPicture, Result bigImageResult) {
+    private void setBigImageToCapturedPicture_person(CapturedPicture capturedPicture, Result bigImageResult) {
         byte[] bigImage = bigImageResult.getValue(DynamicTable.PERSON_COLUMNFAMILY, DynamicTable.PERSON_COLUMN_IMGE);
         capturedPicture.setBigImage(bigImage);
-        return capturedPicture;
     }
 
-    private CapturedPicture setSmallImageToCapturedPicture_car(CapturedPicture capturedPicture, Result result) {
+    private void setSmallImageToCapturedPicture_car(CapturedPicture capturedPicture, Result result) {
         byte[] smallImage = result.getValue(DynamicTable.CAR_COLUMNFAMILY, DynamicTable.CAR_COLUMN_IMGE);
         capturedPicture.setSmallImage(smallImage);
-        return capturedPicture;
     }
 
-    private CapturedPicture setCapturedPicture_car(CapturedPicture capturedPicture, Result result, Map<String, Object> mapEx) {
+    private void setCapturedPicture_car(CapturedPicture capturedPicture, Result result, Map<String, Object> mapEx) {
         String des = Bytes.toString(result.getValue(DynamicTable.CAR_COLUMNFAMILY, DynamicTable.CAR_COLUMN_DESCRIBE));
         capturedPicture.setDescription(des);
 
         String ex = Bytes.toString(result.getValue(DynamicTable.CAR_COLUMNFAMILY, DynamicTable.CAR_COLUMN_EXTRA));
         mapEx.put("ex", ex);
         capturedPicture.setExtend(mapEx);
-        return capturedPicture;
     }
 
-    private CapturedPicture setBigImageToCapturedPicture_car(CapturedPicture capturedPicture, Result bigImageResult) {
+    private void setBigImageToCapturedPicture_car(CapturedPicture capturedPicture, Result bigImageResult) {
         byte[] bigImage = bigImageResult.getValue(DynamicTable.CAR_COLUMNFAMILY, DynamicTable.CAR_COLUMN_IMGE);
         capturedPicture.setBigImage(bigImage);
-        return capturedPicture;
     }
 }

@@ -65,6 +65,7 @@ public class RocketMQProducer implements Serializable {
 
     public void send(String tag, byte[] data) {
         send(topic, tag, null, data, null);
+        LOG.info("Send MQ message[topic:" + topic + ", tag:" + tag + "]");
     }
 
     public void send(String tag, String key, byte[] data) {

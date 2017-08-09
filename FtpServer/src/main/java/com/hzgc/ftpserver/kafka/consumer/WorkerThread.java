@@ -9,32 +9,36 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.log4j.Logger;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class WorkerThread implements Runnable {
     private Logger LOG = Logger.getLogger(WorkerThread.class);
-    protected ConsumerRecord<String, byte[]> consumerRecord;
-    protected BlockingQueue<ConsumerRecord<String, byte[]>> buffer;
-    protected ConcurrentHashMap<String, Boolean> isCommit;
-    protected Connection hbaseConn;
-    protected Table picTable;
-    protected String tableName;
-    protected String columnFamily;
-    protected String column_pic;
-    protected String column_ipcID;
-    protected String column_time;
+    private ConsumerRecord<String, byte[]> consumerRecord;
+    private BlockingQueue<ConsumerRecord<String, byte[]>> buffer;
+    private ConcurrentHashMap<String, Boolean> isCommit;
+    private Connection hbaseConn;
+    private Table picTable;
+    private String tableName;
+    private String columnFamily;
+    private String column_pic;
+    private String column_ipcID;
+    private String column_time;
 
-    public WorkerThread(Connection conn,
-                        BlockingQueue<ConsumerRecord<String, byte[]>> buffer,
-                        String tableName,
-                        String columnFamily,
-                        String column_pic,
-                        String column_ipcID,
-                        String column_time,
-                        ConcurrentHashMap<String, Boolean> commit) {
+    WorkerThread(Connection conn,
+                 BlockingQueue<ConsumerRecord<String, byte[]>> buffer,
+                 String tableName,
+                 String columnFamily,
+                 String column_pic,
+                 String column_ipcID,
+                 String column_time,
+                 ConcurrentHashMap<String, Boolean> commit) {
         this.buffer = buffer;
         this.hbaseConn = conn;
         this.isCommit = commit;
@@ -50,7 +54,7 @@ public class WorkerThread implements Runnable {
         send();
     }
 
-    public void send() {
+    private void send() {
         try {
             if (null != tableName) {
                 picTable = hbaseConn.getTable(TableName.valueOf(tableName));
@@ -64,8 +68,10 @@ public class WorkerThread implements Runnable {
                     Map<String, String> map = FtpUtil.getRowKeyMessage(consumerRecord.key());
                     String ipcID = map.get("ipcID");
                     long timestamp = Long.valueOf(map.get("time"));
+                    Date date = new Date(timestamp);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(column_ipcID), Bytes.toBytes(ipcID));
-                    put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(column_time), Bytes.toBytes(timestamp));
+                    put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(column_time), Bytes.toBytes(dateFormat.format(date)));
                     picTable.put(put);
                     System.out.printf(Thread.currentThread().getName() + "topic = %s, offset = %d, key = %s, value = %s, patition = %s\n",
                             consumerRecord.topic(), consumerRecord.offset(), consumerRecord.key(), consumerRecord.value(), consumerRecord.partition());

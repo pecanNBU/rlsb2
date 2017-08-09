@@ -12,7 +12,7 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 public class ProducerOverFtp {
-    private static Logger log = Logger.getLogger(ProducerOverFtp.class);
+    private static Logger LOG = Logger.getLogger(ProducerOverFtp.class);
     private static KafkaProducer kafkaProducer;
     private Properties kafkaPropers = new Properties();
     private FileInputStream fis;
@@ -30,7 +30,7 @@ public class ProducerOverFtp {
             JSON = kafkaPropers.getProperty("topic-json");
             if (kafkaPropers != null) {
                 kafkaProducer = new KafkaProducer(kafkaPropers);
-                log.info("Create KafkaProducer successfull");
+                LOG.info("Create KafkaProducer successfull");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,6 +45,8 @@ public class ProducerOverFtp {
             kafkaProducer.send(new ProducerRecord<String, byte[]>(topic, key, value),
                     new ProducerCallBack(startTime, key));
         }
+        LOG.info("Send MQ message[topic:" + topic + ", key:" + key + "]");
+
     }
 
     public void closeProducer() {
