@@ -19,6 +19,10 @@ public class DynamicTable {
      */
     public static final byte[] PERSON_COLUMN_IMGE = Bytes.toBytes("p");
     /**
+     * 设备ID
+     */
+    public static final byte[] PERSON_COLUMN_IPCID = Bytes.toBytes("s");
+    /**
      * 描述信息
      */
     public static final byte[] PERSON_COLUMN_DESCRIBE = Bytes.toBytes("d");
@@ -27,17 +31,13 @@ public class DynamicTable {
      */
     public static final byte[] PERSON_COLUMN_EXTRA = Bytes.toBytes("e");
     /**
-     * 设备ID
-     */
-    public static final byte[] PERSON_COLUMN_IPCID = Bytes.toBytes("f");
-    /**
      * 时间戳
      */
     public static final byte[] PERSON_COLUMN_TIMESTAMP = Bytes.toBytes("t");
     /**
      * 特征值
      */
-    public static final byte[] PERSON_COLUMN_FEA = Bytes.toBytes("fea");
+    public static final byte[] PERSON_COLUMN_FEA = Bytes.toBytes("f");
 
     /**
      * car表
@@ -51,7 +51,10 @@ public class DynamicTable {
      * 图片
      */
     public static final byte[] CAR_COLUMN_IMGE = Bytes.toBytes("p");
-
+    /**
+     * 设备ID
+     */
+    public static final byte[] CAR_COLUMN_IPCID = Bytes.toBytes("s");
     /**
      * 描述信息
      */
@@ -60,10 +63,6 @@ public class DynamicTable {
      * 附加信息
      */
     public static final byte[] CAR_COLUMN_EXTRA = Bytes.toBytes("e");
-    /**
-     * 设备ID
-     */
-    public static final byte[] CAR_COLUMN_IPCID = Bytes.toBytes("f");
     /**
      * 车牌号
      */
@@ -75,43 +74,40 @@ public class DynamicTable {
     /**
      * 特征值
      */
-    public static final byte[] CAR_COLUMN_FEA = Bytes.toBytes("fea");
-
+    public static final byte[] CAR_COLUMN_FEA = Bytes.toBytes("f");
 
     /**
      * upFea表
      */
     public static final String TABLE_UPFEA = "upFea";
     /**
-     * upPerFea表列簇
+     * upFea表列簇-人
      */
-    public static final byte[] UPPERFEA_COLUMNFAMILY = Bytes.toBytes("p");
+    public static final byte[] UPFEA_PERSON_COLUMNFAMILY = Bytes.toBytes("P");
     /**
-     * 小图
+     * 图片-人
      */
-    public static final byte[] UPPERFEA_COLUMN_SMALLIMAGE = Bytes.toBytes("s");
+    public static final byte[] UPFEA_PERSON_COLUMN_SMALLIMAGE = Bytes.toBytes("p");
     /**
-     * 特征值
+     * 特征值-人
      */
-    public static final byte[] UPPERFEA_COLUMN_FEA = Bytes.toBytes("fea");
-
+    public static final byte[] UPFEA_PERSON_COLUMN_FEA = Bytes.toBytes("f");
     /**
-     * upCarFea表列簇
+     * upFea表列簇-车
      */
-    public static final byte[] UPCARFEA_COLUMNFAMILY = Bytes.toBytes("c");
+    public static final byte[] UPFEA_CAR_COLUMNFAMILY = Bytes.toBytes("c");
     /**
-     * upCarFea小图
+     * 图片-车
      */
-    public static final byte[] UPCARFEA_COLUMN_SMALLIMAGE = Bytes.toBytes("s");
+    public static final byte[] UPFEA_CAR_COLUMN_SMALLIMAGE = Bytes.toBytes("p");
     /**
-     * upCarFea特征值
+     * 特征值-车
      */
-    public static final byte[] UPCARFEA_COLUMN_FEA = Bytes.toBytes("fea");
+    public static final byte[] UPFEA_CAR_COLUMN_FEA = Bytes.toBytes("f");
     /**
-     * 车牌号
+     * 车牌号-车
      */
-    public static final byte[] UPCARFEA_COLUMN_PLATENUM = Bytes.toBytes("n");
-
+    public static final byte[] UPFEA_CAR_COLUMN_PLATENUM = Bytes.toBytes("n");
     /**
      * searchRes表
      */
@@ -125,8 +121,7 @@ public class DynamicTable {
      */
     public static final byte[] SEARCHRES_COLUMN_SEARCHIMAGEID = Bytes.toBytes("q");
     /**
-     * 返回图片ID+相似度
+     * 查询信息
      */
     public static final byte[] SEARCHRES_COLUMN_SEARCHMESSAGE = Bytes.toBytes("m");
-
 }

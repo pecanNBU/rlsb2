@@ -1,11 +1,12 @@
 package com.hzgc.dubbo.dynamicrepo;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 搜索结果
  */
-public class SearchResult {
+public class SearchResult implements Serializable {
     /**
      * 本次搜索的 id
      */
