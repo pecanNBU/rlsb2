@@ -4,13 +4,14 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 搜索选项
  */
 public class SearchOption implements Serializable {
     /**
-     * 搜索类型，PERSON（人）,CAR（车）
+     * 搜索类型，人PERSON（0）,车CAR（1）
      */
     private SearchType searchType;
     /**
@@ -32,7 +33,7 @@ public class SearchOption implements Serializable {
     /**
      * 搜索的设备范围
      */
-    private List<String> deviceIds ;
+    private List<String> deviceIds;
     /**
      * 平台 Id 优先使用 deviceIds 圈定范围
      */
@@ -46,13 +47,17 @@ public class SearchOption implements Serializable {
      */
     private Date endDate;
     /**
-     * 搜索的时间区间，为空搜索整天
+     * 搜索的时间区间，为空或者没有传入这个参数时候搜索整天
      */
     private List<TimeInterval> intervals;
     /**
      * 参数筛选选项
      */
     private List<SearchFilter> filters;
+    /**
+     * 排序参数
+     */
+    private Map<String, String> sortParams;
 
     public SearchType getSearchType() {
         return searchType;
@@ -146,6 +151,14 @@ public class SearchOption implements Serializable {
         // 初始化搜索日期
     }
 
+    public Map<String, String> getSortParams() {
+        return sortParams;
+    }
+
+    public void setSortParams(Map<String, String> sortParams) {
+        this.sortParams = sortParams;
+    }
+
     @Override
     public String toString() {
         return "SearchOption{" +
@@ -160,6 +173,7 @@ public class SearchOption implements Serializable {
                 ", endDate=" + endDate +
                 ", intervals=" + intervals +
                 ", filters=" + filters +
+                ", sortParams=" + sortParams +
                 '}';
     }
 }

@@ -16,13 +16,16 @@ public interface CapturePictureSearchService {
     SearchResult search(SearchOption option);
 
     /**
-     * @param searchId 搜索的 id（rowkey）
-     * @param offset   从第几条开始
-     * @param count    条数
+     * 查询历史记录
+     *
+     * @param searchId   搜索的 id（rowkey）
+     * @param offset     从第几条开始
+     * @param count      条数
+     * @param sortParams 排序参数
      * @return SearchResult对象
      */
 
-    SearchResult getSearchResult(String searchId, int offset, int count);
+    SearchResult getSearchResult(String searchId, int offset, int count, Map<String, String> sortParams);
 
     /**
      * 查看人、车图片有哪些属性

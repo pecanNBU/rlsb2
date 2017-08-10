@@ -19,6 +19,10 @@ public class DynamicTable {
      */
     public static final byte[] PERSON_COLUMN_IMGE = Bytes.toBytes("p");
     /**
+     * 设备ID
+     */
+    public static final byte[] PERSON_COLUMN_IPCID = Bytes.toBytes("s");
+    /**
      * 描述信息
      */
     public static final byte[] PERSON_COLUMN_DESCRIBE = Bytes.toBytes("d");
@@ -27,26 +31,13 @@ public class DynamicTable {
      */
     public static final byte[] PERSON_COLUMN_EXTRA = Bytes.toBytes("e");
     /**
-     * 设备ID
-     */
-    public static final byte[] PERSON_COLUMN_IPCID = Bytes.toBytes("f");
-    /**
      * 时间戳
      */
     public static final byte[] PERSON_COLUMN_TIMESTAMP = Bytes.toBytes("t");
-
-    /**
-     * perFea表
-     */
-    public static final String TABLE_PERFEA = "perFea";
-    /**
-     * perFea表列簇
-     */
-    public static final byte[] PERFEA_COLUMNFAMILY = Bytes.toBytes("f");
     /**
      * 特征值
      */
-    public static final byte[] PERFEA_COLUMN_FEA = Bytes.toBytes("fea");
+    public static final byte[] PERSON_COLUMN_FEA = Bytes.toBytes("f");
 
     /**
      * car表
@@ -60,7 +51,10 @@ public class DynamicTable {
      * 图片
      */
     public static final byte[] CAR_COLUMN_IMGE = Bytes.toBytes("p");
-
+    /**
+     * 设备ID
+     */
+    public static final byte[] CAR_COLUMN_IPCID = Bytes.toBytes("s");
     /**
      * 描述信息
      */
@@ -70,10 +64,6 @@ public class DynamicTable {
      */
     public static final byte[] CAR_COLUMN_EXTRA = Bytes.toBytes("e");
     /**
-     * 设备ID
-     */
-    public static final byte[] CAR_COLUMN_IPCID = Bytes.toBytes("f");
-    /**
      * 车牌号
      */
     public static final byte[] CAR_COLUMN_PLATENUM = Bytes.toBytes("n");
@@ -81,62 +71,43 @@ public class DynamicTable {
      * 时间戳
      */
     public static final byte[] CAR_COLUMN_TIMESTAMP = Bytes.toBytes("t");
-
-    /**
-     * carFea表
-     */
-    public static final String TABLE_CARFEA = "carFea";
-    /**
-     * carFea表列簇
-     */
-    public static final byte[] CARFEA_COLUMNFAMILY = Bytes.toBytes("f");
     /**
      * 特征值
      */
-    public static final byte[] CARFEA_COLUMN_FEA = Bytes.toBytes("fea");
-    /**
-     * 车牌号
-     */
-    public static final byte[] CARFEA_COLUMN_PLATNUM = Bytes.toBytes("n");
+    public static final byte[] CAR_COLUMN_FEA = Bytes.toBytes("f");
 
     /**
-     * upPerFea表
+     * upFea表
      */
-    public static final String TABLE_UPPERFEA = "upPerFea";
+    public static final String TABLE_UPFEA = "upFea";
     /**
-     * upPerFea表列簇
+     * upFea表列簇-人
      */
-    public static final byte[] UPPERFEA_COLUMNFAMILY = Bytes.toBytes("i");
+    public static final byte[] UPFEA_PERSON_COLUMNFAMILY = Bytes.toBytes("P");
     /**
-     * 小图
+     * 图片-人
      */
-    public static final byte[] UPPERFEA_COLUMN_SMALLIMAGE = Bytes.toBytes("s");
+    public static final byte[] UPFEA_PERSON_COLUMN_SMALLIMAGE = Bytes.toBytes("p");
     /**
-     * 特征值
+     * 特征值-人
      */
-    public static final byte[] UPPERFEA_COLUMN_FEA = Bytes.toBytes("f");
-
+    public static final byte[] UPFEA_PERSON_COLUMN_FEA = Bytes.toBytes("f");
     /**
-     * upCarFea表
+     * upFea表列簇-车
      */
-    public static final String TABLE_UPCARFEA = "upCarFea";
+    public static final byte[] UPFEA_CAR_COLUMNFAMILY = Bytes.toBytes("c");
     /**
-     * upCarFea表列簇
+     * 图片-车
      */
-    public static final byte[] UPCARFEA_COLUMNFAMILY = Bytes.toBytes("i");
+    public static final byte[] UPFEA_CAR_COLUMN_SMALLIMAGE = Bytes.toBytes("p");
     /**
-     * 小图
+     * 特征值-车
      */
-    public static final byte[] UPCARFEA_COLUMN_SMALLIMAGE = Bytes.toBytes("s");
+    public static final byte[] UPFEA_CAR_COLUMN_FEA = Bytes.toBytes("f");
     /**
-     * 特征值
+     * 车牌号-车
      */
-    public static final byte[] UPCARFEA_COLUMN_FEA = Bytes.toBytes("f");
-    /**
-     * 车牌号
-     */
-    public static final byte[] UPCARFEA_COLUMN_PLATENUM = Bytes.toBytes("p");
-
+    public static final byte[] UPFEA_CAR_COLUMN_PLATENUM = Bytes.toBytes("n");
     /**
      * searchRes表
      */
