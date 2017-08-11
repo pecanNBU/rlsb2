@@ -6,12 +6,13 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class ObjectInfoInnerHandlerImpl implements ObjectInfoInnerHandler{
+public class ObjectInfoInnerHandlerImpl implements ObjectInfoInnerHandler, Serializable{
 
     @Override
     public List<String> searchByPkeys(List<String> pkeys) {

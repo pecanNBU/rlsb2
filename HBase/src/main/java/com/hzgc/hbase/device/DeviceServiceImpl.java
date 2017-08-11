@@ -9,7 +9,6 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class DeviceServiceImpl implements DeviceService {
     private static Logger LOG = Logger.getLogger(DeviceServiceImpl.class);

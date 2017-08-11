@@ -10,9 +10,10 @@ import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Map;
 
-public class DeviceUtilImpl implements DeviceUtil {
+public class DeviceUtilImpl implements DeviceUtil, Serializable {
 
     @Override
     public String getplatfromID(String ipcID) {
