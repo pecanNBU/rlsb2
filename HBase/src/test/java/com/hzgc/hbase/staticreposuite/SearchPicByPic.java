@@ -66,8 +66,10 @@ public class SearchPicByPic {
             } else {
                 person.put("sex", "2");
             }
-            person.put("cphone", (new Random().nextInt(1000000000) + 1000000000) + "" + (new Random().nextInt(1000000000) + 1000000000));
-            person.put("idcard", (new Random().nextInt(1000000000) + 1000000000) + "" + (new Random().nextInt(1000000000) + 1000000000));
+            person.put("cphone", (new Random().nextInt(1000000000) + 1000000000) + ""
+                    + (new Random().nextInt(1000000000) + 1000000000));
+            person.put("idcard", (new Random().nextInt(1000000000) + 1000000000) + ""
+                    + (new Random().nextInt(1000000000) + 1000000000));
             byte[] photo = null;
             try {
                 photo = Image2Byte2Image.image2byte(files[i].getAbsolutePath());
