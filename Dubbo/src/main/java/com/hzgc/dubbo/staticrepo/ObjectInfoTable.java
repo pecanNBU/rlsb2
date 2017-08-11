@@ -21,4 +21,6 @@ public class ObjectInfoTable implements Serializable {
     public static final String CPHONE = "cphone";      // 布控人手机号
     public static final String CREATETIME = "createtime";     // 创建时间
     public static final String UPDATETIME = "updatetime";     // 更新时间
+
+    public static final String RELATED = "related";        // 相关度
 }
