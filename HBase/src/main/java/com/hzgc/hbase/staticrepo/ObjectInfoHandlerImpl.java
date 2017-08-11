@@ -190,7 +190,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             default:{
                 objectSearchResult = searchByMutiCondition(pSearchArgsModel.getPaltaformId(),
                         pSearchArgsModel.getIdCard(), pSearchArgsModel.getName(),
-                        pSearchArgsModel.getSex(), pSearchArgsModel.getFeature(),
+                        pSearchArgsModel.getSex(), pSearchArgsModel.getImage(), pSearchArgsModel.getFeature(),
                         pSearchArgsModel.getThredshold(), pSearchArgsModel.getPkeys(),
                         pSearchArgsModel.getCreator(), pSearchArgsModel.getCphone(),
                         pSearchArgsModel.getStart(), pSearchArgsModel.getPageSize(),
@@ -201,12 +201,11 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         return objectSearchResult;
     }
 
-    //功能跟有待完善
+    //多条件查询
     private ObjectSearchResult searchByMutiCondition(String platformId, String idCard,String name, Integer sex,
-                                                     String feature,int threshold,
+                                                     byte[] photo, String feature,int threshold,
                                                      List<String> pkeys, String creator, String cphone,
                                                      int start, int pageSize,boolean moHuSearch){
-        SearchResponse response = null;
         SearchRequestBuilder requestBuilder = ElasticSearchHelper.getEsClient()
                 .prepareSearch(ObjectInfoTable.TABLE_NAME)
                 .setTypes(ObjectInfoTable.PERSON_COLF)
@@ -241,12 +240,19 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         if (creator != null){
             booleanQueryBuilder.should(QueryBuilders.matchQuery(ObjectInfoTable.CREATOR, creator));
         }
+
         requestBuilder.setQuery(booleanQueryBuilder);
         // 后续，根据查出来的人员信息，如果有图片，特征值，以及阈值，（则调用算法进行比对，得出相似度比较高的）
         // 由或者多条件查询里面不支持传入图片以及阈值，特征值。
-        return dealWithSearchRequesBuilder(platformId, requestBuilder, null,
+        ObjectSearchResult objectSearchResult = dealWithSearchRequesBuilder(platformId, requestBuilder, null,
                 null, null,
                 start, pageSize, moHuSearch);
+        //处理以图搜图
+        if (feature != null && threshold > 0){
+            objectSearchResult = searchByPhotoAndThreshold(objectSearchResult.getResults(), platformId, photo,
+                    threshold, feature, start, pageSize );
+        }
+        return objectSearchResult;
     }
 
     @Override
@@ -397,7 +403,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
                 start, pageSize, moHuSearch);
     }
 
-    public ObjectSearchResult getAllObjectINfo(){
+    private ObjectSearchResult getAllObjectINfo(){
         Client client = ElasticSearchHelper.getEsClient();
         SearchRequestBuilder requestBuilder = client.prepareSearch(ObjectInfoTable.TABLE_NAME)
                 .setTypes(ObjectInfoTable.PERSON_COLF)
@@ -407,14 +413,20 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
                 null, null, -1, -1 , false );
     }
 
-    @Override
-    public ObjectSearchResult searchByPhotoAndThreshold(String platformId,
+    private ObjectSearchResult searchByPhotoAndThreshold(List<Map<String, Object>> personInfoList,
+                                                        String platformId,
                                                         byte[] photo,
                                                         int threshold,
                                                         String feature,
                                                         long start,
-                                                        long pageSize) {
-        List<Map<String, Object>> resultsTmp = getAllObjectINfo().getResults();
+                                                        long pageSize){
+        List<Map<String, Object>> resultsTmp;
+        if (personInfoList == null || personInfoList.size() <= 0){
+            resultsTmp = getAllObjectINfo().getResults();
+        } else {
+            resultsTmp = personInfoList;
+        }
+
         List<Map<String, Object>> resultsFinal = new ArrayList<>();
 
         for (Map<String, Object> personInfo: resultsTmp){
@@ -447,6 +459,18 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         putSearchRecordToHBase(platformId, objectSearchResult, photo);
         HBaseUtil.dealWithPaging(objectSearchResult, (int)start, (int)pageSize);
         return objectSearchResult;
+
+    }
+
+    @Override
+    public ObjectSearchResult searchByPhotoAndThreshold(String platformId,
+                                                        byte[] photo,
+                                                        int threshold,
+                                                        String feature,
+                                                        long start,
+                                                        long pageSize) {
+        return searchByPhotoAndThreshold(null, platformId,
+                photo, threshold, feature, start, pageSize);
     }
 
     @Override
