@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import java.io.*;
 import java.util.*;
 
-public class KafkaFtpFile implements FtpFile {
+public class KafkaFtpFile implements FtpFile, Serializable {
     private final Logger LOG = Logger.getLogger(KafkaFtpFile.class);
     private String fileName;
 

@@ -9,8 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.Serializable;
 
-public class LocalFileSystemFactory implements FileSystemFactory {
+public class LocalFileSystemFactory implements FileSystemFactory, Serializable {
     private final Logger LOG = LoggerFactory
             .getLogger(LocalFileSystemFactory.class);
 

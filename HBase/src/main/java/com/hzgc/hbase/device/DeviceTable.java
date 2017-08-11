@@ -2,7 +2,9 @@ package com.hzgc.hbase.device;
 
 import org.apache.hadoop.hbase.util.Bytes;
 
-public class DeviceTable {
+import java.io.Serializable;
+
+public class DeviceTable implements Serializable {
     final static String TABLE_DEVICE = "device";
     final static String TABLE_OBJTYPE = "objToDevice";
     final static byte[] CF_DEVICE = Bytes.toBytes("device");

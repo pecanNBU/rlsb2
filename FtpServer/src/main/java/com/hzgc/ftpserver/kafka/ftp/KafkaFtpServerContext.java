@@ -5,12 +5,18 @@ import com.hzgc.rocketmq.util.RocketMQProducer;
 import org.apache.ftpserver.impl.DefaultFtpServerContext;
 import org.apache.log4j.Logger;
 
-public class KafkaFtpServerContext extends DefaultFtpServerContext {
+import java.io.Serializable;
+
+public class KafkaFtpServerContext extends DefaultFtpServerContext implements Serializable {
     private static Logger LOG = Logger.getLogger(KafkaFtpServerContext.class);
     private ProducerOverFtp producerOverFtp = ProducerOverFtp.getInstance();
     private RocketMQProducer producerRocketMQ = RocketMQProducer.getInstance();
+
     ProducerOverFtp getProducerOverFtp() {
         return producerOverFtp;
     }
-    RocketMQProducer getProducerRocketMQ() {return  producerRocketMQ; }
+
+    RocketMQProducer getProducerRocketMQ() {
+        return producerRocketMQ;
+    }
 }

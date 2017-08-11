@@ -12,9 +12,10 @@ import org.apache.ftpserver.impl.DefaultFtpServer;
 import org.apache.ftpserver.listener.Listener;
 import org.apache.ftpserver.message.MessageResource;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class KafkaFtpServerFactory extends FtpServerFactory {
+public class KafkaFtpServerFactory extends FtpServerFactory implements Serializable {
     private KafkaFtpServerContext kafkaFtpServerContext;
 
     public KafkaFtpServerFactory() {

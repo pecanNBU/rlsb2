@@ -7,8 +7,9 @@ import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.io.Serializable;
 
-public class HBaseConnectionFactory {
+public class HBaseConnectionFactory implements Serializable {
     private static final Logger LOG = Logger.getLogger(HBaseConnectionFactory.class);
     private static Connection hbaseConnection;
     private static Configuration conf = HBaseConfiguration.create();

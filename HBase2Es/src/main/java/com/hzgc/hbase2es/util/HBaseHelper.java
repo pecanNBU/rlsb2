@@ -13,26 +13,28 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Map;
 
-public class HBaseHelper {
+public class HBaseHelper implements Serializable {
     private static Logger LOG = Logger.getLogger(HBaseHelper.class);
     private static Configuration innerHBaseConf;
     private static Connection innerHBaseConnection;
 
-    private HBaseHelper(){}
+    private HBaseHelper() {
+    }
 
-    private static void initHbaseConf(){
+    private static void initHbaseConf() {
         LOG.info("to init hbase configuration.");
         innerHBaseConf = HBaseConfiguration.create();
         File file = FileUtil.loadResourceFile("hbase-site.xml");
-        if (file.exists()){
+        if (file.exists()) {
             innerHBaseConf.addResource(file.getPath());
         }
     }
 
-    private static void initHBaseConn(){
-        if (innerHBaseConf == null){
+    private static void initHBaseConn() {
+        if (innerHBaseConf == null) {
             initHbaseConf();
         }
         try {
@@ -45,20 +47,20 @@ public class HBaseHelper {
 
     }
 
-    public static Connection getHBaseConnection(){
-        if (innerHBaseConnection == null){
+    public static Connection getHBaseConnection() {
+        if (innerHBaseConnection == null) {
             initHBaseConn();
         }
         return innerHBaseConnection;
     }
 
-    public static Table getTable(String tableName){
-        return  getTable(TableName.valueOf(tableName));
+    public static Table getTable(String tableName) {
+        return getTable(TableName.valueOf(tableName));
     }
 
-    private static Table getTable(TableName tableName){
+    private static Table getTable(TableName tableName) {
         try {
-            return  HBaseHelper.getHBaseConnection().getTable(tableName);
+            return HBaseHelper.getHBaseConnection().getTable(tableName);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -95,19 +97,19 @@ public class HBaseHelper {
     }
 
     public static Table createTableWithCoprocessor(String tableName,
-                                                  String observerName,
-                                                  String path,
-                                                  Map<String, String> mapOfOberserverArgs,
-                                                  int maxVersion, String... colfams) {
+                                                   String observerName,
+                                                   String path,
+                                                   Map<String, String> mapOfOberserverArgs,
+                                                   int maxVersion, String... colfams) {
         return createTableWithCoprocessor(tableName, observerName, path,
-                mapOfOberserverArgs, maxVersion,105120000, colfams );
+                mapOfOberserverArgs, maxVersion, 105120000, colfams);
     }
 
-    public static Table createTable(String tableName,  int maxVersion, String... colfams){
-        return createTable(tableName, maxVersion,105120000, colfams);
+    public static Table createTable(String tableName, int maxVersion, String... colfams) {
+        return createTable(tableName, maxVersion, 105120000, colfams);
     }
 
-    public static Table createTable(String tableName,  int maxVersion, int timeToLive, String... colfams){
+    public static Table createTable(String tableName, int maxVersion, int timeToLive, String... colfams) {
         HTableDescriptor tableDescriptor = null;
         Admin admin = null;
         Table table = null;
@@ -139,11 +141,12 @@ public class HBaseHelper {
         }
         return table;
     }
+
     public static Table createTableWithCoprocessor(String tableName,
-                                           String observerName,
-                                           String path,
-                                           Map<String, String> mapOfOberserverArgs,
-                                           int maxVersion, int timeToLive, String... colfams) {
+                                                   String observerName,
+                                                   String path,
+                                                   Map<String, String> mapOfOberserverArgs,
+                                                   int maxVersion, int timeToLive, String... colfams) {
         HTableDescriptor tableDescriptor = null;
         Admin admin = null;
         Table table = null;

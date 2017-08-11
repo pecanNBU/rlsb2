@@ -34,7 +34,7 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
         Scan scan = new Scan();
         if (null != option) {
             if (!option.getDeviceIds().isEmpty() && null != option.getSearchType()) {
-           //     List<String> rowKeyListByDeviceId = new FilterByRowkey().filterByDeviceId(option, scan);
+                //     List<String> rowKeyListByDeviceId = new FilterByRowkey().filterByDeviceId(option, scan);
 
             } else if (option.getPlateNumber() != null && option.getSearchType() == SearchType.CAR) {
                 List<String> rowKeyListByPlateNumber = new FilterByRowkey().filterByPlateNumber(option, scan);
@@ -51,7 +51,7 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
      * @return SearchResult对象
      */
     @Override
-    public SearchResult getSearchResult(String searchId, int offset, int count) {
+    public SearchResult getSearchResult(String searchId, int offset, int count, Map<String, String> sortParams) {
         Table searchResTable = HBaseHelper.getTable(DynamicTable.TABLE_SEARCHRES);
         Table personTable = HBaseHelper.getTable(DynamicTable.TABLE_PERSON);
 
