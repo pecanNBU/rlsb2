@@ -5,9 +5,10 @@ import com.hzgc.util.FileUtil;
 import com.hzgc.util.IOUtil;
 
 import java.io.FileInputStream;
+import java.io.Serializable;
 import java.util.Properties;
 
-public class FtpAddressServiceImpl implements FtpAddressService {
+public class FtpAddressServiceImpl implements FtpAddressService, Serializable {
     private static Properties proper = new Properties();
 
     public FtpAddressServiceImpl() {

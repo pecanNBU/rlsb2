@@ -2,10 +2,12 @@ package com.hzgc.hbase.dynamicrepo;
 
 import org.apache.hadoop.hbase.util.Bytes;
 
+import java.io.Serializable;
+
 /**
  * 动态库表属性
  */
-public class DynamicTable {
+public class DynamicTable implements Serializable {
     /**
      * person表
      */

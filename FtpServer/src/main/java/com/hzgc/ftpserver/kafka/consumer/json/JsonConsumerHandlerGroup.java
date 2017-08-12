@@ -6,11 +6,12 @@ import com.hzgc.ftpserver.kafka.consumer.picture2.PicConsumerHandlerThread;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.log4j.Logger;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class JsonConsumerHandlerGroup implements ConsumerGroup {
+public class JsonConsumerHandlerGroup implements ConsumerGroup, Serializable {
     private final Logger LOG = Logger.getLogger(JsonConsumerHandlerGroup.class);
     private List<ConsumerHandlerThread> consumerHandler;
     private Connection hbaseConn;

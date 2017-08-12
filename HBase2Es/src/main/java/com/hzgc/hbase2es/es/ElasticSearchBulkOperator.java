@@ -7,13 +7,14 @@ import org.elasticsearch.action.delete.DeleteRequestBuilder;
 import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.action.update.UpdateRequestBuilder;
 
+import java.io.Serializable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ElasticSearchBulkOperator {
+public class ElasticSearchBulkOperator implements Serializable {
     private static final int MAX_BULK_COUNT = 10;
     private static BulkRequestBuilder bulkRequestBuilder = null;
 
@@ -76,6 +77,7 @@ public class ElasticSearchBulkOperator {
     /**
      * add update builder to bulk
      * use commitLock to protected bulk as thread-save
+     *
      * @param builder
      */
     public static void addUpdateBuilderToBulk(UpdateRequestBuilder builder) {

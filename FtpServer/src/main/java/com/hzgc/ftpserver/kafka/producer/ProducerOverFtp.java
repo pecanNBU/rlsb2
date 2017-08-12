@@ -9,9 +9,10 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.Serializable;
 import java.util.Properties;
 
-public class ProducerOverFtp {
+public class ProducerOverFtp implements Serializable {
     private static Logger LOG = Logger.getLogger(ProducerOverFtp.class);
     private static KafkaProducer kafkaProducer;
     private Properties kafkaPropers = new Properties();

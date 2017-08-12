@@ -8,9 +8,10 @@ import org.apache.ftpserver.ftplet.User;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.Serializable;
 
 
-public class KafkaFileSystemView implements FileSystemView {
+public class KafkaFileSystemView implements FileSystemView, Serializable {
     private final Logger LOG = Logger.getLogger(KafkaFileSystemView.class);
 
     private String rootDir;

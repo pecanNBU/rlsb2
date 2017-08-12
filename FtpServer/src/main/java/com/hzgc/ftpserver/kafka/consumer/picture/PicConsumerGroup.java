@@ -3,11 +3,12 @@ package com.hzgc.ftpserver.kafka.consumer.picture;
 import com.hzgc.ftpserver.kafka.consumer.ConsumerRunnable;
 import org.apache.log4j.Logger;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class PicConsumerGroup {
+public class PicConsumerGroup implements Serializable {
     private final Logger LOG = Logger.getLogger(PicConsumerGroup.class);
     private List<ConsumerRunnable> consumers;
 

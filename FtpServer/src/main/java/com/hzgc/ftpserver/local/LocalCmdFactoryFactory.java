@@ -4,11 +4,12 @@ import org.apache.ftpserver.command.Command;
 import org.apache.ftpserver.command.CommandFactory;
 import org.apache.ftpserver.command.impl.*;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class LocalCmdFactoryFactory {
+public class LocalCmdFactoryFactory implements Serializable {
 
     private static final HashMap<String, Command> DEFAULT_COMMAND_MAP = new HashMap<String, Command>();
 
