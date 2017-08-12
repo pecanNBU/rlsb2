@@ -180,6 +180,21 @@ public class FaceFunction {
         return featureCompare(currentFeature, historyFeature);
     }
 
+    /**
+     * 将byte[]型特征转化为float[]
+     *
+     * @param fea
+     * @return float[]
+     */
+    public static float[] byteArr2floatArr(byte[] fea) {
+        try {
+            return FaceFunction.string2floatArray(new String(fea, "ISO-8859-1"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private static double featureCompare(float[] currentFeature, float[] historyFeature) {
         double similarityDegree = 0;
         double currentFeatureMultiple = 0;
