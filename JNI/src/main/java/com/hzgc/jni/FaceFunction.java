@@ -37,7 +37,7 @@ public class FaceFunction {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return feature;
+        return null;
     }
 
     /**
@@ -113,24 +113,36 @@ public class FaceFunction {
      *
      * @param feature 传入float[]类型的特征值
      * @return 输出指定编码为ISO-8859-1的String
-     * @throws Exception
      */
     public static String floatArray2string(float[] feature) {
-        if (null != feature && feature.length > 0) {
+        if (feature != null && feature.length == 512) {
+            byte[] bytes = floatArray2ByteArray(feature);
             try {
-                byte[] byteFeature = new byte[feature.length * 4];
-                int temp = 0;
-                for (float f : feature) {
-                    byte[] tempbyte = float2byte(f);
-                    System.arraycopy(tempbyte, 0, byteFeature, temp, tempbyte.length);
-                    temp = temp + 4;
-                }
-                return new String(byteFeature, "ISO-8859-1");
+                return new String(bytes, "ISO8859-1");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         }
         return "";
+    }
+
+    /**
+     * float数组转byte数组
+     * @param feature 特征值（float[]）
+     * @return 特征值(byte[])
+     */
+    public static byte[] floatArray2ByteArray(float[] feature) {
+        if (feature != null && feature.length == 512) {
+            byte[] byteFeature = new byte[feature.length * 4];
+            int temp = 0;
+            for (float f : feature) {
+                byte[] tempbyte = float2byte(f);
+                System.arraycopy(tempbyte, 0, byteFeature, temp, tempbyte.length);
+                temp = temp + 4;
+            }
+            return byteFeature;
+        }
+        return null;
     }
 
     /**
