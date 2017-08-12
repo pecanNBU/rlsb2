@@ -7,11 +7,12 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.log4j.Logger;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.*;
 
-public class ConsumerHandlerThread implements Runnable {
+public class ConsumerHandlerThread implements Runnable, Serializable {
     protected final Logger LOG;
     private final KafkaConsumer<String, byte[]> consumer;
     private Connection hbaseConn;

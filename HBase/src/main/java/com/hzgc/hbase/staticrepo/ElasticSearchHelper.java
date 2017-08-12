@@ -10,11 +10,12 @@ import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
-public class ElasticSearchHelper {
+public class ElasticSearchHelper implements Serializable{
     private static Logger LOG = Logger.getLogger(ElasticSearchHelper.class);
     private static TransportClient client = null;
 

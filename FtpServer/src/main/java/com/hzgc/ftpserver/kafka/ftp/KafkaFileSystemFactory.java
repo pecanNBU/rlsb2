@@ -7,8 +7,9 @@ import org.apache.ftpserver.ftplet.User;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.Serializable;
 
-public class KafkaFileSystemFactory implements FileSystemFactory {
+public class KafkaFileSystemFactory implements FileSystemFactory, Serializable {
     private final Logger LOG = Logger.getLogger(KafkaFileSystemFactory.class);
 
     private boolean createHome;

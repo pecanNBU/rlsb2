@@ -8,8 +8,9 @@ import org.apache.hadoop.hbase.coprocessor.BaseRegionObserver;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.io.Serializable;
 
-public class EsObserver extends BaseRegionObserver {
+public class EsObserver extends BaseRegionObserver implements Serializable {
     private static Logger LOG = Logger.getLogger(EsObserver.class);
     String indexName;
     String typeName;

@@ -17,7 +17,7 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
 
-public class LocalIODataConnection implements DataConnection {
+public class LocalIODataConnection implements DataConnection, Serializable {
     private final Logger LOG = LoggerFactory
             .getLogger(LocalIODataConnection.class);
 

@@ -1,11 +1,9 @@
 package com.hzgc.util;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-/**
- * Created by Administrator on 2017-8-3.
- */
-public class UuidUtil {
+public class UuidUtil implements Serializable {
     private String uuid;
 
     public String getUuid() {
@@ -15,7 +13,8 @@ public class UuidUtil {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
-    public static String setUuid(){
+
+    public static String setUuid() {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         return uuid;
     }

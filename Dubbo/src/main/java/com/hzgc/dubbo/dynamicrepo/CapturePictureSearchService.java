@@ -24,8 +24,8 @@ public interface CapturePictureSearchService {
      * @param sortParams 排序参数
      * @return SearchResult对象
      */
-
     SearchResult getSearchResult(String searchId, int offset, int count, String sortParams);
+
 
     /**
      * 查看人、车图片有哪些属性

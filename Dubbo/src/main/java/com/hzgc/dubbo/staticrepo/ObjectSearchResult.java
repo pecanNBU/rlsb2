@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by lenovo on 2017/7/11.
- */
 public class ObjectSearchResult implements Serializable {
     private String searchId;  // 搜索id
     private int searchStatus;  // 查询成功与否状态，

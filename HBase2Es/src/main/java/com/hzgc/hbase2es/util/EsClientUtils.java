@@ -6,10 +6,11 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class EsClientUtils{
+public class EsClientUtils implements Serializable {
     private static Logger LOG = Logger.getLogger(EsClientUtils.class);
     public static String clusterName;
     public static String nodeHosts;
@@ -19,15 +20,15 @@ public class EsClientUtils{
     public static void initEsClient() throws UnknownHostException {
         Settings settings = Settings.builder()
                 .put("cluster.name", EsClientUtils.clusterName).build();
-        LOG.debug("====================== "  + EsClientUtils.nodeHosts + "=======================");
-        for (String host:EsClientUtils.nodeHosts.split("_")){
+        LOG.debug("====================== " + EsClientUtils.nodeHosts + "=======================");
+        for (String host : EsClientUtils.nodeHosts.split("_")) {
             client = new PreBuiltTransportClient(settings)
                     .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(host),
                             EsClientUtils.nodePort));
         }
     }
 
-    public static void clostEsClient(){
+    public static void clostEsClient() {
         EsClientUtils.client.close();
     }
 }

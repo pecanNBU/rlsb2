@@ -2,7 +2,9 @@ package com.hzgc.hbase.device;
 
 import org.apache.hadoop.hbase.util.Bytes;
 
-public class DeviceTable {
+import java.io.Serializable;
+
+public class DeviceTable implements Serializable {
     final static String TABLE_DEVICE = "device";
     final static String TABLE_OBJTYPE = "objToDevice";
     final static byte[] CF_DEVICE = Bytes.toBytes("device");
@@ -13,8 +15,8 @@ public class DeviceTable {
     final static byte[] OBJTYPE_COL = Bytes.toBytes("type");
     final static byte[] OFFLINERK = Bytes.toBytes("offlineWarnRowKey");
     final static byte[] OFFLINECOL = Bytes.toBytes("objTypes");
-    final static Integer IDENTIFY = 0;
-    final static Integer ADDED = 1;
-    final static Integer OFFLINE = 2;
+    public final static Integer IDENTIFY = 0;
+    public final static Integer ADDED = 1;
+    public final static Integer OFFLINE = 2;
 
 }

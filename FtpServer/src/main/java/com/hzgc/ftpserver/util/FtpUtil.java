@@ -2,16 +2,14 @@ package com.hzgc.ftpserver.util;
 
 import org.apache.ftpserver.util.IoUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 import java.io.*;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FtpUtil {
+public class FtpUtil implements Serializable {
     private static Logger LOG = Logger.getLogger(FtpUtil.class);
 
     public static boolean checkPort(int checkPort) throws Exception {

@@ -4,8 +4,10 @@ import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.log4j.Logger;
 
+import java.io.Serializable;
 
-public class ProducerCallBack implements Callback {
+
+public class ProducerCallBack implements Callback, Serializable {
     private static Logger log = Logger.getLogger(ProducerCallBack.class);
     private final long startTime;   //the time is message was send
     private final String key;  //the message's key

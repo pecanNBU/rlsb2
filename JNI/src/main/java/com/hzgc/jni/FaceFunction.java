@@ -122,9 +122,7 @@ public class FaceFunction {
                 int temp = 0;
                 for (float f : feature) {
                     byte[] tempbyte = float2byte(f);
-                    for (int i = 0; i < tempbyte.length; i++) {
-                        byteFeature[temp + i] = tempbyte[i];
-                    }
+                    System.arraycopy(tempbyte, 0, byteFeature, temp, tempbyte.length);
                     temp = temp + 4;
                 }
                 return new String(byteFeature, "ISO-8859-1");
@@ -140,7 +138,6 @@ public class FaceFunction {
      *
      * @param feature 传入编码为ISO-8859-1的String
      * @return 返回float[]类型的特征值
-     * @throws Exception
      */
     public static float[] string2floatArray(String feature) {
         float[] floatFeature;
@@ -168,6 +165,46 @@ public class FaceFunction {
             }
         }
         return null;
+    }
+
+    /**
+     * 相似度比较，范围[0-1]
+     *
+     * @param currentFeatureStr 需要比对的特征值
+     * @param historyFeatureStr 库中的特征值
+     * @return 相似度
+     */
+    public static double  featureCompare (String currentFeatureStr,String historyFeatureStr) {
+        float[] currentFeature = FaceFunction.string2floatArray(currentFeatureStr);
+        float[] historyFeature = FaceFunction.string2floatArray(historyFeatureStr);
+        return featureCompare(currentFeature, historyFeature);
+    }
+
+    /**
+     * 将byte[]型特征转化为float[]
+     *
+     * @param fea
+     * @return float[]
+     */
+    public static float[] byteArr2floatArr(byte[] fea) {
+        try {
+            return FaceFunction.string2floatArray(new String(fea, "ISO-8859-1"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static double featureCompare(float[] currentFeature, float[] historyFeature) {
+        double similarityDegree = 0;
+        double currentFeatureMultiple = 0;
+        double historyFeatureMultiple = 0;
+        for (int i = 0; i < currentFeature.length; i++) {
+            similarityDegree = similarityDegree + currentFeature[i] * historyFeature[i];
+            currentFeatureMultiple = currentFeatureMultiple + Math.pow(currentFeature[i], 2);
+            historyFeatureMultiple = historyFeatureMultiple + Math.pow(historyFeature[i], 2);
+        }
+        return similarityDegree / Math.sqrt(currentFeatureMultiple) / Math.sqrt(historyFeatureMultiple);
     }
 
     /**
@@ -220,6 +257,7 @@ public class FaceFunction {
         return dest;
     }
 
+
     /**
      * 将byte[]型特征转化为float[]
      *
@@ -231,4 +269,5 @@ public class FaceFunction {
         float[] newFea = FaceFunction.string2floatArray(new String(fea, "ISO-8859-1"));
         return newFea;
     }
+
 }

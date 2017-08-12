@@ -10,10 +10,11 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class HBaseHelper {
+public class HBaseHelper implements Serializable {
     private static Logger LOG = Logger.getLogger(HBaseHelper.class);
     private static Configuration innerHBaseConf = null;
     private static Connection innerHBaseConnection = null;
