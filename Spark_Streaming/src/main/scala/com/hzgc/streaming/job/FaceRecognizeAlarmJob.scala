@@ -1,6 +1,7 @@
 package com.hzgc.streaming.job
 
 import com.google.gson.Gson
+import com.hzgc.jni.FaceFunction
 import com.hzgc.streaming.alarm.{Item, RecognizeAlarmMessage}
 import com.hzgc.streaming.util._
 import org.apache.hadoop.hbase.util.Bytes
@@ -90,7 +91,7 @@ object FaceRecognizeAlarmJob {
           joinTable.registerTempTable("joinTable")
          // joinTable.show()
           //自定义sql函数transition
-          sqlContext.udf.register("comp",(a:String,b:String) =>FaceFunctionTransition.functionTransition(a,b))
+          sqlContext.udf.register("comp",(a:String,b:String) =>FaceFunction.featureCompare(a,b))
           val result =sqlContext.
             sql ("select dynamicID,dynamicPlatId,dynamicDeviceID,staticID,staticObjectType,comp(dynamicFeature,staticFeature) as similarity from joinTable")
           //根据相似度阈值对比对结果进行过滤。本任务为离线告警：处理结果数据必须大于特定阈值

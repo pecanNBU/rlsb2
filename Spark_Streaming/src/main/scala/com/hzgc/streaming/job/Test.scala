@@ -4,7 +4,7 @@ import com.hzgc.ftpserver.util.FtpUtil
 import com.hzgc.hbase.device.{DeviceTable, DeviceUtilImpl}
 import com.hzgc.hbase.staticrepo.ObjectInfoInnerHandlerImpl
 import com.hzgc.jni.FaceFunction
-import com.hzgc.streaming.util.{FaceFunctionTransition, StreamingUtils}
+import com.hzgc.streaming.util.StreamingUtils
 import kafka.serializer.StringDecoder
 import org.apache.spark.SparkConf
 import org.apache.spark.broadcast.Broadcast
