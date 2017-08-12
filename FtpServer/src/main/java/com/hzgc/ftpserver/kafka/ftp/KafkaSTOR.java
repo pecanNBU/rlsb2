@@ -125,7 +125,7 @@ public class KafkaSTOR extends AbstractCommand {
                         int faceNum = FtpUtil.pickPicture(fileName);
                         String faceKey = FtpUtil.faceKey(faceNum, key);
                         kafkaProducer.sendKafkaMessage(ProducerOverFtp.getFace(), faceKey, photBytes);
-                        rocketMQProducer.send(FtpUtil.getRowKeyMessage(faceKey).get("ipID"), photBytes);
+                        rocketMQProducer.send(FtpUtil.getRowKeyMessage(faceKey).get("ipcID"), photBytes);
                         float[] feature = FaceFunction.featureExtract(photBytes);
                         if (feature != null && feature.length == 512) {
                             kafkaProducer.sendKafkaMessage(ProducerOverFtp.getFEATURE(), faceKey, FaceFunction.floatArray2ByteArray(feature));
