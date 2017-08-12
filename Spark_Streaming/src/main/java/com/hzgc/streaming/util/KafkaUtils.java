@@ -28,18 +28,18 @@ public class KafkaUtils implements Serializable {
     void produce() throws Exception{
 //        int messageNo=1;
 //        String key = String.valueOf(messageNo);
-        String filePath="/opt/1.jpg";
+        String filePath="/opt/test.jpg";
         byte[] bt = File2byte(filePath);
         //kafkaid的数格式：000123243453    0001为设备id
         //在往kafka发送之前，将特征值提取。
-        NativeFunction.init();
-        byte[] feature = FaceFunction.floatArray2ByteArray(FaceFunction.featureExtract(""));
-        for(int i=0;i<30;i++){
+//        NativeFunction.init();
+//        byte[] feature = FaceFunction.floatArray2ByteArray(FaceFunction.featureExtract(filePath));
+        byte[] feature = "thisisfeature".getBytes("ISO8859-1");
+        for(int i=0;i<1;i++){
 //            float[] feature = FaceFunction.featureExtract(bt);
 //            String feature2string = FaceFunction.floatArray2string(feature);
-            String str = "thisisatezheng";
-            producer.send(new KeyedMessage<String, byte[]>(TOPIC, "17130NCY0HZ0002_0000000000000000_170424034623_0000063182_01",
-                    str.getBytes("ISO8859-1")));
+            producer.send(new KeyedMessage<String, byte[]>(TOPIC, "17130NCY0HZ0002_0000000000000000_170424060313_0000069182_01",
+                    feature));
       }
 
 //        NativeFunction.destory();
