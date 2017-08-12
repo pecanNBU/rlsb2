@@ -50,7 +50,7 @@ public class ProducerOverFtp implements Serializable {
             kafkaProducer.send(new ProducerRecord<String, byte[]>(topic, key, value),
                     new ProducerCallBack(startTime, key));
         }
-        LOG.info("Send MQ message[topic:" + topic + ", key:" + key + "]");
+        LOG.info("Send Kafka message[topic:" + topic + ", key:" + key + "]");
 
     }
 
