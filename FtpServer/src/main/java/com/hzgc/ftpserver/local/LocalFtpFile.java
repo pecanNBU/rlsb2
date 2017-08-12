@@ -12,7 +12,7 @@ import java.io.*;
 import java.util.*;
 
 
-public class LocalFtpFile implements FtpFile {
+public class LocalFtpFile implements FtpFile, Serializable {
     private final Logger LOG = LoggerFactory.getLogger(LocalFtpFile.class);
 
     // the file name with respect to the user root.

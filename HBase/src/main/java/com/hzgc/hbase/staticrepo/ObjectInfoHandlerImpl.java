@@ -153,9 +153,9 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             }
             case "searchByPhotoAndThreshold":{
                 objectSearchResult = searchByPhotoAndThreshold(pSearchArgsModel.getPaltaformId(),
-                                                pSearchArgsModel.getImage(), pSearchArgsModel.getThredshold(),
-                                                pSearchArgsModel.getFeature(), pSearchArgsModel.getStart(),
-                                                pSearchArgsModel.getPageSize());
+                        pSearchArgsModel.getImage(), pSearchArgsModel.getThredshold(),
+                        pSearchArgsModel.getFeature(), pSearchArgsModel.getStart(),
+                        pSearchArgsModel.getPageSize());
                 break;
             }
             case "searchByRowkey":{
@@ -190,7 +190,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             default:{
                 objectSearchResult = searchByMutiCondition(pSearchArgsModel.getPaltaformId(),
                         pSearchArgsModel.getIdCard(), pSearchArgsModel.getName(),
-                        pSearchArgsModel.getSex(), pSearchArgsModel.getFeature(),
+                        pSearchArgsModel.getSex(), pSearchArgsModel.getImage(), pSearchArgsModel.getFeature(),
                         pSearchArgsModel.getThredshold(), pSearchArgsModel.getPkeys(),
                         pSearchArgsModel.getCreator(), pSearchArgsModel.getCphone(),
                         pSearchArgsModel.getStart(), pSearchArgsModel.getPageSize(),
@@ -201,12 +201,11 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         return objectSearchResult;
     }
 
-    //功能跟有待完善
+    //多条件查询
     private ObjectSearchResult searchByMutiCondition(String platformId, String idCard,String name, Integer sex,
-                                                    String feature,int threshold,
-                                                    List<String> pkeys, String creator, String cphone,
-                                                    int start, int pageSize,boolean moHuSearch){
-        SearchResponse response = null;
+                                                     byte[] photo, String feature,int threshold,
+                                                     List<String> pkeys, String creator, String cphone,
+                                                     int start, int pageSize,boolean moHuSearch){
         SearchRequestBuilder requestBuilder = ElasticSearchHelper.getEsClient()
                 .prepareSearch(ObjectInfoTable.TABLE_NAME)
                 .setTypes(ObjectInfoTable.PERSON_COLF)
@@ -241,12 +240,19 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         if (creator != null){
             booleanQueryBuilder.should(QueryBuilders.matchQuery(ObjectInfoTable.CREATOR, creator));
         }
+
         requestBuilder.setQuery(booleanQueryBuilder);
         // 后续，根据查出来的人员信息，如果有图片，特征值，以及阈值，（则调用算法进行比对，得出相似度比较高的）
         // 由或者多条件查询里面不支持传入图片以及阈值，特征值。
-        return dealWithSearchRequesBuilder(platformId, requestBuilder, null,
+        ObjectSearchResult objectSearchResult = dealWithSearchRequesBuilder(platformId, requestBuilder, null,
                 null, null,
                 start, pageSize, moHuSearch);
+        //处理以图搜图
+        if (feature != null && threshold > 0){
+            objectSearchResult = searchByPhotoAndThreshold(objectSearchResult.getResults(), platformId, photo,
+                    threshold, feature, start, pageSize );
+        }
+        return objectSearchResult;
     }
 
     @Override
@@ -341,8 +347,8 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     // 处理精确查找下，IK 分词器返回多余信息的情况，
     // 比如只需要小王炸，但是返回了小王炸 和小王炸小以及小王炸大的情况
     private void dealWithCreatorAndNameInNoMoHuSearch(ObjectSearchResult searchResult,String searchType,
-                                                     String nameOrCreator,
-                                                     boolean moHuSearch){
+                                                      String nameOrCreator,
+                                                      boolean moHuSearch){
         List<Map<String, Object>> exectResult = new ArrayList<>();
         List<Map<String, Object>> tempList = searchResult.getResults();
         if (!moHuSearch && tempList != null &&(ObjectInfoTable.CREATOR.equals(searchType)
@@ -397,17 +403,80 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
                 start, pageSize, moHuSearch);
     }
 
+    private ObjectSearchResult getAllObjectINfo(){
+        Client client = ElasticSearchHelper.getEsClient();
+        SearchRequestBuilder requestBuilder = client.prepareSearch(ObjectInfoTable.TABLE_NAME)
+                .setTypes(ObjectInfoTable.PERSON_COLF)
+                .setExplain(true).setSize(10000);
+        requestBuilder.setQuery(QueryBuilders.matchAllQuery());
+        return dealWithSearchRequesBuilder(true, null, requestBuilder, null,
+                null, null, -1, -1 , false );
+    }
+
+    private ObjectSearchResult searchByPhotoAndThreshold(List<Map<String, Object>> personInfoList,
+                                                        String platformId,
+                                                        byte[] photo,
+                                                        int threshold,
+                                                        String feature,
+                                                        long start,
+                                                        long pageSize){
+        List<Map<String, Object>> resultsTmp;
+        if (personInfoList == null || personInfoList.size() <= 0){
+            resultsTmp = getAllObjectINfo().getResults();
+        } else {
+            resultsTmp = personInfoList;
+        }
+
+        List<Map<String, Object>> resultsFinal = new ArrayList<>();
+
+        for (Map<String, Object> personInfo: resultsTmp){
+            Map<String, Object> personInfoTmp = new HashMap<>();
+            personInfoTmp.putAll(personInfo);
+            Set<String> attributes = personInfo.keySet();
+            Iterator<String> iterator = attributes.iterator();
+            while (iterator.hasNext()){
+                String attr = iterator.next();
+                if ("feature".equals(attr)){
+                    String feture_his = (String) personInfo.get(attr);
+                    float related = NativeFunction.compare(FaceFunction.string2floatArray(feature),
+                            FaceFunction.string2floatArray(feture_his));
+                    int relatedToInt = (int)(related * 100);
+                    System.out.println(personInfo.get("id")  + ", "  + relatedToInt);
+                    if (relatedToInt > threshold){
+                        personInfoTmp.put(ObjectInfoTable.RELATED, relatedToInt);
+                        resultsFinal.add(personInfoTmp);
+                    }
+                }
+            }
+        }
+        String searchId = UUID.randomUUID().toString().replace("-", "");
+        ObjectSearchResult objectSearchResult = new ObjectSearchResult();
+        objectSearchResult.setSearchId(searchId); // searchId
+        objectSearchResult.setSearchStatus(0);  // status
+        objectSearchResult.setSearchNums(resultsFinal.size());   // results nums
+        objectSearchResult.setResults(resultsFinal);  // results
+        objectSearchResult.setPhotoId(searchId);   // photoId
+        putSearchRecordToHBase(platformId, objectSearchResult, photo);
+        HBaseUtil.dealWithPaging(objectSearchResult, (int)start, (int)pageSize);
+        return objectSearchResult;
+
+    }
+
     @Override
-    public ObjectSearchResult searchByPhotoAndThreshold(String platformId, byte[] photo,
-                                                        int threshold, String feature,
-                                                        long start, long pageSize) {
-        return null;
+    public ObjectSearchResult searchByPhotoAndThreshold(String platformId,
+                                                        byte[] photo,
+                                                        int threshold,
+                                                        String feature,
+                                                        long start,
+                                                        long pageSize) {
+        return searchByPhotoAndThreshold(null, platformId,
+                photo, threshold, feature, start, pageSize);
     }
 
     @Override
     public String getFeature(String tag, byte[] photo) {
         float[] floatFeature = FaceFunction.featureExtract(photo);
-        if (floatFeature != null && floatFeature.length == 2048) {
+        if (floatFeature != null && floatFeature.length == 512) {
             return FaceFunction.floatArray2string(floatFeature);
         }
         return "";
@@ -438,7 +507,6 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         ObjectOutputStream oout = null;
         byte[] results = null;
-        LOG.info("in putSearchRecordToHBase, the objectSearchResult is: " + searchResult);
         if (searchResult !=null){
             try {
                 oout = new ObjectOutputStream(bout);
@@ -496,6 +564,26 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     private ObjectSearchResult dealWithSearchRequesBuilder(String paltformID, SearchRequestBuilder searchRequestBuilder,
                                                            byte[] photo, String searchType, String creatorOrName,
                                                            int start, int pageSize, boolean moHuSearch){
+        return dealWithSearchRequesBuilder(false,
+                paltformID,
+                searchRequestBuilder,
+                photo,
+                searchType,
+                creatorOrName,
+                start,
+                pageSize,
+                moHuSearch);
+    }
+
+    private ObjectSearchResult dealWithSearchRequesBuilder(boolean isSkipRecord,
+                                                           String paltformID,
+                                                           SearchRequestBuilder searchRequestBuilder,
+                                                           byte[] photo,
+                                                           String searchType,
+                                                           String creatorOrName,
+                                                           int start,
+                                                           int pageSize,
+                                                           boolean moHuSearch){
         SearchResponse response = searchRequestBuilder.get();
         SearchHits hits = response.getHits();
         LOG.info("根据搜索条件得到的记录数是： " + hits.getTotalHits());
@@ -526,10 +614,13 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         // 处理精确查找下，IK 分词器返回多余信息的情况，
         // 比如只需要小王炸，但是返回了小王炸 和小王炸小以及小王炸大的情况
         dealWithCreatorAndNameInNoMoHuSearch(searchResult, searchType, creatorOrName, moHuSearch);
-        putSearchRecordToHBase(paltformID, searchResult, photo);
+        if (!isSkipRecord){
+            putSearchRecordToHBase(paltformID, searchResult, photo);
+        }
         //处理搜索的数据,根据是否需要分页进行返回
         HBaseUtil.dealWithPaging(searchResult, start, pageSize);
         LOG.info("最终返回的记录数是： " + searchResult.getResults().size() + " 条");
         return searchResult;
+
     }
 }

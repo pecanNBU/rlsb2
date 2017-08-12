@@ -6,9 +6,10 @@ import org.apache.ftpserver.usermanager.PasswordEncryptor;
 import org.apache.ftpserver.usermanager.UserManagerFactory;
 
 import java.io.File;
+import java.io.Serializable;
 import java.net.URL;
 
-public class LocalPropertiesUserManagerFactory implements UserManagerFactory {
+public class LocalPropertiesUserManagerFactory implements UserManagerFactory, Serializable {
     private String adminName = "admin";
 
     private File userDataFile;

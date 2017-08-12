@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import javax.xml.crypto.Data;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -18,7 +19,7 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class WorkerThread implements Runnable {
+public class WorkerThread implements Runnable, Serializable {
     private Logger LOG = Logger.getLogger(WorkerThread.class);
     private ConsumerRecord<String, byte[]> consumerRecord;
     private BlockingQueue<ConsumerRecord<String, byte[]>> buffer;

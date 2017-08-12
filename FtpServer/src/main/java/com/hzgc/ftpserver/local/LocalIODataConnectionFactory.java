@@ -14,9 +14,10 @@ import org.slf4j.LoggerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+import java.io.Serializable;
 import java.net.*;
 
-public class LocalIODataConnectionFactory implements ServerDataConnectionFactory {
+public class LocalIODataConnectionFactory implements ServerDataConnectionFactory, Serializable {
     private final Logger LOG = LoggerFactory
             .getLogger(LocalIODataConnectionFactory.class);
 

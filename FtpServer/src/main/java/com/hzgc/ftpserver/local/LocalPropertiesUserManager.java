@@ -16,7 +16,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 
-public class LocalPropertiesUserManager extends AbstractUserManager {
+public class LocalPropertiesUserManager extends AbstractUserManager implements Serializable {
 
     private final Logger LOG = LoggerFactory
             .getLogger(LocalPropertiesUserManager.class);

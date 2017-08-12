@@ -268,4 +268,18 @@ public class FaceFunction {
         }
         return dest;
     }
+
+
+    /**
+     * 将byte[]型特征转化为float[]
+     *
+     * @param fea
+     * @return float[]
+     * @throws Exception
+     */
+    public static float[] byteArr2floatArr(byte[] fea) throws Exception {
+        float[] newFea = FaceFunction.string2floatArray(new String(fea, "ISO-8859-1"));
+        return newFea;
+    }
+
 }

@@ -10,10 +10,11 @@ import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ConsumerGroupsMain {
+public class ConsumerGroupsMain implements Serializable {
     private static Logger LOG = Logger.getLogger(ConsumerGroupsMain.class);
     private static ExecutorService executors;
 

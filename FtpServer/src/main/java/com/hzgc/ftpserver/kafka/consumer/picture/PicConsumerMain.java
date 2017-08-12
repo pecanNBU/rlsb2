@@ -5,9 +5,10 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.Serializable;
 import java.util.Properties;
 
-public class PicConsumerMain {
+public class PicConsumerMain implements Serializable {
     private static Logger log = Logger.getLogger(PicConsumerMain.class);
     private static File resourceFile;
     private static Properties propers = new Properties();
