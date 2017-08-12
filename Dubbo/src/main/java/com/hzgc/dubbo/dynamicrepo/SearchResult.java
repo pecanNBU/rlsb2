@@ -18,6 +18,7 @@ public class SearchResult implements Serializable {
     /**
      * 匹配到的结果列表
      */
+
     private List<CapturedPicture> pictures;
 
     public String getSearchId() {

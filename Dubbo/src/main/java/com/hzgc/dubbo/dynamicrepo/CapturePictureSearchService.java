@@ -24,6 +24,10 @@ public interface CapturePictureSearchService {
      * @param sortParams 排序参数
      * @return SearchResult对象
      */
+<<<<<<< HEAD
+=======
+
+>>>>>>> ae471914925a1a169191942125bac31921eb3696
     SearchResult getSearchResult(String searchId, int offset, int count, Map<String, String> sortParams);
 
     /**
