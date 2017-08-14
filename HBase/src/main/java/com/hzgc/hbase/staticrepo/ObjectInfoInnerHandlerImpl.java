@@ -47,7 +47,7 @@ public class ObjectInfoInnerHandlerImpl implements ObjectInfoInnerHandler, Seria
                     //当有特征值时，才将结果返回
                     if(null != feature){
                         //将人员类型、rowkey和特征值进行拼接
-                        String result = id + "-" + a + "-" + feature;
+                        String result = id + "ZHONGXIAN" + a + "ZHONGXIAN" + feature;
                         //将结果添加到集合中
                         findResult.add(result);
                     }

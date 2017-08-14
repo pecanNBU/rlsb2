@@ -9,10 +9,6 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
-<<<<<<< HEAD
-=======
-
->>>>>>> ae471914925a1a169191942125bac31921eb3696
 
 public class DeviceServiceImpl implements DeviceService {
     private static Logger LOG = Logger.getLogger(DeviceServiceImpl.class);

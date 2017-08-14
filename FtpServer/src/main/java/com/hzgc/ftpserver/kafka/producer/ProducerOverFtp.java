@@ -14,23 +14,27 @@ import java.util.Properties;
 
 public class ProducerOverFtp implements Serializable {
     private static Logger LOG = Logger.getLogger(ProducerOverFtp.class);
-    private static KafkaProducer kafkaProducer;
+    private static KafkaProducer<String, byte[]> kafkaProducer;
     private Properties kafkaPropers = new Properties();
     private FileInputStream fis;
     private static String PICTURE = "picture";
     private static String FACE = "face";
     private static String JSON = "json";
+    private static String FEATURE = "feature";
 
-    public ProducerOverFtp() {
+    ProducerOverFtp() {
         try {
             File file = FileUtil.loadResourceFile("producer-over-ftp.properties");
-            this.fis = new FileInputStream(file);
+            if (file != null) {
+                this.fis = new FileInputStream(file);
+            }
             this.kafkaPropers.load(fis);
             PICTURE = kafkaPropers.getProperty("topic-picture");
             FACE = kafkaPropers.getProperty("topic-face");
             JSON = kafkaPropers.getProperty("topic-json");
+            FEATURE = kafkaPropers.getProperty("topic-feature");
             if (kafkaPropers != null) {
-                kafkaProducer = new KafkaProducer(kafkaPropers);
+                kafkaProducer = new KafkaProducer<String, byte[]>(kafkaPropers);
                 LOG.info("Create KafkaProducer successfull");
             }
         } catch (Exception e) {
@@ -46,7 +50,7 @@ public class ProducerOverFtp implements Serializable {
             kafkaProducer.send(new ProducerRecord<String, byte[]>(topic, key, value),
                     new ProducerCallBack(startTime, key));
         }
-        LOG.info("Send MQ message[topic:" + topic + ", key:" + key + "]");
+        LOG.info("Send Kafka message[topic:" + topic + ", key:" + key + "]");
 
     }
 
@@ -56,11 +60,11 @@ public class ProducerOverFtp implements Serializable {
         }
     }
 
-    public static final ProducerOverFtp getInstance() {
+    public static ProducerOverFtp getInstance() {
         return LazyHandler.instanc;
     }
 
-    public static class LazyHandler {
+    private static class LazyHandler {
         private static final ProducerOverFtp instanc = new ProducerOverFtp();
     }
 
@@ -68,11 +72,12 @@ public class ProducerOverFtp implements Serializable {
         return PICTURE;
     }
 
-    public static String getFace() {
-        return FACE;
-    }
+    public static String getFace() { return FACE; }
 
     public static String getJson() {
         return JSON;
     }
+
+    public static String getFEATURE() { return FEATURE; }
+
 }

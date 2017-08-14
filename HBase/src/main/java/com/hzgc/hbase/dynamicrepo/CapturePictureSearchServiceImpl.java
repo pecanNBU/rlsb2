@@ -4,7 +4,6 @@ import com.hzgc.dubbo.dynamicrepo.*;
 import com.hzgc.ftpserver.util.FtpUtil;
 import com.hzgc.hbase.util.HBaseHelper;
 import com.hzgc.hbase.util.HBaseUtil;
-import com.hzgc.kafka.dynamicrepo.KafkaObjectProducer;
 import com.hzgc.util.ObjectUtil;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.Result;
@@ -30,9 +29,6 @@ public class CapturePictureSearchServiceImpl implements CapturePictureSearchServ
      */
     @Override
     public SearchResult search(SearchOption option) {
-        KafkaObjectProducer objectProducer = new KafkaObjectProducer();
-        objectProducer.kafkaObjectProducer(option);
-        SearchResult searchResult = new SearchResult();
         return null;
     }
 

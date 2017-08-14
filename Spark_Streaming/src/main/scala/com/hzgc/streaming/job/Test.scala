@@ -2,9 +2,9 @@ package com.hzgc.streaming.job
 
 import com.hzgc.ftpserver.util.FtpUtil
 import com.hzgc.hbase.device.{DeviceTable, DeviceUtilImpl}
-import com.hzgc.hbase.staticrepo.ObjectInfoInnerHandlerImpl
+import com.hzgc.hbase.staticrepo.{ElasticSearchHelper, ObjectInfoInnerHandlerImpl}
 import com.hzgc.jni.FaceFunction
-import com.hzgc.streaming.util.{FaceFunctionTransition, StreamingUtils}
+import com.hzgc.streaming.util.StreamingUtils
 import kafka.serializer.StringDecoder
 import org.apache.spark.SparkConf
 import org.apache.spark.broadcast.Broadcast
@@ -15,12 +15,12 @@ import scala.collection.JavaConverters
 
 
 object Test {
-  val sparkConf: SparkConf = new SparkConf().setAppName("FaceRecognizeAlarmJob").setMaster("local[7]")
-  val ssc = new StreamingContext(sparkConf, Seconds(1))
-  val separator = "ZHONGXIAN"
-  val interrupt = "SHUXIAN"
   val esClient = new ObjectInfoInnerHandlerImpl()
   val warnClient = new DeviceUtilImpl()
+  val sparkConf: SparkConf = new SparkConf().setAppName("FaceRecognizeAlarmJob").setMaster("local[7]")
+  val ssc = new StreamingContext(sparkConf, Seconds(3))
+  val separator = "ZHONGXIAN"
+  val interrupt = "SHUXIAN"
   val broadcastSeparator: Broadcast[String] = ssc.sparkContext.broadcast(separator)
   val broadcastInterrupt: Broadcast[String] = ssc.sparkContext.broadcast(interrupt)
 
@@ -58,20 +58,29 @@ object Test {
     val kafkaFeature = kafkaDstream.map(message => {
       //通过message的key获取ipcID
       val ipcID = FtpUtil.getRowKeyMessage(message._1).get("ipcID")
+//      println("ipcID:" + ipcID)
       //使用StringBuilder来组合一条Kafka消息和底库中符合条件的数据
       val newMessage = new StringBuilder
       //通过设备ID获取平台ID
       val platID = warnClient.getplatfromID(ipcID)
+//      println("platID:" + platID)
       //通过设备ID获取此设备绑定的布控预案
-      val javaObjTyeList = warnClient.getThreshold
+      val javaObjTyeList = warnClient.isWarnTypeBinding(ipcID)
+//      println("javaObjTypeList" + javaObjTyeList)
       if (platID.length > 0 && javaObjTyeList != null) {
         val identifyMap = javaObjTyeList.get(DeviceTable.IDENTIFY)
+//        println("identifyMap" + identifyMap)
         if (identifyMap != null && identifyMap.size() > 0) {
           val similarity = StreamingUtils.getSimilarity(identifyMap)
+//          println("similarity:" + similarity)
           val javaTypeList = StreamingUtils.getTypeList(identifyMap)
+//          println("javaTypeList:" + javaTypeList.getClass)
+//          println("javaTypeList" + javaTypeList)
           if (similarity != null && javaTypeList != null) {
             val esResult = esClient.searchByPkeys(javaTypeList)
+//            println("esResult:" + esResult)
             val scalaEsResult = JavaConverters.asScalaBufferConverter(esResult).asScala
+//            println("scalaEsResult:" + scalaEsResult)
             scalaEsResult.foreach(result => {
               val tempMessage = broadcastSeparator.value + message._1 +
                 broadcastSeparator.value + ipcID +
@@ -96,11 +105,11 @@ object Test {
           val tempMessage = message.split(broadcastInterrupt.value).
             map(_.split(broadcastSeparator.value)).
             map(f => feature(f(1), f(2), f(3), f(4), f(5), f(6), f(7)))
-
-          val rddMessage = ssc.sparkContext.parallelize(tempMessage).toDF().registerTempTable("data")
-          sqlContext.udf.register("compare", (str1: String, str2: String) => FaceFunction.featureCompare(str1, str2))
-          sqlContext.sql("select * from data compare(dynamicFeature, staticFeature) > threshold").registerTempTable("result")
-          sqlContext.sql("select * from result sort by  ")
+          tempMessage.foreach(println)
+//          val rddMessage = ssc.sparkContext.parallelize(tempMessage).toDF().registerTempTable("data")
+//          sqlContext.udf.register("compare", (str1: String, str2: String) => FaceFunction.featureCompare(str1, str2))
+//          sqlContext.sql("select * from data compare(dynamicFeature, staticFeature) > threshold").registerTempTable("result")
+//          sqlContext.sql("select * from result sort by  ")
         })
         println("+++++++++++++++++++++++++++++++++++")
       })
