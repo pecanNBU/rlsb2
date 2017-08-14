@@ -2,6 +2,7 @@ package com.hzgc.hbase.dynamicrepo;
 
 import com.hzgc.dubbo.dynamicrepo.SearchOption;
 import com.hzgc.dubbo.dynamicrepo.SearchType;
+import com.hzgc.dubbo.dynamicrepo.TimeInterval;
 import com.hzgc.hbase.staticrepo.ElasticSearchHelper;
 import com.hzgc.hbase.util.HBaseHelper;
 import com.hzgc.hbase.util.HBaseUtil;
@@ -36,6 +37,19 @@ public class FilterByRowkey {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
+        BoolQueryBuilder boolQueryBuilder2 = QueryBuilders.boolQuery();
+        List<TimeInterval> timeIntervals = option.getIntervals();
+        TimeInterval timeInterval;
+        if(timeIntervals != null){
+            Iterator it1 = timeIntervals.iterator();
+            while (it1.hasNext()){
+                timeInterval = (TimeInterval) it1.next();
+                int start1 = timeInterval.getStart();
+                int end1 = timeInterval.getEnd();
+                boolQueryBuilder2.should(QueryBuilders.rangeQuery("sj").gt(start1).lt(end1));
+                boolQueryBuilder.must(boolQueryBuilder2);
+            }
+        }
         if(searchType.equals(searchType.PERSON)){
             if (deviceId != null){
                 while (it.hasNext()){
