@@ -24,7 +24,7 @@ public class CapturedPicture implements Serializable {
     /**
      * 图片的相似度
      */
-    private Float similarity;
+    private float similarity;
     /**
      * 图片的附加信息，扩展预留
      */

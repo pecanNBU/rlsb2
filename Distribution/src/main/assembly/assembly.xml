@@ -144,6 +144,7 @@
                 <include>com.hzgc:kafka</include>
                 <include>com.hzgc:rocketmq</include>
                 <include>com.hzgc:streaming</include>
+                <include>com.hzgc:util</include>
             </includes>
 
             <binaries>

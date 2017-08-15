@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ObjectInfoInnerHandlerImpl implements ObjectInfoInnerHandler, Serializable{
+    static {
+        ElasticSearchHelper.getEsClient();
+    }
 
     @Override
     public List<String> searchByPkeys(List<String> pkeys) {
@@ -24,7 +27,7 @@ public class ObjectInfoInnerHandlerImpl implements ObjectInfoInnerHandler, Seria
         List<String> findResult = new ArrayList<>();
         //设置搜索条件
         SearchRequestBuilder requestBuilder = ElasticSearchHelper.getEsClient().prepareSearch("objectinfo")
-                .setTypes("person").setExplain(true);
+                .setTypes("person").setExplain(true).setSize(10000);
         while (it.hasNext()){
             //取出遍历的值
             String a = (String) it.next();
