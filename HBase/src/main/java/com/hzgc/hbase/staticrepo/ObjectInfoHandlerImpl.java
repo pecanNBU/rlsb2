@@ -25,9 +25,9 @@ import sun.rmi.transport.ObjectTable;
 public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     private static Logger LOG = Logger.getLogger(ObjectInfoHandlerImpl.class);
 
-//   // public ObjectInfoHandlerImpl(){
-//        NativeFunction.init();
-//    }
+   public ObjectInfoHandlerImpl(){
+        NativeFunction.init();
+    }
 
     @Override
     public byte addObjectInfo(String platformId, Map<String, Object> person) {
