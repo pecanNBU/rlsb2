@@ -19,8 +19,8 @@ public class FilterByRowKeySuit {
     public void testGetRowKey(){
         SearchOption option = new SearchOption();
         List<String> deviecId = new ArrayList<>();
-//        deviecId.add("17130NCY0HZ0002");
-//        deviecId.add("17130NCY0HZ0003");
+        deviecId.add("17130NCY0HZ0002");
+       deviecId.add("17130NCY0HZ0003");
         List<TimeInterval> list = new ArrayList<>();
         TimeInterval timeInterval = new TimeInterval();
         timeInterval.setStart(1739);
@@ -32,7 +32,7 @@ public class FilterByRowKeySuit {
         timeInterval1.setEnd(1743);
         list.add(timeInterval1);
         option.setIntervals(list);
-       // option.setDeviceIds(deviecId);
+        option.setDeviceIds(deviecId);
         option.setSearchType(SearchType.PERSON);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();

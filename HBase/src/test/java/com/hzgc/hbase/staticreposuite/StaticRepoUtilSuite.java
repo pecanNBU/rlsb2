@@ -42,11 +42,11 @@ public class StaticRepoUtilSuite {
     }
     @Test
     public void testUpdateObjectInfo(){
-        String platformId = "123456";
         Map<String, Object> person = new HashMap<String, Object>();
-        person.put("id", "1111111111jkh11111111");
+        person.put("id", "cd32abcf49ed4f09baebecb8d103b522");
+        person.put("platformid","nihaome11123");
         person.put("name", "小王炸炸");
-        person.put("idcard", "222111111111111111");
+        person.put("idcard", "dadafdfeawdafa");
         person.put("sex", "0");
         try {
             person.put("photo", Image2Byte2Image.image2byte("E:\\1.jpg"));
@@ -137,10 +137,10 @@ public class StaticRepoUtilSuite {
     @Test
     public void testGetPhotoByRowkey() throws IOException {
        ObjectInfoHandlerImpl objectInfoHandler = new ObjectInfoHandlerImpl();
-        String rk = "e590e89a002e44b3b302257a85684d1a";
+        String rk = "6c18bbb907664f499199f1ffb4338520";
         byte[] photo = objectInfoHandler.getPhotoByKey(rk);
         System.out.println(photo);
-        Image2Byte2Image.byte2image(photo, "C:\\nika.png");
+        Image2Byte2Image.byte2image(photo, "C:\\nika1.png");
     }
     @Test
     public void testGetRocordOfObjectInfo(){
