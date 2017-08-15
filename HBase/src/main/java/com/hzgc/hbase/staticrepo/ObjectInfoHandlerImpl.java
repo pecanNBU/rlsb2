@@ -134,56 +134,87 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
                 System.out.println(put);
                 LOG.info("table update successed!");
                 Result result = table.get(get);
-                String platformid = Bytes.toString(result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.PLATFORMID)));
+                String platformid = Bytes.toString(result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.PLATFORMID)));
                 String idcard = (String) person.get(ObjectInfoTable.IDCARD);
                 String newRowKey = platformid + idcard;
                 Put put1 = new Put(Bytes.toBytes(newRowKey));
                 put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.PLATFORMID),
-                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.PLATFORMID)));
+                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                                Bytes.toBytes(ObjectInfoTable.PLATFORMID)));
                 put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.TAG),
-                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.TAG)));
+                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                                Bytes.toBytes(ObjectInfoTable.TAG)));
                 put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.PKEY),
-                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.PKEY)));
+                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                                Bytes.toBytes(ObjectInfoTable.PKEY)));
                 put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.NAME),
-                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.NAME)));
+                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                                Bytes.toBytes(ObjectInfoTable.NAME)));
                 put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.SEX),
-                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.SEX)));
+                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                                Bytes.toBytes(ObjectInfoTable.SEX)));
                 put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.PHOTO),
-                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.PHOTO)));
+                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                                Bytes.toBytes(ObjectInfoTable.PHOTO)));
                 put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.FEATURE),
-                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.FEATURE)));
+                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                                Bytes.toBytes(ObjectInfoTable.FEATURE)));
                 put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.REASON),
-                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.REASON)));
+                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                                Bytes.toBytes(ObjectInfoTable.REASON)));
                 put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.CREATOR),
-                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.CREATOR)));
+                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                                Bytes.toBytes(ObjectInfoTable.CREATOR)));
                 put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.CPHONE),
-                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.CPHONE)));
+                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                                Bytes.toBytes(ObjectInfoTable.CPHONE)));
                 put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.CREATETIME),
-                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.CREATETIME)));
+                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                                Bytes.toBytes(ObjectInfoTable.CREATETIME)));
                 put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.UPDATETIME),
-                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.UPDATETIME)));
+                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                                Bytes.toBytes(ObjectInfoTable.UPDATETIME)));
                 put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.RELATED),
-                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.RELATED)));
+                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                                Bytes.toBytes(ObjectInfoTable.RELATED)));
                 put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.ROWKEY),
-                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.ROWKEY)));
-                put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.IDCARD),Bytes.toBytes(idcard));
+                        result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                                Bytes.toBytes(ObjectInfoTable.ROWKEY)));
+                put1.addColumn(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.IDCARD),Bytes.toBytes(idcard));
                 table.put(put1);
                 Delete delete = new Delete(Bytes.toBytes(id));
-                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.PLATFORMID));
-                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.TAG));
-                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.PKEY));
-                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.NAME));
-                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.SEX));
-                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.PHOTO));
-                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.FEATURE));
-                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.REASON));
-                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.CREATOR));
-                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.CPHONE));
-                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.CREATETIME));
-                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.UPDATETIME));
-                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.RELATED));
-                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.IDCARD));
-                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.ROWKEY));
+                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.PLATFORMID));
+                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.TAG));
+                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.PKEY));
+                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.NAME));
+                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.SEX));
+                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.PHOTO));
+                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.FEATURE));
+                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.REASON));
+                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.CREATOR));
+                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.CPHONE));
+                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.CREATETIME));
+                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.UPDATETIME));
+                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.RELATED));
+                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.IDCARD));
+                delete.addColumns(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),
+                        Bytes.toBytes(ObjectInfoTable.ROWKEY));
                 table.delete(delete);
             } catch (IOException e) {
                 e.printStackTrace();
