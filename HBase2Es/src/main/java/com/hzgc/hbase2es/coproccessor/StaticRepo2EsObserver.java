@@ -34,7 +34,7 @@ public class StaticRepo2EsObserver extends EsObserver {
             for (Cell cell : entry.getValue()) {
                 String key = Bytes.toString(CellUtil.cloneQualifier(cell));
                 String value = Bytes.toString(CellUtil.cloneValue(cell));
-                if (!"photo".equals(key) && !"reason".equals(key)){
+                if (!"photo".equals(key)){
                     infoJson.put(key, value);
                     LOG.info("Put data into es {key:" + key + ", value:" + value + "}");
                 }

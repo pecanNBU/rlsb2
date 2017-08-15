@@ -2,6 +2,7 @@ package com.hzgc.hbase.dynamicrepo;
 
 import com.hzgc.dubbo.dynamicrepo.SearchOption;
 import com.hzgc.dubbo.dynamicrepo.SearchType;
+import com.hzgc.dubbo.dynamicrepo.TimeInterval;
 import com.hzgc.hbase.staticrepo.ElasticSearchHelper;
 import com.hzgc.hbase.util.HBaseHelper;
 import com.hzgc.hbase.util.HBaseUtil;
@@ -28,7 +29,6 @@ public class FilterByRowkey {
     public SearchRequestBuilder getSearchRequestBuilder(SearchOption option){
         SearchType searchType = option.getSearchType();
         List<String> deviceId = option.getDeviceIds();
-        Iterator it = deviceId.iterator();
         Date startTime = option.getStartDate();
         Date endTime = option.getEndDate();
         String index ="dynamic";
@@ -36,8 +36,22 @@ public class FilterByRowkey {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
+        BoolQueryBuilder boolQueryBuilder2 = QueryBuilders.boolQuery();
+        List<TimeInterval> timeIntervals = option.getIntervals();
+        TimeInterval timeInterval;
+        if(timeIntervals != null){
+            Iterator it1 = timeIntervals.iterator();
+            while (it1.hasNext()){
+                timeInterval = (TimeInterval) it1.next();
+                int start1 = timeInterval.getStart();
+                int end1 = timeInterval.getEnd();
+                boolQueryBuilder2.should(QueryBuilders.rangeQuery("sj").gte(start1).lte(end1));
+                boolQueryBuilder.must(boolQueryBuilder2);
+            }
+        }
         if(searchType.equals(searchType.PERSON)){
             if (deviceId != null){
+                Iterator it = deviceId.iterator();
                 while (it.hasNext()){
                     String t = (String) it.next();
                     boolQueryBuilder1.should(QueryBuilders.matchPhraseQuery("f", t).analyzer("standard"));
@@ -47,13 +61,13 @@ public class FilterByRowkey {
             if (startTime != null && endTime != null){
                 String start = simpleDateFormat.format(startTime);
                 String end = simpleDateFormat.format(endTime);
-                boolQueryBuilder.must(QueryBuilders.rangeQuery("t").gt(start).lt(end));
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("t").gte(start).lte(end));
             }
         }else {
 
         }
         return ElasticSearchHelper.getEsClient().prepareSearch(index)
-                .setTypes(type).setExplain(true).setQuery(boolQueryBuilder);
+                .setTypes(type).setExplain(true).setSize(10000).setQuery(boolQueryBuilder);
     }
     public List<String> getSearchResponse(SearchRequestBuilder searchRequestBuilder){
         SearchResponse searchResponse = searchRequestBuilder.get();

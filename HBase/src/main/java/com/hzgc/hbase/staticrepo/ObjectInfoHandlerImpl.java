@@ -202,7 +202,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     }
 
     //多条件查询
-    private ObjectSearchResult searchByMutiCondition(String platformId, String idCard,String name, Integer sex,
+    private ObjectSearchResult searchByMutiCondition(String platformId, String idCard,String name, int sex,
                                                      byte[] photo, String feature,int threshold,
                                                      List<String> pkeys, String creator, String cphone,
                                                      int start, int pageSize,boolean moHuSearch){
@@ -216,7 +216,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             booleanQueryBuilder.must(QueryBuilders.termQuery(ObjectInfoTable.PLATFORMID, platformId));
         }
         // 性别要么是1，要么是0，即要么是男，要么是女
-        if (sex != null){
+        if (sex != -1){
             booleanQueryBuilder.must(QueryBuilders.termQuery(ObjectInfoTable.SEX, sex));
         }
         // 多条件下，输入手机号，只支持精确的手机号
@@ -621,6 +621,5 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         HBaseUtil.dealWithPaging(searchResult, start, pageSize);
         LOG.info("最终返回的记录数是： " + searchResult.getResults().size() + " 条");
         return searchResult;
-
     }
 }
