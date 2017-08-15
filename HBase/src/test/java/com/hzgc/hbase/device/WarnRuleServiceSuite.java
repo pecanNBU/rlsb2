@@ -18,7 +18,7 @@ public class WarnRuleServiceSuite {
     @Test
     public void testAddRules(){
         WarnRuleServiceImpl warnRuleService = new WarnRuleServiceImpl();
-        Map<String,Boolean> map = warnRuleService.addRules(PutData1.setIpcId(),PutData1.setwarnRuleData());
+        Map<String,Boolean> map = warnRuleService.addRules(PutData.setIpcId(),PutData.setwarnRuleData());
         System.out.println(map);
     }
     @Test

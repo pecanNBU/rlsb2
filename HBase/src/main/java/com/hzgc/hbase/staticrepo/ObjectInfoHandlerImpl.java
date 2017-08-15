@@ -131,6 +131,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             Get get = new Get(Bytes.toBytes(id));
             try {
                 table.put(put);
+                System.out.println(put);
                 LOG.info("table update successed!");
                 Result result = table.get(get);
                 String platformid = Bytes.toString(result.getValue(Bytes.toBytes(ObjectInfoTable.PERSON_COLF),Bytes.toBytes(ObjectInfoTable.PLATFORMID)));

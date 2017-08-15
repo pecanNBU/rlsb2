@@ -43,20 +43,20 @@ public class StaticRepoUtilSuite {
     @Test
     public void testUpdateObjectInfo(){
         Map<String, Object> person = new HashMap<String, Object>();
-        person.put("id", "cd32abcf49ed4f09baebecb8d103b522");
-        person.put("platformid","nihaome11123");
-        person.put("name", "小王炸炸");
-        person.put("idcard", "dadafdfeawdafa");
-        person.put("sex", "0");
-        try {
-            person.put("photo", Image2Byte2Image.image2byte("E:\\1.jpg"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        person.put("pkey", "123456");
-        person.put("reason", "赌博+暴力倾向");
-        person.put("creator", "羊驼神兽");
-        person.put("feature", "123455555555");
+        person.put("id", "nihaome1112344dadafdfeawdafa33");
+        person.put("platformid","nihao112344");
+//        person.put("name", "小王炸炸");
+        person.put("idcard", "dadafdfeawdafa3");
+//        person.put("sex", "0");
+//        try {
+//            person.put("photo", Image2Byte2Image.image2byte("E:\\1.jpg"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        person.put("pkey", "123456");
+//        person.put("reason", "赌博+暴力倾向");
+//        person.put("creator", "羊驼神兽");
+//        person.put("feature", "123455555555");
 
         int flag = new ObjectInfoHandlerImpl().updateObjectInfo(person);
         System.out.println(flag);
