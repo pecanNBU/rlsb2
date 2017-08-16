@@ -290,7 +290,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     }
 
     //多条件查询
-    private ObjectSearchResult searchByMutiCondition(String platformId, String idCard,String name, Integer sex,
+    private ObjectSearchResult searchByMutiCondition(String platformId, String idCard,String name, int sex,
                                                      byte[] photo, String feature,int threshold,
                                                      List<String> pkeys, String creator, String cphone,
                                                      int start, int pageSize,boolean moHuSearch){
@@ -304,7 +304,7 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             booleanQueryBuilder.must(QueryBuilders.termQuery(ObjectInfoTable.PLATFORMID, platformId));
         }
         // 性别要么是1，要么是0，即要么是男，要么是女
-        if (sex != null){
+        if (sex != -1){
             booleanQueryBuilder.must(QueryBuilders.termQuery(ObjectInfoTable.SEX, sex));
         }
         // 多条件下，输入手机号，只支持精确的手机号
@@ -521,17 +521,13 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
             Map<String, Object> personInfoTmp = new HashMap<>();
             personInfoTmp.putAll(personInfo);
             Set<String> attributes = personInfo.keySet();
-            Iterator<String> iterator = attributes.iterator();
-            while (iterator.hasNext()){
-                String attr = iterator.next();
-                if ("feature".equals(attr)){
+            for (String attr : attributes) {
+                if ("feature".equals(attr)) {
                     String feture_his = (String) personInfo.get(attr);
-                    float related = NativeFunction.compare(FaceFunction.string2floatArray(feature),
-                            FaceFunction.string2floatArray(feture_his));
-                    int relatedToInt = (int)(related * 100);
-                    System.out.println(personInfo.get("id")  + ", "  + relatedToInt);
-                    if (relatedToInt > threshold){
-                        personInfoTmp.put(ObjectInfoTable.RELATED, relatedToInt);
+                    float related = FaceFunction.featureCompare(feature, feture_his);
+                    System.out.println(personInfo.get("id") + ", " + related);
+                    if (related > threshold) {
+                        personInfoTmp.put(ObjectInfoTable.RELATED, related);
                         resultsFinal.add(personInfoTmp);
                     }
                 }
@@ -709,6 +705,5 @@ public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
         HBaseUtil.dealWithPaging(searchResult, start, pageSize);
         LOG.info("最终返回的记录数是： " + searchResult.getResults().size() + " 条");
         return searchResult;
-
     }
 }

@@ -32,9 +32,9 @@ public class KafkaUtils implements Serializable {
         byte[] bt = File2byte(filePath);
         //kafkaid的数格式：000123243453    0001为设备id
         //在往kafka发送之前，将特征值提取。
-//        NativeFunction.init();
-//        byte[] feature = FaceFunction.floatArray2ByteArray(FaceFunction.featureExtract(filePath));
-        byte[] feature = "thisisfeature".getBytes("ISO8859-1");
+        NativeFunction.init();
+        byte[] feature = FaceFunction.floatArray2ByteArray(FaceFunction.featureExtract(filePath));
+//        byte[] feature = "thisisfeature".getBytes("ISO8859-1");
         for(int i=0;i<1;i++){
 //            float[] feature = FaceFunction.featureExtract(bt);
 //            String feature2string = FaceFunction.floatArray2string(feature);
