@@ -208,7 +208,7 @@ public class FaceFunction {
         return null;
     }
 
-    private static float featureCompare(float[] currentFeature, float[] historyFeature) {
+    public static float featureCompare(float[] currentFeature, float[] historyFeature) {
         double similarityDegree = 0;
         double currentFeatureMultiple = 0;
         double historyFeatureMultiple = 0;
@@ -217,7 +217,6 @@ public class FaceFunction {
             currentFeatureMultiple = currentFeatureMultiple + Math.pow(currentFeature[i], 2);
             historyFeatureMultiple = historyFeatureMultiple + Math.pow(historyFeature[i], 2);
         }
-
         double tempSim = similarityDegree / Math.sqrt(currentFeatureMultiple) / Math.sqrt(historyFeatureMultiple);
         double actualValue = new BigDecimal((tempSim + tempSim / 2) * 100).
                 setScale(2, BigDecimal.ROUND_HALF_UP).

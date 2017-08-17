@@ -1,0 +1,12 @@
+cublas64_75.dll
+cudart64_75.dll
+cudnn64_5.dll
+GsFaceLib.dll
+libgcc_s_seh-1.dll
+libgfortran-3.dll
+libquadmath-0.dll
+libopenblas.dll
+GsFaceLib.lib
+GsFeatureComp.lib
+lc1611.bin
+dshape.dat

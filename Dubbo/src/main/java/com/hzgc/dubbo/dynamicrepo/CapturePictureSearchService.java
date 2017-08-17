@@ -43,4 +43,5 @@ public interface CapturePictureSearchService {
      * @return CapturedPicture    动态库对象
      */
     public CapturedPicture getCaptureMessage(String imageId, int type);
+
 }

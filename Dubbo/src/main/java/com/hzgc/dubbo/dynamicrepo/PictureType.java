@@ -30,7 +30,15 @@ public enum PictureType implements Serializable {
     /**
      * 车辆大图
      */
-    BIG_CAR(5);
+    BIG_CAR(5),
+    /**
+     * 人脸无图信息
+     */
+    MESSAGE_PERSON(6),
+    /**
+     * 车辆无图信息
+     */
+    MESSAGE_CAR(7);
 
 
     private int type;

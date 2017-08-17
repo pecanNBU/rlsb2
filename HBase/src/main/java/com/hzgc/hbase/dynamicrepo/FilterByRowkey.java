@@ -28,6 +28,9 @@ import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
 public class FilterByRowkey {
     private static Logger LOG = Logger.getLogger(FilterByRowkey.class);
 
+    static {
+        ElasticSearchHelper.getEsClient();
+    }
     public SearchRequestBuilder getSearchRequestBuilder(SearchOption option){
         String index = "dynamic";
         String type = "person";

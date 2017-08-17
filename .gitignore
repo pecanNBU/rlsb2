@@ -5,3 +5,17 @@ target/
 .idea/vcs.xml
 javadocs/
 *.iml___jb_tmp___
+hs_err_*
+*.dll
+*.exe
+*.jpg
+*.lib
+*.ipdb
+*.iopj
+*.dat
+*.exp
+*.bin
+*.pdb
+*.bmp
+*.iobj
+*.ini

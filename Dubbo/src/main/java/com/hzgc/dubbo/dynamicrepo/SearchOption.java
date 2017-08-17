@@ -57,6 +57,14 @@ public class SearchOption implements Serializable {
      * 排序参数
      */
     private String sortParams;
+    /**
+     * 分页查询开始行
+     */
+    private int offset;
+    /**
+     * 查询条数
+     */
+    private int count;
 
     public SearchType getSearchType() {
         return searchType;
@@ -158,6 +166,22 @@ public class SearchOption implements Serializable {
         this.sortParams = sortParams;
     }
 
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
     @Override
     public String toString() {
         return "SearchOption{" +
@@ -172,7 +196,9 @@ public class SearchOption implements Serializable {
                 ", endDate=" + endDate +
                 ", intervals=" + intervals +
                 ", filters=" + filters +
-                ", sortParams=" + sortParams +
+                ", sortParams='" + sortParams + '\'' +
+                ", offset=" + offset +
+                ", count=" + count +
                 '}';
     }
 }

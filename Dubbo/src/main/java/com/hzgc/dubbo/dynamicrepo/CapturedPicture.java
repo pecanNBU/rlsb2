@@ -66,11 +66,11 @@ public class CapturedPicture implements Serializable {
         this.description = description;
     }
 
-    public Float getSimilarity() {
+    public float getSimilarity() {
         return similarity;
     }
 
-    public void setSimilarity(Float similarity) {
+    public void setSimilarity(float similarity) {
         this.similarity = similarity;
     }
 

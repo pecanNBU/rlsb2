@@ -25,7 +25,7 @@ public interface DynamicPhotoService {
      * @param type    人/车
      * @return byte[] 小图特征值
      */
-    public byte[] getFeature(String imageId, PictureType type);
+    public byte[] getFeature(String imageId, PictureType type)throws Exception;
 
     /**
      * 将上传的图片、rowKey、特征值插入人脸/车辆特征库 （内）

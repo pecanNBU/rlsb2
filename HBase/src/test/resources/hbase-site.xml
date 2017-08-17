@@ -10,9 +10,7 @@
     </property>
     <property>
         <name>hbase.coprocessor.master.classes</name>
-        <value>
-            com.huawei.hadoop.hbase.backup.services.RecoveryCoprocessor,org.apache.phoenix.hbase.index.master.IndexMasterObserver,org.apache.hadoop.hbase.index.coprocessor.master.IndexMasterObserver,org.apache.hadoop.hbase.security.access.ReadOnlyClusterEnabler
-        </value>
+        <value>com.huawei.hadoop.hbase.backup.services.RecoveryCoprocessor,org.apache.phoenix.hbase.index.master.IndexMasterObserver,org.apache.hadoop.hbase.index.coprocessor.master.IndexMasterObserver,org.apache.hadoop.hbase.security.access.ReadOnlyClusterEnabler</value>
     </property>
     <property>
         <name>hbase.huawei.backup.output</name>
@@ -44,7 +42,7 @@
     </property>
     <property>
         <name>hbase.hmaster.ip.lists</name>
-        <value>s101,s102</value>
+        <value>s102,s101</value>
     </property>
     <property>
         <name>hbase.master.executor.openregion.threads</name>
@@ -76,7 +74,7 @@
     </property>
     <property>
         <name>master.rmi.registry.ip</name>
-        <value>s115</value>
+        <value>s101</value>
     </property>
     <property>
         <name>hbase.fileStream.cleaner.tmp.thread.wakefrequency</name>
@@ -100,7 +98,7 @@
     </property>
     <property>
         <name>hbase.zookeeper.quorum</name>
-        <value>s100,s101,s102</value>
+        <value>s102,s101,s100</value>
     </property>
     <property>
         <name>hbase.server.alias</name>

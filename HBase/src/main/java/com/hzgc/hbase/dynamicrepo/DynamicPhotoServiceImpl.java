@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.hzgc.util.ObjectUtil.*;
+import static com.hzgc.util.ObjectUtil.objectToByte;
+
 /**
  * 动态库实现类
  */
@@ -78,7 +81,7 @@ public class DynamicPhotoServiceImpl implements DynamicPhotoService {
      * @return byte[] 小图特征值
      */
     @Override
-    public byte[] getFeature(String imageId, PictureType type) {
+    public byte[] getFeature(String imageId, PictureType type) throws Exception {
         byte[] feature = null;
         if (null != imageId) {
             Table personTable = HBaseHelper.getTable(DynamicTable.TABLE_PERSON);
@@ -175,7 +178,7 @@ public class DynamicPhotoServiceImpl implements DynamicPhotoService {
         try {
             Put put = new Put(Bytes.toBytes(searchId));
             put.addColumn(DynamicTable.SEARCHRES_COLUMNFAMILY, DynamicTable.SEARCHRES_COLUMN_SEARCHIMAGEID, Bytes.toBytes(queryImageId));
-            byte[] searchMessage = ObjectUtil.objectToByte((Object) resList);
+            byte[] searchMessage = objectToByte(resList);
             put.addColumn(DynamicTable.SEARCHRES_COLUMNFAMILY, DynamicTable.SEARCHRES_COLUMN_SEARCHMESSAGE, searchMessage);
             searchRes.put(put);
             return true;
@@ -203,7 +206,7 @@ public class DynamicPhotoServiceImpl implements DynamicPhotoService {
         try {
             Result result = searchRes.get(get);
             byte[] searchMessage = result.getValue(DynamicTable.SEARCHRES_COLUMNFAMILY, DynamicTable.SEARCHRES_COLUMN_SEARCHMESSAGE);
-            searchMessageMap = (Map<String, Float>) ObjectUtil.byteToObject(searchMessage);
+            searchMessageMap = (Map<String, Float>) byteToObject(searchMessage);
         } catch (Exception e) {
             e.printStackTrace();
             LOG.error("get data by searchId from table_searchRes failed! used method DynamicPhotoServiceImpl.getSearchRes.");
