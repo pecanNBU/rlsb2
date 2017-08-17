@@ -3,6 +3,7 @@ package com.hzgc.jni;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.math.BigDecimal;
 
 public class FaceFunction {
 
@@ -186,7 +187,7 @@ public class FaceFunction {
      * @param historyFeatureStr 库中的特征值
      * @return 相似度
      */
-    public static double  featureCompare (String currentFeatureStr,String historyFeatureStr) {
+    public static float  featureCompare (String currentFeatureStr,String historyFeatureStr) {
         float[] currentFeature = FaceFunction.string2floatArray(currentFeatureStr);
         float[] historyFeature = FaceFunction.string2floatArray(historyFeatureStr);
         return featureCompare(currentFeature, historyFeature);
@@ -207,7 +208,7 @@ public class FaceFunction {
         return null;
     }
 
-    private static double featureCompare(float[] currentFeature, float[] historyFeature) {
+    private static float featureCompare(float[] currentFeature, float[] historyFeature) {
         double similarityDegree = 0;
         double currentFeatureMultiple = 0;
         double historyFeatureMultiple = 0;
@@ -216,7 +217,15 @@ public class FaceFunction {
             currentFeatureMultiple = currentFeatureMultiple + Math.pow(currentFeature[i], 2);
             historyFeatureMultiple = historyFeatureMultiple + Math.pow(historyFeature[i], 2);
         }
-        return similarityDegree / Math.sqrt(currentFeatureMultiple) / Math.sqrt(historyFeatureMultiple);
+
+        double tempSim = similarityDegree / Math.sqrt(currentFeatureMultiple) / Math.sqrt(historyFeatureMultiple);
+        double actualValue = new BigDecimal((tempSim + tempSim / 2) * 100).
+                setScale(2, BigDecimal.ROUND_HALF_UP).
+                doubleValue();
+        if (actualValue >= 100) {
+            return 100;
+        }
+        return (float)actualValue;
     }
 
     /**

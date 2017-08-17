@@ -32,6 +32,6 @@ public class Test {
 //        WarnRuleServiceImpl warn = new WarnRuleServiceImpl();
 //        warn.configRules(ipc, rules);
         DeviceServiceImpl deviceService = new DeviceServiceImpl();
-        deviceService.bindDevice("plat1", "17130NCY0HZ0002", "beizhu");
+        deviceService.bindDevice("plat2", "17130NCY0HZ0004-g", ".....");
     }
 }

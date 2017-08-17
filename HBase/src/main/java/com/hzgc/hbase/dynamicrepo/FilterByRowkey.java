@@ -23,52 +23,62 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
+
 public class FilterByRowkey {
     private static Logger LOG = Logger.getLogger(FilterByRowkey.class);
 
     public SearchRequestBuilder getSearchRequestBuilder(SearchOption option){
-        SearchType searchType = option.getSearchType();
-        List<String> deviceId = option.getDeviceIds();
-        Date startTime = option.getStartDate();
-        Date endTime = option.getEndDate();
-        String index ="dynamic";
+        String index = "dynamic";
         String type = "person";
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
-        BoolQueryBuilder boolQueryBuilder2 = QueryBuilders.boolQuery();
-        List<TimeInterval> timeIntervals = option.getIntervals();
-        TimeInterval timeInterval;
-        if(timeIntervals != null){
-            Iterator it1 = timeIntervals.iterator();
-            while (it1.hasNext()){
-                timeInterval = (TimeInterval) it1.next();
-                int start1 = timeInterval.getStart();
-                int end1 = timeInterval.getEnd();
-                boolQueryBuilder2.should(QueryBuilders.rangeQuery("sj").gte(start1).lte(end1));
-                boolQueryBuilder.must(boolQueryBuilder2);
-            }
-        }
-        if(searchType.equals(searchType.PERSON)){
-            if (deviceId != null){
-                Iterator it = deviceId.iterator();
-                while (it.hasNext()){
-                    String t = (String) it.next();
-                    boolQueryBuilder1.should(QueryBuilders.matchPhraseQuery("f", t).analyzer("standard"));
+        if(option.getSearchType() != null || option.getDeviceIds() != null || option.getStartDate() != null ||
+                option.getEndDate() != null || option.getIntervals() != null) {
+            SearchType searchType = option.getSearchType();
+            List<String> deviceId = option.getDeviceIds();
+            Date startTime = option.getStartDate();
+            Date endTime = option.getEndDate();
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            BoolQueryBuilder boolQueryBuilder1 = QueryBuilders.boolQuery();
+            BoolQueryBuilder boolQueryBuilder2 = QueryBuilders.boolQuery();
+            List<TimeInterval> timeIntervals = option.getIntervals();
+            TimeInterval timeInterval;
+            if (timeIntervals != null) {
+                Iterator it1 = timeIntervals.iterator();
+                while (it1.hasNext()) {
+                    timeInterval = (TimeInterval) it1.next();
+                    int start1 = timeInterval.getStart();
+                    int end1 = timeInterval.getEnd();
+                    boolQueryBuilder2.should(QueryBuilders.rangeQuery("sj").gte(start1).lte(end1));
+                    boolQueryBuilder.must(boolQueryBuilder2);
                 }
-                boolQueryBuilder.must(boolQueryBuilder1);
             }
-            if (startTime != null && endTime != null){
-                String start = simpleDateFormat.format(startTime);
-                String end = simpleDateFormat.format(endTime);
-                boolQueryBuilder.must(QueryBuilders.rangeQuery("t").gte(start).lte(end));
-            }
-        }else {
+            if (searchType.equals(searchType.PERSON)) {
+                if (deviceId != null) {
+                    Iterator it = deviceId.iterator();
+                    while (it.hasNext()) {
+                        String t = (String) it.next();
+                        boolQueryBuilder1.should(QueryBuilders.matchPhraseQuery("f", t).analyzer("standard"));
+                    }
+                    boolQueryBuilder.must(boolQueryBuilder1);
+                }
+                if (startTime != null && endTime != null) {
+                    String start = simpleDateFormat.format(startTime);
+                    String end = simpleDateFormat.format(endTime);
+                    boolQueryBuilder.must(QueryBuilders.rangeQuery("t").gte(start).lte(end));
+                }
+            } else {
 
+            }
+            return ElasticSearchHelper.getEsClient().prepareSearch(index)
+                    .setTypes(type).setExplain(true).setSize(10000).setQuery(boolQueryBuilder);
+        } else {
+            QueryBuilder qb = matchAllQuery();
+            return ElasticSearchHelper.getEsClient().prepareSearch(index)
+                    .setTypes(type).setExplain(true).setSize(10000).setQuery(qb);
         }
-        return ElasticSearchHelper.getEsClient().prepareSearch(index)
-                .setTypes(type).setExplain(true).setSize(10000).setQuery(boolQueryBuilder);
     }
+
     public List<String> getSearchResponse(SearchRequestBuilder searchRequestBuilder){
         SearchResponse searchResponse = searchRequestBuilder.get();
         SearchHits hits = searchResponse.getHits();

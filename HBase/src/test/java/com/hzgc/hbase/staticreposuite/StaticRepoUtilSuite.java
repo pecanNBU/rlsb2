@@ -42,21 +42,21 @@ public class StaticRepoUtilSuite {
     }
     @Test
     public void testUpdateObjectInfo(){
-        String platformId = "123456";
         Map<String, Object> person = new HashMap<String, Object>();
-        person.put("id", "1111111111jkh11111111");
-        person.put("name", "小王炸炸");
-        person.put("idcard", "222111111111111111");
-        person.put("sex", "0");
-        try {
-            person.put("photo", Image2Byte2Image.image2byte("E:\\1.jpg"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        person.put("pkey", "123456");
-        person.put("reason", "赌博+暴力倾向");
-        person.put("creator", "羊驼神兽");
-        person.put("feature", "123455555555");
+        person.put("id", "nihaome1112344dadafdfeawdafa33");
+        person.put("platformid","nihao112344");
+//        person.put("name", "小王炸炸");
+        person.put("idcard", "dadafdfeawdafa3");
+//        person.put("sex", "0");
+//        try {
+//            person.put("photo", Image2Byte2Image.image2byte("E:\\1.jpg"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        person.put("pkey", "123456");
+//        person.put("reason", "赌博+暴力倾向");
+//        person.put("creator", "羊驼神兽");
+//        person.put("feature", "123455555555");
 
         int flag = new ObjectInfoHandlerImpl().updateObjectInfo(person);
         System.out.println(flag);
@@ -137,10 +137,10 @@ public class StaticRepoUtilSuite {
     @Test
     public void testGetPhotoByRowkey() throws IOException {
        ObjectInfoHandlerImpl objectInfoHandler = new ObjectInfoHandlerImpl();
-        String rk = "e590e89a002e44b3b302257a85684d1a";
+        String rk = "6c18bbb907664f499199f1ffb4338520";
         byte[] photo = objectInfoHandler.getPhotoByKey(rk);
         System.out.println(photo);
-        Image2Byte2Image.byte2image(photo, "C:\\nika.png");
+        Image2Byte2Image.byte2image(photo, "C:\\nika1.png");
     }
     @Test
     public void testGetRocordOfObjectInfo(){
