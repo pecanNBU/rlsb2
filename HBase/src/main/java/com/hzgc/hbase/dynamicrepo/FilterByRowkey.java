@@ -6,10 +6,12 @@ import com.hzgc.dubbo.dynamicrepo.TimeInterval;
 import com.hzgc.hbase.staticrepo.ElasticSearchHelper;
 import com.hzgc.hbase.util.HBaseHelper;
 import com.hzgc.hbase.util.HBaseUtil;
-import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.hbase.client.ResultScanner;
+import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.filter.*;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.apache.hadoop.yarn.webapp.hamlet.Hamlet;
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -61,7 +63,7 @@ public class FilterByRowkey {
                     Iterator it = deviceId.iterator();
                     while (it.hasNext()) {
                         String t = (String) it.next();
-                        boolQueryBuilder1.should(QueryBuilders.matchPhraseQuery("f", t).analyzer("standard"));
+                        boolQueryBuilder1.should(QueryBuilders.matchPhraseQuery("s", t).analyzer("standard"));
                     }
                     boolQueryBuilder.must(boolQueryBuilder1);
                 }

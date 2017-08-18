@@ -228,6 +228,7 @@ public class RealTimeCompare implements Serializable {
         return rowKeyList;*/
         FilterByRowkey filterByRowkey = new FilterByRowkey();
         List<String> imageIdList = filterByRowkey.getRowKey(option);
+        System.out.println("通过HBase+es读取数据：");
         for (String imageId : imageIdList) {
             System.out.println(imageId);
         }
@@ -248,9 +249,6 @@ public class RealTimeCompare implements Serializable {
         //根据imageId进行特征查询并转化为float[]
         JavaPairRDD<String, float[]> imageIdFeaRDD = imageIdListRdd.mapToPair((PairFunction<String, String, float[]>) x -> new Tuple2<>(x, FaceFunction.byteArr2floatArr(dynamicPhotoService.getFeature(x, pictureType))));
         List<Tuple2<String, float[]>> tempList = imageIdFeaRDD.collect();
-        for (Tuple2<String, float[]> temp : tempList) {
-            System.out.println(temp.toString());
-        }
         return imageIdFeaRDD.collect();
     }
 

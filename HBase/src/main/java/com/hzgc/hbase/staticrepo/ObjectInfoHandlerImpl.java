@@ -4,15 +4,9 @@ import com.hzgc.dubbo.staticrepo.*;
 import com.hzgc.hbase.util.HBaseHelper;
 import com.hzgc.hbase.util.HBaseUtil;
 import com.hzgc.jni.FaceFunction;
-import com.hzgc.jni.NativeFunction;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import org.apache.log4j.*;
+import org.apache.log4j.Logger;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
@@ -20,13 +14,18 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import sun.rmi.transport.ObjectTable;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class ObjectInfoHandlerImpl implements ObjectInfoHandler {
     private static Logger LOG = Logger.getLogger(ObjectInfoHandlerImpl.class);
 
    public ObjectInfoHandlerImpl(){
-        NativeFunction.init();
+       //NativeFunction.init();
     }
 
     @Override

@@ -34,7 +34,7 @@ public class PersonRepo2EsObserver extends EsObserver {
             for (Cell cell : entry.getValue()) {
                 String key = Bytes.toString(CellUtil.cloneQualifier(cell));
                 String value = Bytes.toString(CellUtil.cloneValue(cell));
-                if ("t".equals(key) || "f".equals(key) || "fea".equals(key)) {
+                if ("t".equals(key) || "f".equals(key) || "s".equals(key)) {
                     infoJson.put(key, value);
                     if ("t".equals(key)){
                         String time = "sj";

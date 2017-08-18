@@ -1,6 +1,9 @@
 package com.hzgc.hbase.staticreposuite;
 
+import com.hzgc.dubbo.dynamicrepo.SearchOption;
+import com.hzgc.dubbo.dynamicrepo.SearchType;
 import com.hzgc.dubbo.staticrepo.ObjectSearchResult;
+import com.hzgc.hbase.dynamicrepo.FilterByRowkey;
 import com.hzgc.hbase.staticrepo.ElasticSearchHelper;
 import com.hzgc.hbase.staticrepo.ObjectInfoHandlerImpl;
 import com.hzgc.hbase.util.HBaseHelper;
@@ -14,7 +17,6 @@ import org.elasticsearch.client.Client;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.swing.plaf.PanelUI;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -187,5 +189,17 @@ public class SearchPicByPic {
         String filePath = "/opt/ldl/small_pic/2017_04_24_06_33_16_28366_1.jpg";
         float[] feature_curr = FaceFunction.featureExtract(filePath);
         System.out.println(NativeFunction.compare(feature_curr, FaceFunction.string2floatArray(feature_his)));
+    }
+
+    @Test
+    public void testSearchByPidForDynamic() {
+        SearchOption option = new SearchOption();
+        List<String> deviceIds = new ArrayList<>();
+        deviceIds.add("17130NCY0HZ0002");
+        deviceIds.add("17130NCY0HZ0012");
+        option.setDeviceIds(deviceIds);
+        option.setSearchType(SearchType.PERSON);
+        FilterByRowkey filterByRowkey = new FilterByRowkey();
+        System.out.println(filterByRowkey.getRowKey(option));
     }
 }
